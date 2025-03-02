@@ -19,7 +19,7 @@ const makeToken = (data) => {
   });
 };
 
-const chekingToken = (token) => {
+const checkingToken = (token) => {
   return new Promise((ok, notok) => {
     jwt.verify(token, "yy-pp--sd", (err, decoded) => {
       if (err) notok(err);
@@ -29,4 +29,4 @@ const chekingToken = (token) => {
 };
 
 module.exports.makeToken = makeToken;
-module.exports.chekingToken = chekingToken;
+module.exports.checkingToken = checkingToken;
