@@ -4,39 +4,39 @@ const users = require("../../models/sql/users");
 const jwt = require("../../auth/jwt");
 const localStorage = require("localStorage");
 
-// this is logg in function
 const loginController = async (req, res, next) => {
   try {
-    localStorage.setItem("isRemember", req.body.remember);
-
+    // בדיקה אם המשתמש הכניס שם וסיסמה
     if (!req.body.name || !req.body.password) {
       return res.status(400).json({
         err: { message: "Name and password are required" }
       });
     }
 
-    let data = req.body;
-    let finduser = await users.selectUserByName(data.name);
+    // חיפוש המשתמש במסד הנתונים
+    let finduser = await users.selectUserByName(req.body.name);
 
     if (finduser[0].length > 0) {
-      let user = finduser[0][0]; // Assuming the first result is the user
+      let user = finduser[0][0]; // משתמש שנמצא
       let checkpassword = await authbcrypt.checkPassword(req.body.password, user.password);
 
       if (checkpassword) {
-        let checkToken = await jwt.makeToken({ hash: user.password });
+        // יצירת טוקן JWT
+        const token = await jwt.sign({ id: user.id }, "YOUR_SECRET_KEY", { expiresIn: '1h' });
 
-        if (checkToken) {
-          return res.json({
-            user: user,
-            remember: req.body.remember,
-            token: checkToken,
-            number: user.id
-          });
-        } else {
-          return res.status(500).json({
-            err: { message: "Error generating token" }
-          });
-        }
+        // שמירת הטוקן בקוקיז
+        res.cookie('authToken', token, {
+          httpOnly: true,  // הגדרת httpOnly כדי להבטיח שג'אווה סקריפט לא יוכל לגשת לטוקן
+          secure: true,    // הגדרת secure כדי שהטוקן ישלח רק בבקשות דרך HTTPS
+          sameSite: 'Strict', // מונע שליחת הטוקן לאתרים חיצוניים
+          maxAge: 60 * 60 * 1000 // תוקף ה-Cookie ל-1 שעה
+        });
+
+        // שליחת תגובה ללקוח
+        return res.status(200).json({
+          message: "Logged in successfully",
+          userInfo: user
+        });
       } else {
         return res.status(401).json({
           err: { message: "Password or username is incorrect" }
@@ -48,7 +48,6 @@ const loginController = async (req, res, next) => {
       });
     }
   } catch (e) {
-    console.log("Error during login: ", e.message);
     return res.status(500).json({
       err: { message: "Server error: " + e.message }
     });
