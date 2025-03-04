@@ -1,4 +1,3 @@
-import Nav from "./Nav";
 import "./nav.css";
 
 
