@@ -4,6 +4,7 @@ import "./nav.css";
 import NotFound from "../pages/NotFound";
 import Dashboard from "../pages/Dashboard";
 import HomeScreen from "../pages/HomeScreen";
+import PrivateRouter from "../routers/PrivateRouter";
 
 
 function NavRouter() {
@@ -12,9 +13,14 @@ function NavRouter() {
       <div className="position-sticky">
         <Nav />
       </div>
+ 
 
       <Routes>  
+      <Route path="/" element={<PrivateRouter />} exact>
       <Route path="/" element={<HomeScreen />} exact />
+      </Route>
+      
+      
       <Route path="/dashboard" element={<Dashboard />} exact />
       <Route path="*" element={<NotFound />} exact />
       </Routes>

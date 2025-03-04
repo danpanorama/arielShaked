@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios'; // יש להוסיף את axios
-import { userCheckAuth } from '../Redux/Actions/userBaseDataAction';
+import axios from 'axios'; 
+import axiosInstance from '../config/AxiosConfig';
 
 const PrivateRouter = () => {
   const user = useSelector((state) => state.userData);
@@ -18,7 +18,7 @@ const PrivateRouter = () => {
   // פונקציה לבדיקת התחברות
   async function checkAuthOnReload() {
     try {
-        const response = await axios.get('/checkAuth', { withCredentials: true }); // שליחה עם credentials כדי להשתמש בעוגיות
+        const response = await axiosInstance.get('/checkAuth', { withCredentials: true }); // שליחה עם credentials כדי להשתמש בעוגיות
     
         if (response.data.success) {
           // אם האימות הצליח, נעדכן את הסטייט
