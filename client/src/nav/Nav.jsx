@@ -1,0 +1,13 @@
+import Nav from "./Nav";
+import "./nav.css";
+
+
+function Nav() {
+  return (
+    <div className="">
+ 
+    </div>
+  );
+}
+
+export default Nav;
