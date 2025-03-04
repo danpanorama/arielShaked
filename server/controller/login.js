@@ -1,42 +1,36 @@
-const hapijoi = require("../../auth/joiLogin");
-const authbcrypt = require("../../auth/bcrypt");
-const users = require("../../models/sql/users");
-const jwt = require("../../auth/jwt");
-const localStorage = require("localStorage");
+const authbcrypt = require("../auth/bycrypt");
+const users = require("../models/users");
+const jwt = require("../auth/jwt");
 
 const loginController = async (req, res, next) => {
   try {
-    // בדיקה אם המשתמש הכניס שם וסיסמה
-    if (!req.body.name || !req.body.password) {
+    if (!req.body.email || !req.body.password) {
       return res.status(400).json({
         err: { message: "Name and password are required" }
       });
     }
 
-    // חיפוש המשתמש במסד הנתונים
-    let finduser = await users.selectUserByName(req.body.name);
+    let user = await users.checkIfEmailExists(req.body.email);
 
-    if (finduser[0].length > 0) {
-      let user = finduser[0][0]; // משתמש שנמצא
+    if (user[0].length > 0) {
+      let user = user[0][0];
       let checkpassword = await authbcrypt.checkPassword(req.body.password, user.password);
 
+
       if (checkpassword) {
-        // יצירת טוקן JWT
-        const token = await jwt.sign({ id: user.id }, "YOUR_SECRET_KEY", { expiresIn: '1h' });
-
-        // שמירת הטוקן בקוקיז
+        const token = await jwt.makeToken({ id: user.id }, process.env.JWT_TOKEN, { expiresIn: '1h' });
         res.cookie('authToken', token, {
-          httpOnly: true,  // הגדרת httpOnly כדי להבטיח שג'אווה סקריפט לא יוכל לגשת לטוקן
-          secure: true,    // הגדרת secure כדי שהטוקן ישלח רק בבקשות דרך HTTPS
-          sameSite: 'Strict', // מונע שליחת הטוקן לאתרים חיצוניים
-          maxAge: 60 * 60 * 1000 // תוקף ה-Cookie ל-1 שעה
+          httpOnly: true,
+          secure: true,
+          sameSite: 'Strict',
+          maxAge: 60 * 60 * 1000
         });
 
-        // שליחת תגובה ללקוח
-        return res.status(200).json({
-          message: "Logged in successfully",
-          userInfo: user
-        });
+        // הגדרת הנתונים שנעביר הלאה
+        req.user = user;
+
+        // קריאה ל-next כדי להעביר לראוטר
+        return next();
       } else {
         return res.status(401).json({
           err: { message: "Password or username is incorrect" }

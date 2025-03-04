@@ -37,19 +37,24 @@ const createDatabaseAndTables = async () => {
     await connection.query(createProvidersTableQuery);
     console.log("Table 'providers' created successfully or already exists.");
 
-    // יצירת טבלה 'users' אם היא לא קיימת
+
+        // יצירת טבלה 'users' אם היא לא קיימת
     const createUsersTableQuery = `
-      CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE,
-        phone_number VARCHAR(20),
-        permissions ENUM('admin', 'user', 'guest') DEFAULT 'user',
-        is_active BOOLEAN DEFAULT TRUE
-      )
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,  
+      name VARCHAR(255) NOT NULL,  
+      email VARCHAR(255) NOT NULL UNIQUE,  
+      phone_number VARCHAR(20),  
+      password VARCHAR(255) NOT NULL,  
+      permissions ENUM('admin', 'user', 'guest') DEFAULT 'user', 
+      is_active BOOLEAN DEFAULT TRUE  
+    )
     `;
+
     await connection.query(createUsersTableQuery);
     console.log("Table 'users' created successfully or already exists.");
+
+
 
     // שחרור החיבור
     connection.release();
