@@ -15,11 +15,11 @@ const checkIfEmailExists = (email) => {
     );
   };
   
-  const insertNewUser = (username, email, password, role) => {
+  const insertNewUser = (name, email, password, phone,permissions,is_active) => {
     return pool.execute(
-      `INSERT INTO users (username, email, password, role) 
-       VALUES (?, ?, ?, ?)`,
-      [username, email, password, role]
+      `INSERT INTO users (name, email, password, phone,permissions,is_active) 
+       VALUES (?, ?, ?, ?,?,?)`,
+      [name, email, password, phone,permissions,is_active]
     );
   };
   

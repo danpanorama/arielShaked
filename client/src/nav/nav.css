@@ -1,0 +1,12 @@
+.navbar{
+    min-height: 82px;
+    width: 100%;
+    background-color: black;
+    
+}
+.position-sticky{
+    z-index: 99999999999;
+    position: sticky;
+    top: 0;
+    left: 0;
+}

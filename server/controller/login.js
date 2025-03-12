@@ -4,46 +4,46 @@ const jwt = require("../auth/jwt");
 
 const loginController = async (req, res, next) => {
   try {
-    if (!req.body.email || !req.body.password) {
+   
+    const { email, password } = req.body;
+
+    if (!email || !password) {
       return res.status(400).json({
-        err: { message: "Name and password are required" }
+        error: { data: { message: "Email and password are required", header: 'error' } }
       });
     }
 
-    let user = await users.checkIfEmailExists(req.body.email);
+    let getUser = await users.checkIfEmailExists(email);
 
-    if (user[0].length > 0) {
-      let user = user[0][0];
-      let checkpassword = await authbcrypt.checkPassword(req.body.password, user.password);
-
+    if (getUser[0].length > 0) {
+      let user = getUser[0][0];
+      let checkpassword = await authbcrypt.checkPassword(password, user.password);
 
       if (checkpassword) {
         const token = await jwt.makeToken({ id: user.id }, process.env.JWT_TOKEN, { expiresIn: '1h' });
-        res.cookie('authToken', token, {
+        res.cookie('auth_token', token, {
           httpOnly: true,
-          secure: true,
+          secure: process.env.NODE_ENV === 'production', // Only set secure cookies in production
           sameSite: 'Strict',
-          maxAge: 60 * 60 * 1000
+          maxAge: 60 * 60 * 1000 // 1 hour
         });
-
-        // הגדרת הנתונים שנעביר הלאה
+    
         req.user = user;
-
-        // קריאה ל-next כדי להעביר לראוטר
         return next();
       } else {
         return res.status(401).json({
-          err: { message: "Password or username is incorrect" }
+          error: { message: "Invalid email or password" }
         });
       }
     } else {
       return res.status(404).json({
-        err: { message: "No such user" }
+        error: { message: "User not found" }
       });
     }
   } catch (e) {
+    console.error(e);
     return res.status(500).json({
-      err: { message: "Server error: " + e.message }
+      error: { message: "Server error: " + e.message }
     });
   }
 };

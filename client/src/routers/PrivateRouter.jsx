@@ -1,54 +1,54 @@
+// import React, { useEffect, useState } from 'react';
+// import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { checkUserAuthAction } from '../redux/actions/userActions';
+
+// const PrivateRouter = () => {
+//   const user = useSelector((state) => state.userData);
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+  
+//   const [authSuccess, setAuthSuccess] = useState(null);
+
+//   const from = location.state?.from?.pathname || "/dashboard";
+
+//   useEffect(() => {
+//     dispatch(checkUserAuthAction(navigate, setAuthSuccess, from));
+//   }, [dispatch, navigate, from]);
+
+//   if (authSuccess === null) {
+//     return <div>טוען...</div>;
+//   }
+
+//   return authSuccess ? <Outlet /> : <Navigate to="/login" state={{ from: location }} />;
+// };
+
+// export default PrivateRouter;
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios'; 
-import axiosInstance from '../config/AxiosConfig';
+import { checkUserAuthAction } from '../redux/actions/userActions';
 
 const PrivateRouter = () => {
   const user = useSelector((state) => state.userData);
-  const location = useLocation();
+  const currentLocation = useLocation(); // שינוי שם ל-currentLocation
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // הוספת סטייט עבור הצלחת האימות
   const [authSuccess, setAuthSuccess] = useState(null);
 
-  const from = location.state?.from?.pathname || "/dashboard"; // ברירת מחדל: דשבורד
-
-  // פונקציה לבדיקת התחברות
-  async function checkAuthOnReload() {
-    try {
-        const response = await axiosInstance.get('/checkAuth', { withCredentials: true }); // שליחה עם credentials כדי להשתמש בעוגיות
-    
-        if (response.data.success) {
-          // אם האימות הצליח, נעדכן את הסטייט
-          setAuthSuccess(true);
-          navigate(from, { replace: true });
-        } else {
-          // אם האימות נכשל, נפנה אותו להתחברות
-          setAuthSuccess(false);
-          navigate('/login', { state: { from: location }, replace: true });
-        }
-      } catch (error) {
-        // במקרה של שגיאה, ניתוב להתחברות
-        console.error('Authentication failed:', error.message);
-        setAuthSuccess(false);
-        navigate('/login', { state: { from: location }, replace: true });
-      }
-  }
+  const from = currentLocation.state?.from?.pathname || "/dashboard"; // שימוש ב-currentLocation
 
   useEffect(() => {
-    // נבצע את הבדיקה בכל טעינה
-    checkAuthOnReload();
-  }, [user.connect, dispatch, navigate, from]);
+    dispatch(checkUserAuthAction(navigate, setAuthSuccess, from, currentLocation));
+  }, [dispatch, navigate, from, currentLocation]);
 
-  // כאשר הבדיקה עדיין בעיצומה, ניתן להחזיר ספינר/המתנה
   if (authSuccess === null) {
     return <div>טוען...</div>;
   }
 
-  // אם המשתמש מחובר, נראה את התוכן הפנימי של ה־Outlet
-  return authSuccess ? <Outlet /> : <Navigate to="/login" state={{ from: location }} />;
-}
+  return authSuccess ? <Outlet /> : <Navigate to="/login" state={{ from: currentLocation }} />;
+};
 
 export default PrivateRouter;

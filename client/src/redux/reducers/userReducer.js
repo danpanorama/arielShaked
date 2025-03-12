@@ -1,36 +1,22 @@
-import * as actionTypes from "../contents/loaderContent";
+import * as actionTypes from "../contents/connectContent";
 
 const initialState = {
-connect:false,
-user:{}
+  connect: false,
+  user: {},
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-  
-
-    // case actionTypes.START_LOAD:
-    //   const loader = {
-    //     ...state,
-    //   };
-    //   loader.Loader = true
-   
-    //   return loader;
-
-
-    //   case actionTypes.STOP_LOAD:
-    //     const stopLoad = {
-    //       ...state,
-    //     };
-    //     stopLoad.Loader = false
-     
-    //     return stopLoad;
-
+    case actionTypes.CONNECT:
+      return {
+        ...state,
+        connect: true,
+        user: action.data, // עדכון של ה-user עם הערכים שמגיעים ב-action
+      };
 
     default:
-      break;
+      return state;
   }
-  return state;
 };
 
 export default reducer;

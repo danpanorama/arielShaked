@@ -1,0 +1,47 @@
+.inputBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.imageLogo{
+    max-width: 300px;
+    max-height: 250px;
+    margin-bottom: 60px;
+}
+
+.signUp-Container{
+    width: 60%;
+    margin: 0 auto;
+padding-top: 50px;
+padding-bottom: 20px;
+}
+.form{
+   
+    background-color: black;
+    color: white;
+    padding: 40px 0;
+    border-radius: 5px;
+}
+
+.input{
+    border-radius: 30px;
+    outline: none;
+    border: none;
+    min-height: 30px;
+    min-width: 250px ;
+    text-align: center;
+}
+
+
+.inputError {
+    border: 2px solid red;
+  }
+  
+  .errorText {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }

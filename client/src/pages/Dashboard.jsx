@@ -1,11 +1,12 @@
 
 import '../App.css';
+import SideNavBar from '../components/sidenav/SideNavBar';
 import '../css/dashboard.css';
 
 function Dashboard() {
   return (
     <div className="">
-<h1>dashboard</h1>   
+<SideNavBar/> 
     </div>
   );
 }

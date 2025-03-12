@@ -1,13 +1,16 @@
 var express = require('express');
 const login = require('../controller/login');
+const signup = require('../controller/signUp');
+
 var router = express.Router();
 
 /* GET home page */
-router.get('/', login.loginController, function(req, res, next) {
-  res.json({user:user,message:'user log in '});
+router.post('/', login.loginController, function(req, res, next) {
+  res.json({user:req.user,message:'user log in '});
 });
-router.get('/signup', login.loginController, function(req, res, next) {
-  res.json({user:user,message:'user signup '});
+router.post('/signup',signup.signUpController, function(req, res, next) {
+  console.log(req.body,"yyy")
+  res.json({user:req.user,message:'user signup '});
 });
 
 router.get('/logout', function(req, res, next) {

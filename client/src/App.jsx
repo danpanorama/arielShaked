@@ -1,4 +1,5 @@
 import './App.css';
+import ErrorComponents from './components/error/ErrorComponent';
 import NavRouter from './nav/NavRouter';
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
       <NavRouter/>
 
 
-      
+      <ErrorComponents/>
 
     </div>
   );

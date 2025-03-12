@@ -1,0 +1,41 @@
+.ErrorComponents{
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.558);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.ErrorComponentsClose{
+    height: 0;
+    width: 0;
+    background-color: rgba(0, 0, 0, 0.558);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+.error-box-message{
+    min-height: 50%;
+    max-width: 80%;
+    min-width: 250px;
+    background-color: white;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.inner-error-box{
+    max-width: 300px;
+}

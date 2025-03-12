@@ -1,15 +1,21 @@
 const authbcrypt = require("../auth/bycrypt");
 const users = require("../models/users");
 const jwt = require("../auth/jwt");
-
+ 
 const signUpController = async (req, res, next) => {
     try {
-        console.log("date: " + helpers.createDateAndTime() + " .Inside Signup Post route");
+        console.log("date: " + " .Inside Signup Post route");
         console.log('req.body: ', req.body);
-        const { firstName, email, phone, password, confirmPassword } = req.body;
+        const { firstName, lastName, password, repeatPassword, email, phone, permissions } = req.body;
 
-        // בדוק אם הסיסמאות תואמות
-        if (password !== confirmPassword) {
+        if (!firstName || !lastName || !password || !repeatPassword || !email || !phone || permissions === undefined) {
+          return res.status(400).json({
+            message: "All fields are required: firstName, lastName, password, repeatPassword, email, phone, and permissions.",
+          });
+        }
+        
+      
+        if (password !== repeatPassword) {
             return res.status(400).json({
                 message: "סיסמה ואימות סיסמה אינם זהים!"
             });
@@ -19,7 +25,7 @@ const signUpController = async (req, res, next) => {
         let userExists = await users.checkIfEmailExists(email);
         if (userExists[0].length > 0) {
             return res.json({
-                message: "האימייל כבר נמצא בשימוש"
+                error: {message:"האימייל כבר נמצא בשימוש",header:"המשתמש קיים"}
             });
         }
 
@@ -27,10 +33,12 @@ const signUpController = async (req, res, next) => {
         let hash = await authbcrypt.hashPassport(password);
 
         // יצירת טוקן JWT
-        let token = await jwt.makeToken({ hash: hash });
+        let token = await jwt.makeToken({
+            hash: hash
+        });
 
         // הוספת המשתמש החדש למסד הנתונים
-        let insertNewUser = await users.insertNewUser(firstName, email, hash, phone);
+        let insertNewUser = await users.insertNewUser(firstName, email, hash, phone,permissions,1);
         if (insertNewUser) {
             // חפש את המשתמש החדש לאחר ההכנסה
             let user = await users.checkIfEmailExists(email);
@@ -42,9 +50,9 @@ const signUpController = async (req, res, next) => {
                 maxAge: 3600000, // הזמן שבו הקוקיז יהיו בתוקף (למשל 1 שעה)
             });
 
-            return res.json({
-                user: user[0][0],
-            });
+             req.user =  user[0][0],
+            
+            next()
         }
 
     } catch (err) {
