@@ -1,23 +1,25 @@
 const jwt = require("../auth/jwt");
 
-
 const jwtAuth = async (req, res, next) => {
-    try {
-        const token = req.body.token || req.headers['authorization'];
-        if (token) {
-            let pass = await jwt.checkingToken(token);
-            if (pass) {
-                req.token = token;
-                next();
-            } else {
-                return res.status(401).json({ message: "Invalid token" });
-            }
-        } else {
-            return res.status(400).json({ message: "No token provided" });
-        }
-    } catch (e) {
-        return res.status(500).json({ message: "Error processing token", error: e.message });
+  try {
+    (req.cookies)
+    const token =
+      req.cookies?.auth_token || req.headers["authorization"]?.replace("Bearer ", "");
+
+    if (!token) {
+      return res.status(400).json({noToken:1, message: "לא התקבל טוקן" });
     }
+
+    const isValid = await jwt.checkingToken(token);
+    if (!isValid) {
+      return res.status(401).json({noToken:1, message: "טוקן לא תקין" });
+    }
+
+    req.token = token;
+    next();
+  } catch (e) {
+    return res.status(500).json({noToken:1, message: "שגיאה בטוקן", error: e.message });
+  }
 };
 
 module.exports.jwtAuth = jwtAuth;

@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 function SideNavBar() {
   const sideNavLinks = [
     { name: "הזמנות אפייה", url: "" },
-    { name: " ספקים", url: "" },
-    { name: " מלאי", url: "" },
-    { name: " פרטי-ספק", url: "" },
+    { name: " ספקים", url: "/providers" },
+    { name: " מלאי", url: "/products" },
+    { name: " פרטי-ספק", url: "/providersProducts" },
     { name: " הזמנות ספקים", url: "" },
     { name: " הרשאות", url: "" },
     { name: " דוחות", url: "" },
@@ -20,7 +20,7 @@ function SideNavBar() {
           ? sideNavLinks.map((e) => {
             return(
                 <div className="linkHolder flex-col-center">
-                <Link className="sideNavLink" to={""}>
+                <Link className="sideNavLink" to={e.url}>
                {e.name}
                 </Link>
               </div>

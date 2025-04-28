@@ -10,15 +10,15 @@ router.get('/', function(req, res, next) {
 router.get("/checkAuth", async (req, res,next) => {
   try {
       const token = req.cookies.auth_token; // Read token from HTTP-only cookie
-console.log('here1')
-      if (!token) {
-        console.log('here2')
 
+      if (!token) {
+      
+('here')
         return res.status(401).json({ success: false, message: "אין אישור: לא נמצא טוקן זיהוי משתמש" });
       }
 
       const decoded = await jwt.checkingToken(token, process.env.JWT_SECRET);
-      console.log('here3')
+
 
       return res.status(200).json({ success: true, user: decoded });
 

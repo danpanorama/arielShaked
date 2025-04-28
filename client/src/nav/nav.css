@@ -4,6 +4,7 @@
     background-color: black;
     
 }
+
 .position-sticky{
     z-index: 99999999999;
     position: sticky;

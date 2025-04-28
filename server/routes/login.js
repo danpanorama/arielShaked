@@ -9,7 +9,7 @@ router.post('/', login.loginController, function(req, res, next) {
   res.json({user:req.user,message:'user log in '});
 });
 router.post('/signup',signup.signUpController, function(req, res, next) {
-  console.log(req.body,"yyy")
+ 
   res.json({user:req.user,message:'user signup '});
 });
 

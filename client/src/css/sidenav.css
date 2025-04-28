@@ -1,27 +1,35 @@
 .sideNavBarController{
     height: 100vh;
-    width: 20%;
+    width: 200px;
     background-color: var(--yellow-color);
     position: fixed;
     right: 0;
     top: 0;
 
 }
+.space{
+    width: 200px;
+}
 .sideNavLinkList{
     margin-top: 130px;
-    padding-right: 10px;
-    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .sideNavLink{
     color: var(--yellow-color);
     text-decoration: none;
+  
 }
 
 .linkHolder{
     min-height: 54px;
-    max-width: 206px;
+    width: 90%;
     background-color: black;
   border-radius: 20px;
     margin-top: 20px;
+
 }

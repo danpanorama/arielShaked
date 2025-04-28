@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "../App.css";
 import "../css/forms.css";
 import "../css/btn.css";
@@ -57,11 +57,11 @@ function SignUp() {
     setErrorMessages(messages);
     return valid;
   };
-
+const navigate = useNavigate()
   // Handle form submission
   const login = () => {
     if (validateForm()) {
-      dispatch(loginAction(userDataState));
+      dispatch(loginAction(userDataState, navigate));
     }
   };
 

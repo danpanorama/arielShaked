@@ -3,11 +3,11 @@ const users = require("../models/users");
 const jwt = require("../auth/jwt");
  
 const signUpController = async (req, res, next) => {
-    try {
-        console.log("date: " + " .Inside Signup Post route");
-        console.log('req.body: ', req.body);
-        const { firstName, lastName, password, repeatPassword, email, phone, permissions } = req.body;
 
+    try {
+        ("date: " + " .Inside Signup Post route");
+        ('req.body: ', req.body);
+        const { firstName, lastName, password, repeatPassword, email, phone, permissions } = req.body;
         if (!firstName || !lastName || !password || !repeatPassword || !email || !phone || permissions === undefined) {
           return res.status(400).json({
             message: "All fields are required: firstName, lastName, password, repeatPassword, email, phone, and permissions.",
@@ -24,11 +24,11 @@ const signUpController = async (req, res, next) => {
         // בדוק אם האימייל כבר קיים
         let userExists = await users.checkIfEmailExists(email);
         if (userExists[0].length > 0) {
+         
             return res.json({
                 error: {message:"האימייל כבר נמצא בשימוש",header:"המשתמש קיים"}
             });
-        }
-
+        } 
         // הצפנת הסיסמה
         let hash = await authbcrypt.hashPassport(password);
 

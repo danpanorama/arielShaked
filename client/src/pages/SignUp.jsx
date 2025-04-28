@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {validateEmail,validatePassword} from '../components/tools/Validation'
 
@@ -12,6 +12,7 @@ import Logo from "../images/bigLogo.svg";
 
 function SignUp() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [userDataState, setUserDataState] = useState({
     firstName: "",
     lastName: "",
@@ -132,7 +133,7 @@ function SignUp() {
   const signUp = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      dispatch(signUpAction(userDataState));
+      dispatch(signUpAction(userDataState,navigate));
     }
   };
 
