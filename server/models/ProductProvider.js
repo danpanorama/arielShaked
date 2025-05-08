@@ -14,6 +14,7 @@ const getProviderProductById = (id) => {
 const insertNewProviderProduct = (
   item_number,
   name,
+  provider_name,
   provider_id,
   price,
   estimated_delivery_time,
@@ -22,11 +23,12 @@ const insertNewProviderProduct = (
 ) => {
   return pool.execute(
     `INSERT INTO provider_products 
-    (item_number, name, provider_id, price, estimated_delivery_time, min_order_quantity, is_active)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    (item_number, name,provider_name, provider_id, price, estimated_delivery_time, min_order_quantity, is_active)
+    VALUES (?,?, ?, ?, ?, ?, ?, ?)`,
     [
       item_number,
       name,
+      provider_name,
       provider_id,
       price,
       estimated_delivery_time,
@@ -35,13 +37,28 @@ const insertNewProviderProduct = (
     ]
   );
 };
-const getProviderProductByIds = (item_number, provider_id) => {
-  const sql = `SELECT * FROM provider_products WHERE item_number = ? AND provider_id = ?`;
-  return pool.execute(sql, [item_number, provider_id]);
+const getProviderProductByIds = ( provider_id) => {
+  const sql = `SELECT * FROM provider_products WHERE  provider_id = ?`;
+  return pool.execute(sql, [ provider_id]);
 };
+
+const getProvidersByProductId  = ( item_number) => {
+  const sql = `SELECT * FROM provider_products WHERE item_number = ?`;
+  return pool.execute(sql, [ item_number]);
+};
+
+
+
+const deleteAllProductsFromProvider = async (providerId) => {
+  const sql = "DELETE FROM provider_products WHERE provider_id = ?";
+  return await pool.execute(sql, [providerId]);
+};
+
 module.exports = {
   getAllProviderProducts,
   getProviderProductById,
   insertNewProviderProduct,
-  getProviderProductByIds
+  getProviderProductByIds,
+  getProvidersByProductId,
+  deleteAllProductsFromProvider, // הוספת הפונקציה כאן
 };

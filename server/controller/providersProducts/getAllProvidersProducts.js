@@ -2,7 +2,7 @@ const providerProducts = require("../../models/ProductProvider");
 
 const getAllProvidersProducts = async (req, res) => {
   try {
-    ('here')
+   
     const rows = await providerProducts.getAllProviderProducts();
     return res.status(200).json(rows[0]);
   } catch (err) {

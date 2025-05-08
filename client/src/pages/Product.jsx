@@ -68,20 +68,43 @@ function Product() {
     }
   };
 
-  const deleteProduct = async (id) => {
+  const deleteProduct = async ({ productId, quantity }) => {
     try {
-      
-      
-
-      await axiosInstance.post(`/products/removeProduct/`,id, {
-        withCredentials: true,
+      const response = await axiosInstance.post(
+        `/products/removeProduct/`,
+        { productId, quantity },
+        { withCredentials: true }
+      );
+  
+      // הודעה מהשרת
+      const message = response.data.message;
+  
+      // עדכון הרשימה בצד לקוח
+      setProducts((prev) => {
+        return prev
+          .map((product) => {
+            console.log(product.id,productId)
+            if (product.id == productId) {
+              console.log(product.id)
+              const currentQuantity = Number(product.quantity);
+              const deleteQuantity = Number(quantity);
+  
+              // אם מחקנו לגמרי – נסיר מהמערך
+              if (deleteQuantity >= currentQuantity) {
+                return null;
+              }
+  
+              // אחרת – נחזיר מוצר עם כמות מעודכנת
+              return {
+                ...product,
+                quantity: currentQuantity - deleteQuantity,
+              };
+            }
+            return product;
+          })
+          .filter(Boolean); // מסיר null אם צריך
       });
-
-
-      setProducts((prev) => prev.filter((product) => product._id !== id));
-
-
-
+  
     } catch (e) {
       dispatch({
         type: ERROR,
@@ -92,6 +115,7 @@ function Product() {
       });
     }
   };
+  
  
 
 

@@ -29,35 +29,95 @@ function AddProduct(props) {
       <form>
         <div className="inputHolderDiv marginBottom10">
           <label className="label">שם מוצר</label>
-          <input className="SearchBar" type="text" name="name" value={productData.name} onChange={handleChange} />
+          <input
+            className="SearchBar"
+            type="text"
+            name="name"
+            value={productData.name}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">קטגוריה</label>
-          <input className="SearchBar" type="text" name="category" value={productData.category} onChange={handleChange} />
+          <select
+            className="SearchBar"
+            name="category"
+            value={productData.category}
+            onChange={handleChange}
+          >
+            <option value="">בחר קטגוריה</option>
+            <option value="חומרי גלם">חומרי גלם</option>
+            <option value="מוצרי חשמל"> קפואים</option>
+            <option value="כלי עבודה">חומרי גלם </option>
+            <option value="כלי עבודה"> יבשים </option>
+
+            {/* תוכל להוסיף כאן עוד קטגוריות כרצונך */}
+          </select>
         </div>
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">כמות</label>
-          <input className="SearchBar" type="number" name="quantity" value={productData.quantity} onChange={handleChange} />
+          <select
+            className="SearchBar"
+            name="quantity"
+            value={productData.quantity}
+            onChange={handleChange}
+          >
+            <option value="">בחר כמות</option>
+            <option value="1">1</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+            <option value="200000">200000</option>
+            {/* תוכל להוסיף או לשנות ערכים לפי הצורך */}
+          </select>
         </div>
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">יחידת מידה</label>
-          <input className="SearchBar" type="text" name="unit" value={productData.unit} onChange={handleChange} />
+          <select
+            className="SearchBar"
+            name="unit"
+            value={productData.unit}
+            onChange={handleChange}
+          >
+            <option value="">בחר יחידה</option>
+            <option value="קילוגרם">קילוגרם</option>
+            <option value="חבילה">חבילה</option>
+            <option value="ליטר">ליטר</option>
+            <option value="יחידה">יחידה</option>
+            {/* תוכל להוסיף או לשנות לפי הצורך */}
+          </select>
         </div>
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">כמות מינימלית</label>
-          <input className="SearchBar" type="number" name="min_required" value={productData.min_required} onChange={handleChange} />
+          <input
+            className="SearchBar"
+            type="number"
+            name="min_required"
+            value={productData.min_required}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">פעיל</label>
-          <input type="checkbox" name="is_active" checked={productData.is_active} onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="is_active"
+            checked={productData.is_active}
+            onChange={handleChange}
+          />
         </div>
 
-        <PrimaryButton text="שמירה" click={() => props.addProvider(productData)} />
+        <PrimaryButton
+          text="שמירה"
+          click={() => props.addProvider(productData)}
+        />
       </form>
     </div>
   );

@@ -11,6 +11,9 @@ import SignUp from "../pages/SignUp";
 import Providers from "../pages/Providers";
 import Product from "../pages/Product";
 import ProvidersProducts from "../pages/ProvidersProducts";
+import Users from "../pages/Users";
+import OrderBakery from "../pages/OrderBakery";
+import SuplyScreen from "../pages/SuplyScreen";
 
 
 function NavRouter() {
@@ -33,10 +36,18 @@ function NavRouter() {
       <Route path="/providers" element={<PrivateRouter />} exact>
       <Route path="/providers" element={<Providers />} exact />
       </Route>
+      <Route path="/providersOrders" element={<PrivateRouter />} exact>
+      <Route path="/providersOrders" element={<SuplyScreen />} exact />
+      </Route>
+      <Route path="/orders" element={<PrivateRouter />} exact>
+      <Route path="/orders" element={<OrderBakery />} exact />
+      </Route>
       <Route path="/products" element={<PrivateRouter />} exact>
       <Route path="/products" element={<Product />} exact />
       </Route>
-
+      <Route path="/users" element={<PrivateRouter />} exact>
+      <Route path="/users" element={<Users />} exact />
+      </Route>
       <Route path="/providersProducts" element={<PrivateRouter />} exact>
       <Route path="/providersProducts" element={<ProvidersProducts />} exact />
       </Route>

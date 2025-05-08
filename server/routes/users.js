@@ -1,12 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var jwt = require('../auth/jwt')
+var jwt = require('../auth/jwt');
+const { getAllUsersController } = require('../controller/users/getAllUsers');
+const { switchPermissionsController } = require('../controller/users/switchPermissionsController');
+const { removeUserController } = require('../controller/users/removeUserController');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/',getAllUsersController, function(req, res, next) {
+ 
+});
+router.post('/permissions',switchPermissionsController, function(req, res, next) {
+
 });
 
+router.post('/removeUser',removeUserController, function(req, res, next) {
+
+});
 router.get("/checkAuth", async (req, res,next) => {
   try {
       const token = req.cookies.auth_token; // Read token from HTTP-only cookie

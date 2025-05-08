@@ -3,7 +3,7 @@ import "../../css/tools.css";
 
 function ProviderTable({ providers, onDelete,deleteProvider }) {
   return (
-    <table>
+    <table className="tables">
       <thead>
         <tr>
           <th>מספר ספק</th>

@@ -30,28 +30,27 @@ const products = require("../../models/product");
 
 const deleteProductController = async (req, res) => {
   try {
+  
     const { productId, quantity } = req.body;
-
     if (!productId || quantity === undefined) {
       return res.status(400).json({ message: "חובה לספק מזהה מוצר וכמות למחיקה." });
     }
-
-    // שלב 1: משוך את המוצר מה־DB
     const [rows] = await products.getProductsById(productId);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: "המוצר לא נמצא." });
     }
-
     const product = rows[0];
-
-    if (product.quantity > quantity) {
-      // שלב 2: יש יותר מהמינון – נעדכן את הכמות
-      const newQuantity = product.quantity - quantity;
-      await products.updateProductQuantity(productId, newQuantity);
+    const currentQuantity = Number(product.quantity);
+    const deleteQuantity = Number(quantity);
+    
+    if (currentQuantity > deleteQuantity) {
+      const newQuantity = currentQuantity - deleteQuantity; 
+      console.log(productId,newQuantity)
+      await products.updateProductQuantity(newQuantity,productId);
+      console.log('done')
       return res.status(200).json({ message: "הכמות עודכנה בהצלחה." });
     } else {
-      // שלב 3: כמות נמוכה או שווה – נמחוק את המוצר
       const result = await products.deleteProductById(productId);
 
       if (result[0].affectedRows === 0) {

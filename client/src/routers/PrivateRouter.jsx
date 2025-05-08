@@ -1,30 +1,4 @@
-// import React, { useEffect, useState } from 'react';
-// import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { checkUserAuthAction } from '../redux/actions/userActions';
 
-// const PrivateRouter = () => {
-//   const user = useSelector((state) => state.userData);
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
-  
-//   const [authSuccess, setAuthSuccess] = useState(null);
-
-//   const from = location.state?.from?.pathname || "/dashboard";
-
-//   useEffect(() => {
-//     dispatch(checkUserAuthAction(navigate, setAuthSuccess, from));
-//   }, [dispatch, navigate, from]);
-
-//   if (authSuccess === null) {
-//     return <div>טוען...</div>;
-//   }
-
-//   return authSuccess ? <Outlet /> : <Navigate to="/login" state={{ from: location }} />;
-// };
-
-// export default PrivateRouter;
 
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -32,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../config/AxiosConfig'; // ודא שיש לך את זה
 import { ERROR } from '../redux/contents/errContent';
 import { START_LOAD,STOP_LOAD } from '../redux/contents/loaderContent';
+import { REMEMBER_ME } from '../redux/contents/connectContent';
 
 const PrivateRouter = () => {
   const user = useSelector((state) => state.userData);
@@ -49,6 +24,7 @@ const PrivateRouter = () => {
         const response = await axiosInstance.get('/users/checkAuth', { withCredentials: true });
   
         if (response.data.success) {
+          dispatch({type:REMEMBER_ME})
           setAuthSuccess(true);
         } else {
           throw new Error("Not authenticated");

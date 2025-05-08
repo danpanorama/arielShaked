@@ -2,10 +2,10 @@ import "../../App.css";
 import SideNavBar from "../../components/sidenav/SideNavBar";
 import "../../css/tools.css";
 
-function SearchBar() {
+function SearchBar({ onSearch }) {
   return (
     <div className="">
-      <input type="text" placeholder="חיפוש" className="SearchBar" />
+      <input type="text" placeholder="חיפוש"  onChange={(e) => onSearch(e.target.value)} className="SearchBar" />
       <div className="searchIcon">
         {/* <svg
           width="31"

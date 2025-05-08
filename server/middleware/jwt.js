@@ -2,7 +2,7 @@ const jwt = require("../auth/jwt");
 
 const jwtAuth = async (req, res, next) => {
   try {
-    (req.cookies)
+  console.log(req.cookies)
     const token =
       req.cookies?.auth_token || req.headers["authorization"]?.replace("Bearer ", "");
 

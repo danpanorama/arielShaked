@@ -6,6 +6,7 @@ var router = express.Router();
 
 /* GET home page */
 router.post('/', login.loginController, function(req, res, next) {
+  req.user.password = '**********no no no '
   res.json({user:req.user,message:'user log in '});
 });
 router.post('/signup',signup.signUpController, function(req, res, next) {
@@ -14,7 +15,12 @@ router.post('/signup',signup.signUpController, function(req, res, next) {
 });
 
 router.get('/logout', function(req, res, next) {
-  res.json({user:userinfo,message:'user log in '});
+  console.log('logout')
+  res.clearCookie("auth_token"); // אם שמרת את הטוקן בקוקי
+  res.status(200).json({ message: "התנתקת בהצלחה" });
 });
+
+
+
 
 module.exports = router;

@@ -47,6 +47,16 @@ const deleteProviderById = (id) => {
   );
 };
 
+// מחיקת ספק לפי ID
+const updateAllProductsProviderToZero = (id) => {
+  return pool.execute(
+    `  UPDATE provider_products
+    SET provider_id = 0, provider_name = 'ספק כללי'
+    WHERE provider_id = ?`,
+    [id]
+  );
+};
+
 // ייצוא
 module.exports = {
   checkIfEmailExists,
@@ -54,5 +64,6 @@ module.exports = {
   getAllProviders,
   updateProviderById,
   deleteProviderById,
-  getProvidersById
+  getProvidersById,
+  updateAllProductsProviderToZero
 };

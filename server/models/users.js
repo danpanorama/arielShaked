@@ -7,11 +7,33 @@ const checkIfEmailExists = (email) => {
       [email]
     );
   };
+  const getAllUsers = () => {
+    return pool.execute(
+      `SELECT * FROM users `,
+      []
+    );
+  };
+
+
+  const updateUserPermission = (permission, id) => {
+    return pool.execute(
+      `UPDATE users SET permissions = ? WHERE id = ?`,
+      [permission, id]
+    );
+  };
   
   const checkIfEmailAndPasswordMatch = (email, password) => {
     return pool.execute(
       `SELECT * FROM users WHERE email = ? AND password = ?`,
       [email, password]
+    );
+  };
+
+
+  const removeUser = (id) => {
+    return pool.execute(
+      `DELETE FROM users WHERE id = ?`,
+      [id]
     );
   };
   
@@ -49,3 +71,8 @@ module.exports.checkIfEmailAndPasswordMatch = checkIfEmailAndPasswordMatch;
 module.exports.insertNewUser = insertNewUser;
 module.exports.updateUser = updateUser;
 module.exports.updateUserRole = updateUserRole;
+module.exports.getAllUsers = getAllUsers
+module.exports.updateUserPermission = updateUserPermission
+module.exports.removeUser = removeUser
+
+

@@ -5,12 +5,18 @@ const { getAllProvidersController } = require('../controller/providers/getProvid
 const { addProviderController } = require('../controller/providers/addProvider');
 const { removeProviderController } = require('../controller/providers/removeProvider');
 
+const getProviderItemController = require('../controller/providers/getProviderItemController');
+
 /* GET home page. */
 router.get('/',jwtMiddleware.jwtAuth,getAllProvidersController, function(req, res, next) {
  
 }); 
-
-
+router.post('/items',jwtMiddleware.jwtAuth,getProviderItemController, function(req, res, next) {
+ 
+}); 
+router.get('/providersOrders',jwtMiddleware.jwtAuth,getAllProvidersController, function(req, res, next) {
+ 
+}); 
 router.post('/addProvider',jwtMiddleware.jwtAuth,addProviderController, function(req, res, next) {
 
 });

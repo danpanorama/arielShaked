@@ -29,10 +29,10 @@ const getProductsById = (id) => {
 };
 
 
-const updateProductQuantity = (id,  quantity) => {
+const updateProductQuantity = (quantity,id) => {
   return pool.execute(
     `UPDATE products SET quantity = ? WHERE id = ?`,
-    [id, quantity]
+    [quantity,id]
   );
 };
 

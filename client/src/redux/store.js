@@ -1,29 +1,31 @@
-import { createStore, combineReducers, applyMiddleware,compose } from 'redux';
-import {thunk} from 'redux-thunk'; 
-import { composeWithDevTools } from 'redux-devtools-extension'; 
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { thunk } from 'redux-thunk';
+
 import ErrorReducer from './reducers/errReducer';
-import loaderReducer from './reducers/LoaderReducer'
-import userReducer from './reducers/userReducer'
+import loaderReducer from './reducers/LoaderReducer';
+import userReducer from './reducers/userReducer';
+import providerCartReducer from './reducers/providerCartReducer.js';
 
-
+// שילוב כל הרדוסרים
 const reducer = combineReducers({
-  loader:loaderReducer,
+  loader: loaderReducer,
   err: ErrorReducer,
-  user:userReducer
-
+  user: userReducer,
+  providerCart: providerCartReducer,
 });
 
-
+// מצב התחלתי ריק
 const initialState = {};
-
 const middleware = [thunk];
 
-const composeEnhancers = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// compose רגיל בלי devtools
+const composedEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+// יצירת store
 const store = createStore(
   reducer,
   initialState,
-  composeEnhancers(applyMiddleware(...middleware))
+  composedEnhancers(applyMiddleware(...middleware))
 );
 
 export default store;

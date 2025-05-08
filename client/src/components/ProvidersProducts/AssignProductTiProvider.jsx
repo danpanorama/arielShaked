@@ -42,8 +42,22 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  
+    if (name === "provider_id") {
+      const [id, nameValue] = value.split("|");
+      setFormData((prev) => ({
+        ...prev,
+        provider_id: id,
+        provider_name: nameValue,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
+  
 
 
 
@@ -51,7 +65,6 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
     <div className="yellowPopUp addProviderFrom">
       <h1 onClick={activePopUp}>X</h1>
       <h1>שיוך מוצר לספק</h1>
-
       <form >
         <div className="inputHolderDiv marginBottom10">
           <label className="label">מספר פריט</label>
@@ -62,11 +75,13 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
             onChange={handleChange}
           >
             <option value="">בחר פריט</option>
-            {(products[0])}
+          
             {products.map((item) => (
+
               <option key={item.id} value={item.id}>
                 {item.id} - {item.name}
               </option>
+              
             ))}
           </select>
         </div>
@@ -81,12 +96,14 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
           >
             <option value="">בחר ספק</option>
             {providers.map((provider) => (
-              <option key={provider.id} value={provider.id}>
-                {provider.id} - {provider.name}
-              </option>
+          <option key={provider.id} value={`${provider.id}|${provider.name}`}>
+          {provider.id} - {provider.name}
+        </option>
+        
             ))}
           </select>
         </div>
+  
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">מחיר</label>

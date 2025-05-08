@@ -4,10 +4,10 @@ import "../../css/tools.css";
 function ProductTable({ Products, onDelete }) {
 
   return (
-    <table>
+    <table className="tables">
       <thead>
         <tr>
-          <th>מס'</th>
+          <th >מס'</th>
           <th>שם</th>
           <th>קטגוריה</th>
           <th>כמות</th>

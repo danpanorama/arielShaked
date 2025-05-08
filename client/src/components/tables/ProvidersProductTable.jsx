@@ -4,7 +4,7 @@ import "../../css/tools.css";
 function ProvidersProductTable({ providersProductArray, onDelete }) {
 
   return (
-    <table>
+    <table className="tables">
       <thead>
         <tr>
           <th>מספר מזהה</th>
@@ -34,6 +34,7 @@ function ProvidersProductTable({ providersProductArray, onDelete }) {
               <td>{product.item_number}</td>
               <td>{product.name}</td>
               <td>{product.provider_id}</td>
+              <td>{product.name}</td>
               <td>{product.price}</td>
               <td>{product.estimated_delivery_time}</td>
               <td>{product.min_order_quantity}</td>

@@ -1,3 +1,7 @@
+
+
+
+
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import "../App.css";
@@ -10,53 +14,65 @@ import PopUpGeneral from "../components/popup/PopUpGeneral";
 import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
 import { ERROR } from "../redux/contents/errContent";
-import { FetchData, getFromServer } from "../components/tools/FetchData";
+import { getFromServer } from "../components/tools/FetchData";
+import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
 
 function ProvidersProducts() {
   const dispatch = useDispatch();
   const [activePopUp, setActivePopUp] = useState(false);
   const [providersProductArray, setProvidersProductArray] = useState([]);
-  
+  const [searchTerm, setSearchTerm] = useState("");
+
   const activePopUpFunction = () => {
     setActivePopUp(!activePopUp);
   };
-   
-
 
   useEffect(() => {
-    getFromServer('/providersProducts', setProvidersProductArray, 'אירעה שגיאה', 'שגיאה', dispatch);
+    getFromServer(
+      "/providersProducts",
+      setProvidersProductArray,
+      "אירעה שגיאה",
+      "שגיאה",
+      dispatch
+    );
   }, []);
 
-
-  
-
-
-
-
-
+  const filteredProducts = filterBySearchTerm(providersProductArray, searchTerm, [
+    "provider_name",
+    "item_number",
+    "name",
+  ]);
 
   async function associateProductToProvider(formData) {
     try {
-      const { item_number, provider_id, price, estimated_delivery_time, min_order_quantity } = formData;
-  
+      const {
+        provider_name,
+        item_number,
+        provider_id,
+        price,
+        estimated_delivery_time,
+        min_order_quantity,
+      } = formData;
+
       const response = await axiosInstance.post(
-        "/providersProducts/assignProduct", 
+        "/providersProducts/assignProduct",
         {
+          provider_name,
           item_number,
           provider_id,
           price,
           estimated_delivery_time,
-          min_order_quantity,  // כל הפרמטרים שהמשתמש מילא
+          min_order_quantity,
         },
         {
           withCredentials: true,
         }
-      ); 
-      formData.name = response.data.name
-      formData.id = response.data.itemId
+      );
 
-    
-      setProvidersProductArray((prev) => [...prev,formData]);
+      formData.name = response.data.name;
+      formData.id = response.data.itemId;
+
+      setProvidersProductArray((prev) => [...prev, formData]);
     } catch (e) {
       dispatch({
         type: ERROR,
@@ -67,30 +83,24 @@ function ProvidersProducts() {
       });
     }
   }
-  
-  
 
   return (
     <div className="providersContainer">
       <SideNavBar />
       <Headers text="שיוך מוצרים לספקים" />
       <div className="flex-row-bet">
-        <SearchBar />
-        <PrimaryButton
-          click={activePopUpFunction}
-          text="הוספת שיוך לספק"
-        />
+        <SearchBar onSearch={(value) => setSearchTerm(value)} />
+        <PrimaryButton click={activePopUpFunction} text="הוספת שיוך לספק" />
       </div>
       <br />
       <br />
-      <ProvidersProductTable providersProductArray={providersProductArray} />
+      <ProvidersProductTable providersProductArray={filteredProducts} />
       <PopUpGeneral
         click={associateProductToProvider}
         isPopUpActive={activePopUp}
         activePopUp={activePopUpFunction}
         associateProductToProvider={associateProductToProvider}
         type="provider-products"
-       
       />
     </div>
   );
