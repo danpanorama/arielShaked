@@ -12,7 +12,7 @@ const signUpController = async (req, res, next) => {
           return res.status(400).json({
             message: "All fields are required: firstName, lastName, password, repeatPassword, email, phone, and permissions.",
           });
-        }
+        }  
         
       
         if (password !== repeatPassword) {
