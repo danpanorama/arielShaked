@@ -175,7 +175,7 @@ function ProvidersOrders({ close, providersState }) {
         { providerId: provider.id },
         { withCredentials: true }
       );
-
+console.log(res)
       setProducts(res.data.items);
       setSelectedCategory(provider);
     } catch (err) {

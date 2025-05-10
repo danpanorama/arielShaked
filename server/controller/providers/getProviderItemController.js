@@ -15,7 +15,7 @@ const getProviderItemController = async (req, res, next) => {
 
     
     if (items.length === 0) {
-      return res.status(404).json({ message: "לא נמצאו מוצרים עבור ספק זה" });
+      return res.status(404).json({data:{ message: "לא נמצאו מוצרים עבור ספק זה" ,header:"אין מוצרים"}});
     }
 
     return res.status(200).json({ items });
