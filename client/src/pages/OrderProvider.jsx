@@ -7,6 +7,8 @@ import SideNavBar from "../components/sidenav/SideNavBar";
 import Headers from "../components/header/Headers";
 import ProvidersOrders from "../components/popup/ProvidersOrders";
 import axiosInstance from "../config/AxiosConfig";
+import { useDispatch } from "react-redux";
+import { ERROR } from "../redux/contents/errContent";
 
 function SuplyScreen() {
   const [showPopup, setShowPopup] = useState(false);
@@ -14,6 +16,7 @@ function SuplyScreen() {
   const [providersState, setProvidersState] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const dispatch  = useDispatch()
 
   useEffect(() => {
     fetchOrders();
@@ -24,10 +27,12 @@ function SuplyScreen() {
       const response = await axiosInstance.get("/providers", {
         withCredentials: true,
       });
-      console.log(response.data);
+     
       setProvidersState(response.data);
     } catch (err) {
       setError("שגיאה בטעינת הספקים");
+      dispatch({type:ERROR})
+      
     } finally {
       setLoading(false);
     }

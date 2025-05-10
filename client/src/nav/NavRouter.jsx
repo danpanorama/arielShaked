@@ -13,7 +13,7 @@ import Product from "../pages/Product";
 import ProvidersProducts from "../pages/ProvidersProducts";
 import Users from "../pages/Users";
 import OrderBakery from "../pages/OrderBakery";
-import SuplyScreen from "../pages/SuplyScreen";
+import OrderProvider from "../pages/OrderProvider";
 
 
 function NavRouter() {
@@ -37,7 +37,7 @@ function NavRouter() {
       <Route path="/providers" element={<Providers />} exact />
       </Route>
       <Route path="/providersOrders" element={<PrivateRouter />} exact>
-      <Route path="/providersOrders" element={<SuplyScreen />} exact />
+      <Route path="/providersOrders" element={<OrderProvider />} exact />
       </Route>
       <Route path="/orders" element={<PrivateRouter />} exact>
       <Route path="/orders" element={<OrderBakery />} exact />

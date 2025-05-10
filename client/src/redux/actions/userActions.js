@@ -64,7 +64,7 @@ export const signUpAction = (data, navigate) => async (dispatch) => {
     });
 
 
-  }
+  }finally {dispatch({type:STOP_LOAD})}
 };
 
 

@@ -169,6 +169,22 @@ const createDatabaseAndTables = async () => {
     `;
     await connection.query(createProductsTableQuery);
 
+    // טבלת הזמנות ספקים ✅
+const createProviderOrdersTableQuery = `
+CREATE TABLE IF NOT EXISTS provider_orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  provider_id INT NOT NULL,
+  provider_name VARCHAR(255) NOT NULL,
+  category VARCHAR(255),
+  price DECIMAL(10,2),
+  estimated_delivery_time VARCHAR(100),
+  is_approved BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (provider_id) REFERENCES providers(id)
+)
+`;
+await connection.query(createProviderOrdersTableQuery);
+
     // טבלת שיוך מוצרים לספקים עם provider_name ✅
     const createProviderProductsTableQuery = `
       CREATE TABLE IF NOT EXISTS provider_products (
