@@ -30,6 +30,9 @@ export const signUpAction = (data, navigate) => async (dispatch) => {
 
     if (res.data.error) {
 
+   dispatch({
+      type: STOP_LOAD
+    })
       dispatch({
         type: ERROR,
         data: {
@@ -64,6 +67,10 @@ export const signUpAction = (data, navigate) => async (dispatch) => {
     });
 
 
+  }finally{
+    dispatch({
+      type: STOP_LOAD
+    })
   }
 };
 
