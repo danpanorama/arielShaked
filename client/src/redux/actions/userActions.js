@@ -67,11 +67,15 @@ export const signUpAction = (data, navigate) => async (dispatch) => {
     });
 
 
+<<<<<<< HEAD
   }finally{
     dispatch({
       type: STOP_LOAD
     })
   }
+=======
+  }finally {dispatch({type:STOP_LOAD})}
+>>>>>>> laptop
 };
 
 

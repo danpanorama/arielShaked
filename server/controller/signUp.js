@@ -7,6 +7,7 @@ const signUpController = async (req, res, next) => {
     try {
         ("date: " + " .Inside Signup Post route");
         ('req.body: ', req.body);
+        
         const { firstName, lastName, password, repeatPassword, email, phone, permissions } = req.body;
         if (!firstName || !lastName || !password || !repeatPassword || !email || !phone || permissions === undefined) {
           return res.status(400).json({
