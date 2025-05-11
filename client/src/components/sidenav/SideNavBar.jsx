@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import "../../App.css";
 import "../../css/sidenav.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import CartPopup from "../popup/CartPopUp"; // 📦 ייבוא הקופסה
 
 function SideNavBar() {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [isCartOpen, setIsCartOpen] = useState(false); // 🟢 ניהול מצב פתיחה/סגירה של העגלה
 
   const sideNavLinks = [
     { name: "הזמנות אפייה", url: "/orders" },
@@ -19,16 +22,11 @@ function SideNavBar() {
 
   const handleLogout = async () => {
     try {
-      // בקשת לוגאאוט לשרת (אם אתה משתמש בקוקי / Session)
       await fetch("http://localhost:3000/login/logout", {
         method: "GET",
         credentials: "include",
       });
-
-      // מחיקת הטוקן מה-LocalStorage
       localStorage.removeItem("token");
-
-      // ניווט חזרה למסך ההתחברות
       navigate("/login");
     } catch (error) {
       console.error("שגיאה בלוגאאוט:", error);
@@ -52,6 +50,13 @@ function SideNavBar() {
             </NavLink>
           </div>
         ))}
+
+        {/* 🛒 כפתור העגלה */}
+        <div className="linkHolder flex-col-center">
+          <button className="sideNavLink" onClick={() => setIsCartOpen(true)}>
+            🛒 העגלה שלי
+          </button>
+        </div>
       </div>
 
       {/* 🔘 כפתור Logout */}
@@ -60,6 +65,9 @@ function SideNavBar() {
           התנתקות
         </button>
       </div>
+
+      {/* 📦 פופאפ עגלה */}
+      {isCartOpen && <CartPopup close={() => setIsCartOpen(false)} />}
     </div>
   );
 }

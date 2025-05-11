@@ -110,7 +110,7 @@ function Users() {
       <Headers text="משתמשים / עובדים" />
       <div className="flex-row-bet">
         <SearchBar />
-        <PrimaryButton click={togglePopUp} text="הוסף משתמש חדש" />
+        {/* <PrimaryButton click={togglePopUp} text="הוסף משתמש חדש" /> */}
       </div>
       <br />
       <br />
