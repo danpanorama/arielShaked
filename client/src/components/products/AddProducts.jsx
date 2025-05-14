@@ -47,10 +47,10 @@ function AddProduct(props) {
             onChange={handleChange}
           >
             <option value="">בחר קטגוריה</option>
-            <option value="חומרי גלם">חומרי גלם</option>
-            <option value="מוצרי חשמל"> קפואים</option>
-            <option value="כלי עבודה">חומרי גלם </option>
-            <option value="כלי עבודה"> יבשים </option>
+          
+            <option value=" קפואים"> קפואים</option>
+            <option value="חומרי גלם">חומרי גלם </option>
+            <option value=" יבשים"> יבשים </option>
 
             {/* תוכל להוסיף כאן עוד קטגוריות כרצונך */}
           </select>
@@ -58,22 +58,13 @@ function AddProduct(props) {
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">כמות</label>
-          <select
+          <input type="text"
             className="SearchBar"
             name="quantity"
             value={productData.quantity}
             onChange={handleChange}
-          >
-            <option value="">בחר כמות</option>
-            <option value="1">1</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="100">100</option>
-            <option value="500">500</option>
-            <option value="1000">1000</option>
-            <option value="200000">200000</option>
-            {/* תוכל להוסיף או לשנות ערכים לפי הצורך */}
-          </select>
+          />
+          
         </div>
 
         <div className="inputHolderDiv marginBottom10">

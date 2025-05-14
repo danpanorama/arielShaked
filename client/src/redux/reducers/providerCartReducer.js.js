@@ -1,60 +1,67 @@
 const initialState = {
-  items: [],
-  total: 0,
+  orders: [],
 };
 
 const providerCartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map(item =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + action.payload.quantity }
-              : item
-          ),
-          total: state.total + action.payload.price * action.payload.quantity,
-        };
-      } else {
-        return {
-          ...state,
-          items: [...state.items, { ...action.payload }],
-          total: state.total + action.payload.price * action.payload.quantity,
-        };
-      }
-    }
-
-    case 'REMOVE_ITEM': {
-      const itemToRemove = state.items.find(item => item.id === action.payload.id);
+   case 'ADD_ITEM': {
+  const existingProvider = state.orders.find(order => order.providerId === action.payload.providerId);
+  if (existingProvider) {
+    const existingItem = existingProvider.items.find(item => item.id === action.payload.id);
+    if (existingItem) {
       return {
         ...state,
-        items: state.items.filter(item => item.id !== action.payload.id),
-        total: state.total - (itemToRemove.price * itemToRemove.quantity),
+        orders: state.orders.map(order =>
+          order.providerId === action.payload.providerId
+            ? {
+                ...order,
+                items: order.items.map(item =>
+                  item.id === action.payload.id
+                    ? { ...item, quantity: item.quantity + action.payload.quantity }
+                    : item
+                ),
+              }
+            : order
+        ),
+      };
+    } else {
+      return {
+        ...state,
+        orders: state.orders.map(order =>
+          order.providerId === action.payload.providerId
+            ? { ...order, items: [...order.items, action.payload] }
+            : order
+        ),
       };
     }
+  } else {
+    return {
+      ...state,
+      orders: [
+        ...state.orders,
+        { providerId: action.payload.providerId, items: [action.payload] },
+      ],
+    };
+  }
+}
 
-    case 'DECREASE_ITEM': {
-      const item = state.items.find(i => i.id === action.payload.id);
-      if (!item) return state;
 
-      const newQuantity = item.quantity - action.payload.amount;
-      if (newQuantity <= 0) {
+    case 'REMOVE_ITEM': {
+      const provider = state.orders.find(order => order.providerId === action.payload.providerId);
+      if (provider) {
         return {
           ...state,
-          items: state.items.filter(i => i.id !== action.payload.id),
-          total: state.total - item.quantity * item.price,
-        };
-      } else {
-        return {
-          ...state,
-          items: state.items.map(i =>
-            i.id === action.payload.id ? { ...i, quantity: newQuantity } : i
+          orders: state.orders.map(order =>
+            order.providerId === action.payload.providerId
+              ? {
+                  ...order,
+                  items: order.items.filter(item => item.id !== action.payload.id),
+                }
+              : order
           ),
-          total: state.total - (action.payload.amount * item.price),
         };
       }
+      return state;
     }
 
     case 'CLEAR_CART':

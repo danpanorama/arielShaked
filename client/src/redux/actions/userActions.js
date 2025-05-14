@@ -125,3 +125,38 @@ export const loginAction = (data, navigate) => async (dispatch) => {
     });
   }
 };
+
+
+export const addNewEmployee = (data) => async (dispatch) => {
+  try {
+    dispatch({ type: START_LOAD });
+    console.log(data)
+
+    const res = await axiosInstance.post("/login/signup", data, {
+      withCredentials: true,
+    });
+
+    if (res.data.error) {
+      dispatch({ type: ERROR, data: {
+        message: res.data.error.message,
+        header: res.data.error.header
+      }});
+      return null;
+    }
+
+    dispatch({ type: STOP_LOAD });
+
+    // החזר את המשתמש החדש
+    return res.data.user;
+
+  } catch (err) {
+    const errorMessage = err.response?.data?.message || "אנה נסו שנית מאוחר יותר";
+    dispatch({ type: ERROR, data: {
+      message: errorMessage,
+      header: 'שגיאה בעת התחברות משתמש חדש'
+    }});
+    return null;
+  } finally {
+    dispatch({ type: STOP_LOAD });
+  }
+};

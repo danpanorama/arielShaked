@@ -1,21 +1,21 @@
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {validateEmail,validatePassword} from '../components/tools/Validation'
+import {validateEmail,validatePassword} from '../../components/tools/Validation'
 
-import "../App.css";
-import "../css/forms.css";
-import "../css/btn.css";
+import "../../App.css";
+import "../../css/forms.css";
+import "../../css/btn.css";
 
-import { signUpAction } from "../redux/actions/userActions";
-import Logo from "../images/bigLogo.svg";
+import { signUpAction } from "../../redux/actions/userActions";
+import Logo from "../../images/bigLogo.svg";
 
 function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const [userDataState, setUserDataState] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
+  
     password: "",
     repeatPassword: "",
     email: "",
@@ -33,29 +33,19 @@ function SignUp() {
     let newIsError = {};
   
     switch (name) {
-      case "firstName":
+      case "name":
         if (!value.trim()) {
           valid = false;
-          newErrorMessages.firstName = "שם פרטי חובה";
-          newIsError.firstName = true;
+          newErrorMessages.name = "שם פרטי חובה";
+          newIsError.name = true;
         } else {
           valid = true;
-          newErrorMessages.firstName = "";
-          newIsError.firstName = false;
+          newErrorMessages.name = "";
+          newIsError.name = false;
         }
         break;
   
-      case "lastName":
-        if (!value.trim()) {
-          valid = false;
-          newErrorMessages.lastName = "שם משפחה חובה";
-          newIsError.lastName = true;
-        } else {
-          valid = true;
-          newErrorMessages.lastName = "";
-          newIsError.lastName = false;
-        }
-        break;
+   
   
       case "email":
         if (!validateEmail(value)) {
@@ -147,31 +137,18 @@ function SignUp() {
 
           <div className="inputBox">
             <input
-              name="firstName"
+              name="name"
               placeholder="שם פרטי"
-              className={`input ${isError.firstName ? "inputError" : ""}`}
+              className={`input ${isError.name ? "inputError" : ""}`}
               type="text"
-              value={userDataState.firstName}
+              value={userDataState.name}
               onChange={handleChange}
             />
-            {isError.firstName && (
-              <span className="errorText">{errorMessages.firstName}</span>
+            {isError.name && (
+              <span className="errorText">{errorMessages.name}</span>
             )}
           </div>
 
-          <div className="inputBox">
-            <input
-              name="lastName"
-              placeholder="שם משפחה"
-              className={`input ${isError.lastName ? "inputError" : ""}`}
-              type="text"
-              value={userDataState.lastName}
-              onChange={handleChange}
-            />
-            {isError.lastName && (
-              <span className="errorText">{errorMessages.lastName}</span>
-            )}
-          </div>
 
           <div className="inputBox">
             <input
@@ -239,9 +216,10 @@ function SignUp() {
               value={userDataState.permissions}
               onChange={handleChange}
             >
-              <option value="0">ללא הרשאות</option>
-              <option value="1">הרשאות עובד כללי</option>
-              <option value="2">הרשאות מנהל</option>
+              <option value="1"> עובד מטבח</option>
+              <option value="2"> עובד חנות</option>
+              <option value="3"> מנהל</option>
+              <option value="4">  מנהל בכיר</option>
             </select>
           </div>
 

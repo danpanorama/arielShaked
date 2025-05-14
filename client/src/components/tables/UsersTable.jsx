@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-function UserTable({ users, onDelete, onRevokePermission, myUserId }) {
+function UserTable({ users, onDelete, onActiveUsers, myUserId }) {
    const userID = useSelector((state)=> state.user)
   return ( 
       <table className="tables">
@@ -9,14 +9,15 @@ function UserTable({ users, onDelete, onRevokePermission, myUserId }) {
             <th>מספר משתמש</th>
             <th>שם מלא</th>
             <th>אימייל</th>
-            <th>טלפון</th>
+            <th>סטטוס</th>
             <th>הרשאות</th>
-            <th>ביטול הרשאה</th>
-            <th>מחק</th>
+           
+            <th>השהה משתמש</th>
+                 <th>מחק משתמש</th>
           </tr>
         </thead>
         <tbody>
-          {users.length === 0 ? (
+          {users && users.length === 0 ? (
             <tr>
               <td colSpan="7" style={{ textAlign: "center" }}>
                 אין משתמשים להצגה
@@ -40,29 +41,33 @@ function UserTable({ users, onDelete, onRevokePermission, myUserId }) {
                     {user.id ==userID.user.id?"*":"" }
                   </td>
                   <td>{user.email}</td>
-                  <td>{user.phone}</td>
-                  <td>{user.permissions}</td>
+                  <td>{user.is_active == 1 ? 'משתמש פעיל':'משתמש חסום'}</td>
                   <td>
-         
-                    {!isCurrentUser && (
-                     <div>
-                       <button className={user.permissions == 'user' ? "activeButton":""} onClick={() => onRevokePermission(user.id,"user")}>
-                       כללי
-                      </button>
-                      <button className={user.permissions == 'admin' ? "activeButton":""} onClick={() => onRevokePermission(user.id,"admin")}>
-                       מנהל
-                      </button>
-                      {/* <button  onClick={() => onRevokePermission(user.id)}>
-                       בכיר
-                      </button> */}
-                     </div>
-                    )}
-                  </td>
-                 
+  {user.permissions === 0
+    ? "עובד מאפייה"
+    : user.permissions === 1
+    ? "עובד חנות"
+    : user.permissions === 2
+    ? "עוזר מנהל"
+    : user.permissions === 4
+    ? "מנהל"
+    : "לא מוגדר"}
+</td>
+
+                <td>
+  {user.id !== userID.user.id && !isCurrentUser && (
+    user.is_active === 1 ? (
+      <button onClick={() => onActiveUsers(user.id,0)}> השהה </button>
+    ) : (
+      <button onClick={() => onActiveUsers(user.id,1)}> הפעל </button>
+    )
+  )}
+</td>
+
                   <td>
 
                     {user.id !=userID.user.id && !isCurrentUser && (
-                      <button onClick={() => onDelete(user.id)}>מחק</button>
+                      <button onClick={() => onDelete(user.id)}>מחק לגמרי</button>
                     )}
                  
                   </td>

@@ -25,7 +25,7 @@ const addProviderController = async (req, res, next) => {
     // הכנסת ספק חדש למסד הנתונים
     const insertResult = await providers.insertNewProvider(
       name, contact_name, phone, address, email,
-      0
+      1
     );
 
   

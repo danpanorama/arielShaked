@@ -4,16 +4,42 @@ const pool = require("./mysql2");
 const getAllProviderOrders = () => {
   return pool.execute(`SELECT * FROM provider_orders ORDER BY created_at DESC`);
 };
-
-
-const insertProviderOrder = (provider_id, provider_name, category, price, estimated_delivery_time) => {
+const checkProductExists = (productId) => {
   return pool.execute(
-    `INSERT INTO provider_orders 
-     (provider_id, provider_name, category, price, estimated_delivery_time) 
-     VALUES (?, ?, ?, ?, ?)`,
-    [provider_id, provider_name, category, price, estimated_delivery_time]
+    `SELECT * FROM products WHERE id = ?`,
+    [productId]
   );
 };
+
+const getOrderById = (order_id) => {
+  return pool.execute("SELECT * FROM provider_orders WHERE id = ?", [order_id]);
+};
+
+const getOrderItemsByOrderId = (order_id) => {
+  return pool.execute("SELECT * FROM provider_order_items WHERE order_id = ?", [order_id]);
+};
+  
+
+const insertProviderOrder = (
+  provider_id,
+  provider_name,
+  price,
+  estimated_delivery_time,
+  created_at,
+  is_approved,
+  is_paid,
+  amount_paid,
+  is_received
+) => {
+  return pool.execute(
+    `INSERT INTO provider_orders 
+     (provider_id, provider_name, price, estimated_delivery_time, created_at,is_approved,is_paid,amount_paid,is_received) 
+     VALUES (?, ?, ?, ?, ?,?,?,?,?)`,
+    [provider_id, provider_name, price, estimated_delivery_time ?? null, created_at,is_approved,is_paid,amount_paid,is_received]
+  );
+};
+
+
 const insertProviderOrderItem = (order_id, product_id, product_name, quantity, unit_price) => {
   return pool.execute(
     `INSERT INTO provider_order_items 
@@ -39,6 +65,8 @@ const updateEstimatedDeliveryTime = (orderId, estimatedTime) => {
   );
 };
 
+
+
 // מחיקת הזמנת ספק לפי ID
 const deleteProviderOrderById = (orderId) => {
   return pool.execute(
@@ -53,5 +81,8 @@ module.exports = {
   updateOrderApprovalStatus,
   updateEstimatedDeliveryTime,
   deleteProviderOrderById,
-  insertProviderOrderItem
+  insertProviderOrderItem,
+  checkProductExists,
+  getOrderById,
+  getOrderItemsByOrderId
 };

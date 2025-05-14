@@ -7,13 +7,15 @@ import HomeScreen from "../pages/HomeScreen";
 import PrivateRouter from "../routers/PrivateRouter";
 import LoginRouter from '../routers/LoginRouter'
 import Login from "../pages/Login";
-import SignUp from "../pages/SignUp";
+
 import Providers from "../pages/Providers";
 import Product from "../pages/Product";
 import ProvidersProducts from "../pages/ProvidersProducts";
 import Users from "../pages/Users";
 import OrderBakery from "../pages/OrderBakery";
 import OrderProvider from "../pages/OrderProvider";
+import Entering from "../pages/Entering";
+import OrderDetail from "../pages/OrderDetail";
 
 
 function NavRouter() {
@@ -28,8 +30,8 @@ function NavRouter() {
  
 
       <Routes>  
-      <Route path="/login" element={<Login />} exact />
-      <Route path="/sign-up" element={<SignUp />} exact />
+      {/* <Route path="/login" element={<Login />} exact /> */}
+       <Route path="/login" element={<Entering />} exact />
       <Route path="/" element={<PrivateRouter />} exact>
       <Route path="/" element={<Dashboard />} exact />
       </Route>
@@ -38,6 +40,9 @@ function NavRouter() {
       </Route>
       <Route path="/providersOrders" element={<PrivateRouter />} exact>
       <Route path="/providersOrders" element={<OrderProvider />} exact />
+      </Route>
+       <Route path="/order/:orderId" element={<PrivateRouter />} exact>
+      <Route path="/order/:orderId" element={<OrderDetail />} exact />
       </Route>
       <Route path="/orders" element={<PrivateRouter />} exact>
       <Route path="/orders" element={<OrderBakery />} exact />

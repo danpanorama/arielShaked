@@ -167,3 +167,161 @@ border: 1px solid black;
     background-color: #ffca28;
   }
   
+
+/* order.css */
+
+/* קונטיינר עיקרי לדף פרטי הזמנה */
+.orderDetailContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh;
+  color: #333;
+  direction: rtl;
+}
+
+/* כפתור חזרה */
+.backButton {
+  background-color: #ffcc00;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  transition: background 0.3s ease;
+  align-self: flex-start;
+  margin-bottom: 20px;
+}
+
+.backButton:hover {
+  background-color: #ffaa00;
+}
+
+.backButton:focus {
+  outline: none;
+}
+
+/* כותרת דף */
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #444;
+}
+
+/* אזור פרטי ההזמנה */
+.orderDetail {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* כותרות קטגוריות בתוך פרטי הזמנה */
+.orderDetail h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* פסקאות עם פרטי הזמנה */
+.orderDetail p {
+  font-size: 16px;
+  margin: 6px 0;
+  line-height: 1.6;
+}
+
+.orderDetail p strong {
+  font-weight: bold;
+  color: #444;
+}
+
+/* רשימה של פרטי המוצרים */
+.orderDetail ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.orderDetail li {
+  padding: 12px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* אזור הודעות שגיאה */
+.error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* עיצוב תאריכים ומחירים */
+.orderDetail .price,
+.orderDetail .date {
+  font-size: 18px;
+  color: #28a745;
+}
+
+/* עיצוב פרטי המוצר */
+.productCard {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* כותרת מוצר */
+.productCard h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* פרטי מוצר */
+.productCard p {
+  font-size: 16px;
+  color: #555;
+  margin: 4px 0;
+}
+
+/* כפתור לכמות מוצר */
+.quantityControl {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.quantityControl button {
+  padding: 8px 12px;
+  background-color: #ffc107;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #222;
+  transition: background-color 0.3s ease;
+}
+
+.quantityControl button:hover {
+  background-color: #ffca28;
+}
+
+  

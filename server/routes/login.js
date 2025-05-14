@@ -12,7 +12,7 @@ router.post('/', login.loginController, function(req, res, next) {
 router.post('/signup',signup.signUpController, function(req, res, next) {
  
   res.json({user:req.user,message:'user signup '});
-});
+}); 
 
 router.get('/logout', function(req, res, next) {
   console.log('logout')

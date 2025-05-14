@@ -10,7 +10,6 @@ import { ERROR } from "../../redux/contents/errContent";
 function RemoveProduct(props) {
   const [product, setProduct] = useState([]);
   const dispatch = useDispatch();
-
   const [productData, setProductData] = useState({
     productId: "",
     reason: "",
@@ -33,7 +32,7 @@ function RemoveProduct(props) {
       return;
     }
 
-    props.deleteProduct(productData);
+    props.removeProduct(productData);
   };
 
   useEffect(() => {

@@ -21,16 +21,11 @@ const addProductController = async (req, res, next) => {
       );
     }
 
-let active = 0
-if(is_active == true){
-  active = 1
-}else{
-  active = 0
-}
+
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     // הכנסת מוצר חדש למסד הנתונים
-    const insertResult = await products.insertNewProduct(name, category, quantity, unit, min_required,time ,active);
+    const insertResult = await products.insertNewProduct(name, category, quantity, unit, min_required,time ,1);
    
     if (insertResult) {
       const newProduct = await products.checkIfProductExistsByName(name);

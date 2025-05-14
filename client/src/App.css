@@ -39,7 +39,55 @@
   align-items: center;
   justify-content: space-between;
 }
+.margintop82{
+  margin-top: 45px;
+}
 
 .pageHeader{
   margin-bottom: 50px;
 }
+.bg_red{
+  background-color: red;
+  color: white;
+}
+.bg_green{
+  background-color: green;
+}
+
+/* רקע מותנה לשדה הסטטוס */
+.pending {
+  background-color: orange;
+}
+
+.approved {
+  background-color: green;
+}
+
+/* רקע מותנה לשדה המחיר אם לא שולם */
+.unpaid {
+  background-color: red;
+}
+
+.paid {
+  background-color: green;
+}
+
+/* רקע מותנה לשדה ה"לא שולם / שולם" */
+.unpaid, .paid {
+  background-color: #f0f0f0; /* צבע רקע כללי */
+}
+
+.unpaid {
+  background-color: #ffdddd; /* צבע רקע לא שולם */
+}
+
+.paid {
+  background-color: #ddffdd; /* צבע רקע שולם */
+}
+
+
+
+
+
+
+

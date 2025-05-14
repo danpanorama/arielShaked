@@ -38,7 +38,7 @@ function ProvidersProductTable({ providersProductArray, onDelete }) {
               <td>{product.price}</td>
               <td>{product.estimated_delivery_time}</td>
               <td>{product.min_order_quantity}</td>
-              <td>{product.is_active ? "כן" : "לא"}</td>
+         
             </tr>
           ))
         )}

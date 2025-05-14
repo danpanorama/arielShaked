@@ -1,0 +1,56 @@
+/* ../css/addStock.css */
+.add-stock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: #fffef5;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  font-family: 'Varela Round', sans-serif;
+}
+
+.add-stock-form h2 {
+  text-align: center;
+  color: #333;
+}
+
+.add-stock-form label {
+  font-weight: bold;
+  color: #555;
+}
+
+.add-stock-form select,
+.add-stock-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.add-stock-form select:focus,
+.add-stock-form input:focus {
+  border-color: #f5a623;
+  outline: none;
+}
+
+.add-stock-form .add-btn {
+  background-color: #f5a623;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.add-stock-form .add-btn:hover {
+  background-color: #d48806;
+}

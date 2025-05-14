@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../App.css";
 
 import PrimaryButton from "../components/btn/PrimaryButton";
@@ -10,117 +10,260 @@ import PopUpGeneral from "../components/popup/PopUpGeneral";
 import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
 import { ERROR } from "../redux/contents/errContent";
-import UsersTable from "../components/tables/UsersTable";
 import UserTable from "../components/tables/UsersTable";
-
+import SignUpEmployee from "../components/users/SignUpEmployee";
+import {
+  validatePassword,
+  validateEmail,
+} from "../components/tools/Validation";
+import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
+// 👈 שים לב לנתיב הנכון
+// ... (imports שנשארים כמו שהם)
 function Users() {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [isPopUpActive, setIsPopUpActive] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const [userDataState, setUserDataState] = useState({
+    name: "",
+    password: "",
+    repeatPassword: "",
+    email: "",
+    phone: "",
+    permissions: 0,
+    is_active: 1, // ערך ברירת מחדל
+  });
+
+  const [errorMessages, setErrorMessages] = useState({});
+  const [isError, setIsError] = useState({});
 
   const togglePopUp = () => {
-    setIsPopUpActive(!isPopUpActive);
+    setIsPopUpActive((prev) => !prev);
   };
 
-  async function onRevokePermission(id, permission) {
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setUserDataState((prevState) => ({
+      ...prevState,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    let valid = true;
+    let newErrorMessages = {};
+    let newIsError = {};
+
+    switch (name) {
+      case "name":
+        if (!value.trim()) {
+          valid = false;
+          newErrorMessages.name = "שם פרטי חובה";
+          newIsError.name = true;
+        }
+        break;
+      case "email":
+        if (!validateEmail(value)) {
+          valid = false;
+          newErrorMessages.email = "אימייל לא תקין";
+          newIsError.email = true;
+        }
+        break;
+      case "password":
+        if (!validatePassword(value)) {
+          valid = false;
+          newErrorMessages.password = "הסיסמא חלשה";
+          newIsError.password = true;
+        }
+        break;
+      case "repeatPassword":
+        if (value !== userDataState.password) {
+          valid = false;
+          newErrorMessages.repeatPassword = "הסיסמאות לא תואמות";
+          newIsError.repeatPassword = true;
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrorMessages((prev) => ({ ...prev, ...newErrorMessages }));
+    setIsError((prev) => ({ ...prev, ...newIsError }));
+
+    return valid;
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    Object.keys(userDataState).forEach((field) => {
+      if (!validateField(field, userDataState[field])) valid = false;
+    });
+    return valid;
+  };
+
+  const signUp = async (e) => {
+    e.preventDefault();
+    if (user.user.permission < 2) {
+      return dispatch({
+        type: ERROR,
+        data: { message: "אין לך הרשאות", header: "אתה לא מנהל" },
+      });
+    }
+
+    if (!validateForm()) return;
+
     try {
-      // שלח בקשה לשרת לעדכון (אם צריך)
-      await axiosInstance.post(
-        "/users/permissions",
-        { id, permission },
+
+
+      console.log(userDataState);
+      const response = await axiosInstance.post(
+        "/users/adduser",
+        userDataState,
         { withCredentials: true }
       );
-  
-      // עדכן את הסטייט של המשתמשים בלייב
-      setUsers(prevUsers =>
-        prevUsers.map(user =>
-          user.id === id ? { ...user, permissions: permission } : user
+      setUsers((prev) => [...prev, response.data.user]); 
+      togglePopUp();
+      // איפוס שדות
+      setUserDataState({
+        name: "",
+        password: "",
+        repeatPassword: "",
+        email: "",
+        phone: "",
+        permissions: 0,
+        is_active: true,
+      });
+
+      // איפוס שגיאות
+      setErrorMessages({});
+      setIsError({});
+    } catch (e) {
+      dispatch({
+        type: ERROR,
+        data: {
+          message: e?.response?.data?.message || "שגיאה בהוספת משתמש",
+          header: "שגיאה",
+        },
+      });
+    }
+  };
+  const handleDeleteUser = async (userId) => {
+    if (user.user.permission < 3) {
+      return dispatch({
+        type: ERROR,
+        data: { message: "אין לך הרשאות למחיקת משתמשים", header: "גישה נדחתה" },
+      });
+    }
+
+    try {
+      await axiosInstance.post(
+        `/users/removeUser`,
+        { userId: userId },
+        { withCredentials: true }
+      );
+
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    } catch (e) {
+      dispatch({
+        type: ERROR,
+        data: {
+          message: e?.response?.data?.message || "שגיאה במחיקת המשתמש",
+          header: "שגיאה",
+        },
+      });
+    }
+  };
+  const handleActiveUsers = async (userId, permission) => {
+    if (user.user.permission < 3) {
+      return dispatch({
+        type: ERROR,
+        data: { message: "אין לך הרשאות למחיקת משתמשים", header: "גישה נדחתה" },
+      });
+    }
+ 
+
+    try {
+      await axiosInstance.post(
+        `/users/active`,
+        { userId: userId, permission: permission },
+        { withCredentials: true }
+      );
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, is_active: !user.is_active } : user
         )
       );
     } catch (e) {
       dispatch({
         type: ERROR,
         data: {
-          message: e?.response?.data?.message || "שגיאה בעדכון ההרשאה",
-          header: "שגיאה בעדכון משתמש",
+          message: e?.response?.data?.message || "שגיאה בהשאיית המשתמש",
+          header: "שגיאה",
         },
       });
     }
-  }
-  
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axiosInstance.get("/users", { withCredentials: true });
+      setUsers(res.data.users);
+    } catch (e) {
+      dispatch({
+        type: ERROR,
+        data: { message: "שגיאה בטעינה", header: "טעינת משתמשים נכשלה" },
+      });
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
   }, []);
+  useEffect(() => {
+    setFilteredUsers(users); // עדכון רשימת המשתמשים המסוננים בכל פעם ש-users משתנים
+  }, [users]);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axiosInstance.get("/users", {
-        withCredentials: true,
-      });
-      setUsers(response.data.users);
-    } catch (e) {
-      dispatch({
-        type: ERROR,
-        data: {
-          message: e?.response?.data?.message || "שגיאה בשליפת משתמשים",
-          header: "שגיאה בטעינת משתמשים",
-        },
-      });
-    }
+  const handleSearch = (searchTerm) => {
+    const filtered = filterBySearchTerm(users, searchTerm, [
+      "name",
+      "id",
+      "phone",
+    ]);
+    setFilteredUsers(filtered);
   };
-
-  const addUser = async (newUser) => {
-    try {
-      const response = await axiosInstance.post("/users/addUser", newUser, {
-        withCredentials: true,
-      });
-      setUsers((prev) => [...prev, response.data.user]);
-    } catch (e) {
-      dispatch({
-        type: ERROR,
-        data: {
-          message: e?.response?.data?.message || "שגיאה בהוספת משתמש",
-          header: "שגיאה בהוספת משתמש חדש",
-        },
-      });
-    }
-  };
-
-  const deleteUser = async (userId) => {
-    try {
-      await axiosInstance.post("/users/removeUser", { userId }, {
-        withCredentials: true,
-      });
-      setUsers((prev) => prev.filter((user) => user.id !== userId));
-    } catch (e) {
-      dispatch({
-        type: ERROR,
-        data: {
-          message: e?.response?.data?.message || "שגיאה במחיקת משתמש",
-          header: "שגיאה במחיקת משתמש",
-        },
-      });
-    }
-  };
-
+{console.log(user)}
   return (
     <div className="providersContainer">
       <SideNavBar />
       <Headers text="משתמשים / עובדים" />
       <div className="flex-row-bet">
-        <SearchBar />
-        {/* <PrimaryButton click={togglePopUp} text="הוסף משתמש חדש" /> */}
+        <SearchBar onSearch={handleSearch} />
+        <PrimaryButton click={togglePopUp} text="הוסף משתמש חדש" />
       </div>
       <br />
-      <br />
-      <UserTable onRevokePermission={onRevokePermission} users={users} onDelete={deleteUser} />
+      <UserTable
+        users={filteredUsers.length > 0 ? filteredUsers : users}
+        onDelete={handleDeleteUser}
+        onActiveUsers={handleActiveUsers}
+        myUserId={user.user.id}
+      />
+
       <PopUpGeneral
         type="user"
-        click={togglePopUp}
         isPopUpActive={isPopUpActive}
-        addProvider={addUser}
         activePopUp={togglePopUp}
+        users={users}
+        userData={userDataState}
+        addUser={signUp}
+        handleChange={handleChange}
+        togglePopUp={togglePopUp}
+        isError={isError}
+        errorMessages={errorMessages}
       />
     </div>
   );

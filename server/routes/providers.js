@@ -4,10 +4,11 @@ const jwtMiddleware = require('../middleware/jwt');
 const { getAllProvidersController } = require('../controller/providers/getProviders');
 const { addProviderController } = require('../controller/providers/addProvider');
 const { removeProviderController } = require('../controller/providers/removeProvider');
-
 const getProviderItemController = require('../controller/providers/getProviderItemController');
 const { providerOrder } = require('../controller/providersProducts/providerOrder');
 const { getAllProvidersOrderController } = require('../controller/providersProducts/getAllProvidersOrderController');
+const { providersOrdersController } = require('../controller/orders/providerOrders/providersOrdersController');
+const { getOrderByIdController } = require('../controller/orders/providerOrders/getOrderByIdController');
 
 /* GET home page. */
 router.get('/',jwtMiddleware.jwtAuth,getAllProvidersController, function(req, res, next) {
@@ -16,12 +17,17 @@ router.get('/',jwtMiddleware.jwtAuth,getAllProvidersController, function(req, re
 router.post('/items',jwtMiddleware.jwtAuth,getProviderItemController, function(req, res, next) {
  
 }); 
-router.post('/providersOrders',jwtMiddleware.jwtAuth,providerOrder, function(req, res, next) {
+router.post('/providersOrders',jwtMiddleware.jwtAuth,providersOrdersController, function(req, res, next) {
  
  
 }); 
 
 router.get('/getAllOrders',jwtMiddleware.jwtAuth,getAllProvidersOrderController, function(req, res, next) {
+ 
+ 
+}); 
+
+router.get('/orderNumber/:orderId',jwtMiddleware.jwtAuth,getOrderByIdController, function(req, res, next) {
  
  
 }); 

@@ -1,4 +1,3 @@
-
 import "../../App.css";
 import "../../css/tools.css";
 import AddProvides from "../providers/AddProvides";
@@ -6,9 +5,12 @@ import AddProduct from "../products/AddProducts";
 import RemoveProduct from "../products/RemoveProduct";
 import AssignProductTiProvider from "../ProvidersProducts/AssignProductTiProvider";
 import SignUpEmployee from "../users/SignUpEmployee";
+import AddToStock from "../products/AddToStock";
+import ReceiveOrderPopup from "../products/ReceiveOrderPopup";
 
-function PopUpGeneral({
+function NewPopUp({
   type,
+  addStockToProduct,
   addUser,
   users,
   userData,
@@ -21,11 +23,14 @@ function PopUpGeneral({
   providers,
   addProvider,
   products,
-  deleteProduct,
+  removeProduct,
   associateProductToProvider,
+  deleteProduct
 }) {
   return (
-    <div className={isPopUpActive ? "activeProviderPopUp" : "closeProviderPopUp"}>
+    <div
+      className={isPopUpActive ? "activeProviderPopUp" : "closeProviderPopUp"}
+    >
       <div className="yellowPopUp">
         {type === "provider" && (
           <AddProvides activePopUp={activePopUp} addProvider={addProvider} />
@@ -34,10 +39,18 @@ function PopUpGeneral({
           <AddProduct activePopUp={activePopUp} addProvider={addProvider} />
         )}
         {type === "removeProduct" && (
-          <RemoveProduct activePopUp={activePopUp} deleteProduct={deleteProduct} products={products} />
+          <RemoveProduct
+            activePopUp={activePopUp}
+            removeProduct={removeProduct}
+            products={products}
+          />
         )}
         {type === "provider-products" && (
-          <AssignProductTiProvider associateProductToProvider={associateProductToProvider} activePopUp={activePopUp} deleteProduct={deleteProduct} />
+          <AssignProductTiProvider
+            associateProductToProvider={associateProductToProvider}
+            activePopUp={activePopUp}
+            deleteProduct={deleteProduct}
+          />
         )}
         {type === "user" && (
           <SignUpEmployee
@@ -50,9 +63,20 @@ function PopUpGeneral({
             errorMessages={errorMessages}
           />
         )}
+        {type === "addStock" && (
+        <AddToStock
+  products={products}
+  addStockToProduct={addStockToProduct}
+  activePopUp={activePopUp}
+/>
+
+        )}
+        {type === "receiveOrder" && (
+          <ReceiveOrderPopup activePopUp={activePopUp} orders={""} />
+        )}
       </div>
     </div>
   );
 }
 
-export default PopUpGeneral;
+export default NewPopUp;

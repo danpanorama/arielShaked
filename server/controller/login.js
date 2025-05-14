@@ -22,6 +22,7 @@ const loginController = async (req, res, next) => {
           sameSite: 'Strict',
           maxAge: 60 * 60 * 1000 // 1 hour
         });
+        user.password = '123 shhhh'
         req.user = user;
         return next();
       } else { 

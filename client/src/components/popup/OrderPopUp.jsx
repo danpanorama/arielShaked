@@ -24,7 +24,7 @@ function OrderPopUp({ close }) {
   return (
     <div className="popupOverlay">
       <div className="popupContainer">
-        <br /><br />
+        <br /><br />     
         <button className="" onClick={close}>✖</button>
 
         {!selectedCategory ? (

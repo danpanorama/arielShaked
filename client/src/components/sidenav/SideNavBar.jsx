@@ -10,15 +10,16 @@ function SideNavBar() {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false); // 🟢 ניהול מצב פתיחה/סגירה של העגלה
 
-  const sideNavLinks = [
-    { name: "הזמנות אפייה", url: "/orders" },
-    { name: " ספקים", url: "/providers" },
-    { name: " מלאי", url: "/products" },
-    { name: " פרטי-ספק", url: "/providersProducts" },
-    { name: " הזמנות ספקים", url: "/providersOrders" },
-    { name: " הרשאות", url: "/users" },
-    { name: " דוחות", url: "" },
-  ];
+const sideNavLinks = [
+  { name: "הזמנות אפייה", url: "/orders", permissions: [2,1, 3,4,0] },
+  { name: "ספקים", url: "/providers", permissions: [3,4] },
+  { name: "מלאי", url: "/products", permissions: [3,4,2,1] },
+  { name: "פרטי-ספק", url: "/providersProducts", permissions: [3,4] },
+  { name: "הזמנות ספקים", url: "/providersOrders", permissions: [3,4] },
+  { name: "הרשאות", url: "/users", permissions: [3,4] },
+  { name: "דוחות", url: "", permissions: [3,4] },
+];
+
 
   const handleLogout = async () => {
     try {
@@ -32,31 +33,47 @@ function SideNavBar() {
       console.error("שגיאה בלוגאאוט:", error);
     }
   };
+ 
 
   return (
     <div className="sideNavBarController">
       <div className="sideNavLinkList">
-        {sideNavLinks.map((e) => (
-          <div key={e.url} className="linkHolder flex-col-center">
-            <NavLink
-              className={({ isActive }) =>
-                isActive
-                  ? "sideNavLink activeLink flex-col-center"
-                  : "sideNavLink flex-col-center"
-              }
-              to={e.url}
-            >
-              {e.name}
-            </NavLink>
-          </div>
-        ))}
+        <p className="username">{user.user.name}</p>
 
-        {/* 🛒 כפתור העגלה */}
-        <div className="linkHolder flex-col-center">
-          <button className="sideNavLink" onClick={() => setIsCartOpen(true)}>
-            🛒 העגלה שלי
-          </button>
-        </div>
+        <p className="userPermissions">
+            {user.user.permissions === 0
+    ? "עובד מאפייה"
+    : user.user.permissions === 1
+    ? "עובד חנות"
+    : user.user.permissions === 2
+    ? "עוזר מנהל"
+    : user.user.permissions === 3
+    ? "מנהל"
+     : user.user.permissions === 4
+    ? "מנהל"
+    : "לא מוגדר"}
+        </p>
+    
+      {sideNavLinks
+  .filter((link) => link.permissions.includes(user.user?.permissions))
+  .map((e) => (
+    <div key={e.url} className="linkHolder flex-col-center">
+      <NavLink
+        className={({ isActive }) =>
+          isActive
+            ? "sideNavLink activeLink flex-col-center"
+            : "sideNavLink flex-col-center"
+        }
+        to={e.url}
+      >
+        {e.name}
+      </NavLink>
+    </div>
+))}
+
+
+     
+    
       </div>
 
       {/* 🔘 כפתור Logout */}
