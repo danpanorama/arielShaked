@@ -77,12 +77,8 @@ const handlePaymentUpdate = async () => {
           <h3>מספר הזמנה: {order.id}</h3>
           <p><strong>ספק:</strong> {order.provider_name}</p>
           <p><strong>מחיר:</strong> {order.price} ש"ח</p>
-
-
           <p><strong>סטטוס הזמנה:</strong> {order.is_approved === 0 ? "נשלח" : "קיבל"}</p>
           <p><strong>סטטוס תשלום:</strong> {order.is_paid === 0 ? "לא שולם" : "שולם"}</p>
-
-
           {order.is_approved === 1 && (
   <div className="paymentUpdate">
     <label>סכום ששולם:</label>
