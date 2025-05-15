@@ -32,6 +32,7 @@ function ProductTable({ Products, onDelete,deleteProductCompletely }) {
             <th>כמות מינימלית</th>
             <th>עדכון אחרון</th>
             <th>פעיל</th>
+                <th>מחק</th>
           </tr>
         </thead>
         <tbody>

@@ -19,6 +19,22 @@ const getOrderItemsByOrderId = (order_id) => {
   return pool.execute("SELECT * FROM provider_order_items WHERE order_id = ?", [order_id]);
 };
   
+const getUnapprovedOrders = () => {
+  const query = `
+    SELECT o.id, o.provider_name AS providerName, o.created_at
+    FROM provider_orders o
+    WHERE o.is_approved = 0
+  `;
+  return pool.execute(query);
+};
+const updateOrderReceivedStatus = (orderId, isReceived) => {
+  return pool.execute(
+    `UPDATE provider_orders SET is_received = ? WHERE id = ?`,
+    [isReceived, orderId]
+  );
+};
+
+
 
 const insertProviderOrder = (
   provider_id,
@@ -75,6 +91,24 @@ const deleteProviderOrderById = (orderId) => {
   );
 };
 
+const updateOrderItemReceivedQuantity = (orderId, productId, receivedQty) => {
+  return pool.execute(
+    `UPDATE provider_order_items 
+     SET received_quantity = ? 
+     WHERE order_id = ? AND product_id = ?`,
+    [receivedQty, orderId, productId]
+  );
+};
+
+const updateOrderPayment = (orderId, amountPaid) => {
+  return pool.execute(
+    `UPDATE provider_orders 
+     SET amount_paid = ?, is_paid = CASE WHEN ? >= price THEN 1 ELSE 0 END 
+     WHERE id = ? AND is_approved = 1`,
+    [amountPaid, amountPaid, orderId]
+  );
+};
+
 module.exports = {
   getAllProviderOrders,
   insertProviderOrder,
@@ -84,5 +118,9 @@ module.exports = {
   insertProviderOrderItem,
   checkProductExists,
   getOrderById,
-  getOrderItemsByOrderId
+  getOrderItemsByOrderId,
+  getUnapprovedOrders,
+  updateOrderReceivedStatus,
+  updateOrderItemReceivedQuantity,
+  updateOrderPayment
 };

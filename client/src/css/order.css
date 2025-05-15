@@ -36,8 +36,8 @@ border: 1px solid black;
   }
   
   .popupContainer {
-    width: 70%;
-    height: 80%;
+    min-width: 60%;
+    min-height: 60%;
     background-color: white;
     border-radius: 12px;
     padding: 20px;
@@ -45,7 +45,18 @@ border: 1px solid black;
     overflow-y: auto;
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
   }
-  
+  .popupContainer2{
+
+    min-width: 90%;
+    max-height: 60%;
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
+  }
   .closeBtn2 {
     position: absolute;
     top: 10px;

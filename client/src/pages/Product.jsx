@@ -138,6 +138,7 @@ function Product() {
     const filtered = filterBySearchTerm(originalProducts, searchTerm, ["name", "id", "price"]);
     setFilteredProducts(filtered);
   };
+  
   const addStockToProduct = async ({ productId, quantity, reason }) => {
   try {
     const response = await axiosInstance.post(
@@ -156,6 +157,7 @@ function Product() {
     setOriginalProducts((prev) =>
       prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
     );
+    
     setFilteredProducts((prev) =>
       prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
     );
@@ -169,6 +171,7 @@ function Product() {
     });
   }
 };
+
 
 
   return (

@@ -23,7 +23,7 @@ function AddProvides(props) {
 
   return (
     <div className="yellowPopUp addProviderFrom">
-      <h1 onClick={props.activePopUp}>X</h1>
+      <button className="" onClick={props.activePopUp}>close</button>
       <h1>הוספת ספק חדש</h1>
 
       <form>
@@ -81,12 +81,15 @@ function AddProvides(props) {
             onChange={handleChange}
           />
         </div>
-
-        <PrimaryButton
+       
+   <PrimaryButton
           text="שמירה"
           click={props.addProvider}
           data={providerData}
         />
+       
+
+     
       </form>
     </div>
   );

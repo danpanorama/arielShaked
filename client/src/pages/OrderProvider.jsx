@@ -173,22 +173,28 @@ function OrderProvider() {
       )
     );
   };
+const handleQuantityChange = (itemId, quantity) => {
+  // וודא שהכמות חיובית
+  if (quantity <= 0) return;
 
-  const handleQuantityChange = (itemId, quantity) => {
-    if (quantity <= 0) return;
-    setCart((prevCart) =>
-      prevCart.map((c) =>
-        c.providerId === selectedProvider.id
-          ? {
-              ...c,
-              items: c.items.map((i) =>
-                i.id === itemId ? { ...i, quantity } : i
-              ),
-            }
-          : c
-      )
+  setCart((prevCart) => {
+    const providerId = selectedProvider.id;
+    const providerName = selectedProvider.name;
+    const updatedCart = prevCart.map((c) =>
+      c.providerId === providerId
+        ? {
+            ...c,
+            items: c.items.map((i) =>
+              i.id === itemId ? { ...i, quantity } : i
+            ),
+          }
+        : c
     );
-  };
+    return updatedCart;
+  });
+};
+
+
 
   const currentCart = cart.find((c) => c.providerId === selectedProvider?.id);
 
@@ -240,6 +246,7 @@ function OrderProvider() {
                 <th>סטטוס תשלום</th>
                 <th>סכום ששולם</th>
                 <th>זמן אספקה צפוי</th>
+                
               </tr>
             </thead>
 
@@ -250,15 +257,15 @@ function OrderProvider() {
         <Link to={`/order/${order.id}`}>{order.id}</Link>
       </td>
       <td>{order.provider_name}</td>
-      <td className={order.is_paid === 0 ? "unpaid" : "paid"}>
+      <td className={order.is_paid === 1 ? "paid " : "unpaid"}>
         {order.price}
       </td>
       <td>{order.created_at?.split("T")[0]}</td>
       <td className={order.is_approved === 0 ? "pending" : "approved"}>
         {order.is_approved === 0 ? "נשלח" : "קיבל"}
       </td>
-      <td className={order.is_paid === 0 ? "unpaid" : "paid"}>
-        {order.is_paid === 0 ? "לא שולם" : "שולם"}
+      <td className={order.is_paid === 1 ? " paid" : "unpaid"}>
+        {order.is_paid === 1 ? " שולם" : " לא שולם"}
       </td>
       <td>{order.amount_paid}</td>
       <td>

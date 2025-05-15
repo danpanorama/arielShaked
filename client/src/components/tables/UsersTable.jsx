@@ -8,7 +8,7 @@ function UserTable({ users, onDelete, onActiveUsers, myUserId }) {
           <tr>
             <th>מספר משתמש</th>
             <th>שם מלא</th>
-            <th>אימייל</th>
+            <th>אימייל</th> 
             <th>סטטוס</th>
             <th>הרשאות</th>
            

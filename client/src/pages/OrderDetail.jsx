@@ -5,18 +5,48 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../config/AxiosConfig";
 import Headers from "../components/header/Headers";
 import "../css/order.css";
-
+import { ERROR } from '../redux/contents/errContent';
+import { useDispatch } from "react-redux";
 function OrderDetail() {
   const { orderId } = useParams(); // מקבל את מזהה ההזמנה מה-URL
   const navigate = useNavigate(); // לשימוש בניווט אחורה
   const [order, setOrder] = useState(null);
   const [error, setError] = useState("");
+  const [amountPaid, setAmountPaid] = useState("");
+const dispatch = useDispatch();
 
-  useEffect(() => {
-   
+ useEffect(() => {
+  fetchOrderDetails();
+}, [orderId]);
 
+useEffect(() => {
+  if (order) {
+    setAmountPaid(order.amount_paid || "");
+  }
+}, [order]);
+
+const handlePaymentUpdate = async () => {
+  try {
+    await axiosInstance.post(
+      "/providers/update-payment",
+      {
+        orderId: order.id,
+        amountPaid: Number(amountPaid),
+      },
+      { withCredentials: true }
+    );
     fetchOrderDetails();
-  }, [orderId]);
+    alert("התשלום עודכן בהצלחה");
+  } catch (err) {
+       dispatch({
+      type: ERROR,
+      data: {
+        message: err?.response?.data?.message || "שגיאה בעדכון התשלום",
+        header: "שגיאה",
+      },
+    });
+  }
+};
 
    const fetchOrderDetails = async () => {
       try {
@@ -47,9 +77,25 @@ function OrderDetail() {
           <h3>מספר הזמנה: {order.id}</h3>
           <p><strong>ספק:</strong> {order.provider_name}</p>
           <p><strong>מחיר:</strong> {order.price} ש"ח</p>
+
+
           <p><strong>סטטוס הזמנה:</strong> {order.is_approved === 0 ? "נשלח" : "קיבל"}</p>
           <p><strong>סטטוס תשלום:</strong> {order.is_paid === 0 ? "לא שולם" : "שולם"}</p>
-          <p><strong>סכום ששולם:</strong> {order.amount_paid} ש"ח</p>
+
+
+          {order.is_approved === 1 && (
+  <div className="paymentUpdate">
+    <label>סכום ששולם:</label>
+    <input
+      type="number"
+      max={order.price}
+      value={amountPaid}
+      onChange={(e) => setAmountPaid(e.target.value)}
+    />
+    <button onClick={handlePaymentUpdate}>עדכן תשלום</button>
+  </div>
+)}
+
           <p><strong>תאריך יצירה:</strong> {order.created_at?.split("T")[0]}</p>
           <p><strong>זמן אספקה צפוי:</strong> {order.estimated_delivery_time ? order.estimated_delivery_time.split("T")[0] : "לא צויין"}</p>
 

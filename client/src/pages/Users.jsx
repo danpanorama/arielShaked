@@ -125,6 +125,17 @@ function Users() {
         userDataState,
         { withCredentials: true }
       );
+      if(response.data.error){
+        console.log(response.data)
+         return dispatch({
+        type: ERROR,
+        data: {
+          message: response.data?.error.message || "שגיאה בהוספת משתמש",
+          header: "שגיאה",
+        },
+      });
+      }
+      console.log(response.data)
       setUsers((prev) => [...prev, response.data.user]); 
       togglePopUp();
       // איפוס שדות
@@ -195,7 +206,7 @@ function Users() {
 
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.id === userId ? { ...user, is_active: !user.is_active } : user
+          user.id === userId ? { ...user, is_active: permission } : user
         )
       );
     } catch (e) {
@@ -236,7 +247,7 @@ function Users() {
     ]);
     setFilteredUsers(filtered);
   };
-{console.log(user)}
+
   return (
     <div className="providersContainer">
       <SideNavBar />
