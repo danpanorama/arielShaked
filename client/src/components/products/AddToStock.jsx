@@ -1,70 +1,96 @@
 import { useState } from "react";
-import "../../css/products.css";
+import "../../App.css";
+import "../../css/tools.css";
+import PrimaryButton from "../btn/PrimaryButton";
+import CloseButton from "../btn/CloseButton";
 
 function AddToStock({ products, addStockToProduct, activePopUp }) {
-  const [selectedProduct, setSelectedProduct] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [reason, setReason] = useState("");
+  const [stockData, setStockData] = useState({
+    productId: "",
+    quantity: "",
+    reason: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStockData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = (e) => {
+    console.log('l')
     e.preventDefault();
-    if (!selectedProduct || !quantity) return;
+    const { productId, quantity } = stockData;
+    if (!productId || !quantity) return;
 
     addStockToProduct({
-      productId: selectedProduct,
-      quantity: Number(quantity),
-      reason,
+      productId,
+      quantity: Number(stockData.quantity),
+      reason: stockData.reason,
     });
 
-    setSelectedProduct("");
-    setQuantity("");
-    setReason("");
+    setStockData({
+      productId: "",
+      quantity: "",
+      reason: "",
+    });
+
     activePopUp(); // סגור את הפופאפ
   };
 
   return (
-    <div className="add-stock-wrapper">
-      <button className="close-button" onClick={activePopUp}>✕</button> 
+    <div className="yellowPopUp addProviderFrom">
+<CloseButton text={'X'} click={activePopUp} />
+      <h1>החזרת פריט למלאי</h1>
 
-      <form className="add-stock-form" onSubmit={handleSubmit}>
-        <h2>הוספת מוצר למלאי</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="inputHolderDiv marginBottom10">
+          <label className="label">בחר מוצר</label>
+          <select
+            className="SearchBar"
+            name="productId"
+            value={stockData.productId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- בחר מוצר --</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <label htmlFor="product-select">בחר מוצר:</label>
-        <select
-          id="product-select"
-          value={selectedProduct}
-          onChange={(e) => setSelectedProduct(e.target.value)}
-          required
-        >
-          <option value="">-- בחר מוצר --</option>
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
+        <div className="inputHolderDiv marginBottom10">
+          <label className="label">כמות להוספה</label>
+          <input
+            className="SearchBar"
+            type="number"
+            name="quantity"
+            min="1"
+            placeholder="לדוגמה: 50"
+            value={stockData.quantity}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <label htmlFor="quantity">כמות להוספה:</label>
-        <input
-          type="number"
-          id="quantity"
-          min="1"
-          placeholder="לדוגמה: 50"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          required
-        />
+        <div className="inputHolderDiv marginBottom10">
+          <label className="label">סיבת החזרה (אופציונלי)</label>
+          <input
+            className="SearchBar"
+            type="text"
+            name="reason"
+            placeholder="לדוגמה: חזר מהספק"
+            value={stockData.reason}
+            onChange={handleChange}
+          />
+        </div>
 
-        <label htmlFor="reason">סיבת החזרה (אופציונלי):</label>
-        <input
-          type="text"
-          id="reason"
-          placeholder="לדוגמה: חזר מהספק"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-        />
-
-        <button type="submit" className="add-btn">הוסף למלאי</button>
+        <PrimaryButton text="הוסף למלאי" click={handleSubmit} />
       </form>
     </div>
   );

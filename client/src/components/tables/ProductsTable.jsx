@@ -9,7 +9,7 @@ function ProductTable({ Products, onDelete,deleteProductCompletely }) {
     const minRequired = parseFloat(product.min_required);
 
     if (quantity < minRequired) return "low-stock";
-    if (quantity < minRequired + minRequired * 0.2) return "warning-stock";
+    
     return "";
   };
 
@@ -17,8 +17,8 @@ function ProductTable({ Products, onDelete,deleteProductCompletely }) {
     <div className="product-table-container">
       <div className="legend">
         <span className="legend-item red">חסר במלאי</span>
-        <span className="legend-item orange">כמעט חסר</span>
-        <span className="legend-item gray">לא פעיל</span>
+    
+     
       </div>
 
       <table className="tables">
@@ -32,7 +32,7 @@ function ProductTable({ Products, onDelete,deleteProductCompletely }) {
             <th>כמות מינימלית</th>
             <th>עדכון אחרון</th>
             <th>פעיל</th>
-                <th>מחק</th>
+             
           </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@ function ProductTable({ Products, onDelete,deleteProductCompletely }) {
                 <td>{parseFloat(product.min_required).toFixed(0)}</td>
                 <td>{product.last_updated?.split("T")[0]}</td>
                 <td>{product.is_active ? "כן" : "לא"}</td>
-                <td><button onClick={ (()=>{deleteProductCompletely(product.id)})}>מחק</button></td>
+               
               </tr>
             ))
           )}

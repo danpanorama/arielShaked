@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import "../../App.css";
 import "../../css/sidenav.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import CartPopup from "../popup/CartPopUp"; // 📦 ייבוא הקופסה
+
 
 function SideNavBar() {
   const user = useSelector((state) => state.user);
@@ -83,8 +83,6 @@ const sideNavLinks = [
         </button>
       </div>
 
-      {/* 📦 פופאפ עגלה */}
-      {isCartOpen && <CartPopup close={() => setIsCartOpen(false)} />}
     </div>
   );
 }

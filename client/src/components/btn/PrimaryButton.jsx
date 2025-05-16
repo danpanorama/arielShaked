@@ -3,7 +3,7 @@ import "../../css/tools.css";
 
 function PrimaryButton(props) {
   return (
-    <div onClick={(()=>{
+    <div onClick={((e)=>{
       props.click(props.data)
     })} 
     

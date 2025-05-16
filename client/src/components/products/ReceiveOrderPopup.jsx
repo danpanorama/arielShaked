@@ -70,7 +70,7 @@ const confirmOrder = async (orderId, items) => {
   return (
     <div className="popupContainer2">
       <button className="closeBtn5" onClick={activePopUp}>
-        סגור
+     X   
       </button>
       <br />
       <br />

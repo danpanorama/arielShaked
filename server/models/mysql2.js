@@ -15,7 +15,6 @@ let pool = mysql.createPool({
 const createDatabaseAndTables = async () => {
   try {
     const connection = await pool.promise().getConnection();
-
     // יצירת הסכמה אם לא קיימת
     await connection.query(`CREATE DATABASE IF NOT EXISTS shakedariel`);
     await connection.query(`USE shakedariel`);

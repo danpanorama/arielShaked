@@ -23,13 +23,10 @@ const addProductController = async (req, res, next) => {
 
 
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
     // הכנסת מוצר חדש למסד הנתונים
-    const insertResult = await products.insertNewProduct(name, category, quantity, unit, min_required,time ,1);
-   
+    const insertResult = await products.insertNewProduct(name, category, 0, unit, min_required,time ,1);
     if (insertResult) {
       const newProduct = await products.checkIfProductExistsByName(name);
- 
       res.json({product:newProduct[0]})
     }
 

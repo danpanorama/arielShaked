@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import "../App.css";
-
 import PrimaryButton from "../components/btn/PrimaryButton";
 import SearchBar from "../components/searchbar/SearchBar";
 import SideNavBar from "../components/sidenav/SideNavBar";

@@ -6,6 +6,7 @@ import axiosInstance from "../../config/AxiosConfig";
 import "../../css/tools.css";
 import PrimaryButton from "../btn/PrimaryButton";
 import { ERROR } from "../../redux/contents/errContent";
+import CloseButton from "../btn/CloseButton";
 
 function RemoveProduct(props) {
   const [product, setProduct] = useState([]);
@@ -26,14 +27,12 @@ function RemoveProduct(props) {
 
   const handleRemove = () => {
     const { productId, reason, quantity } = productData;
-
     if (!productId || !reason || !quantity) {
       alert("אנא מלא את כל השדות.");
       return;
     }
-
     props.removeProduct(productData);
-  };
+  }; 
 
   useEffect(() => {
     getAllProduct();
@@ -63,8 +62,8 @@ function RemoveProduct(props) {
 
   return (
     <div className="yellowPopUp addProviderFrom">
-      <h1 onClick={props.activePopUp}>X</h1>
-      <h1>הסרת מוצר</h1>
+        <CloseButton text={'X'} click={props.activePopUp} />
+      <h1>הסרת פריט מהמלאי</h1>
 
       <form>
         {/* בחירת מוצר */}

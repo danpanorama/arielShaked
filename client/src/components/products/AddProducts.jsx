@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../../App.css";
 import "../../css/tools.css";
 import PrimaryButton from "../btn/PrimaryButton";
+import CloseButton from "../btn/CloseButton";
 
 function AddProduct(props) {
   const [productData, setProductData] = useState({
@@ -23,8 +24,8 @@ function AddProduct(props) {
 
   return (
     <div className="yellowPopUp addProviderFrom">
-      <h1 onClick={props.activePopUp}>X</h1>
-      <h1>הוספת מוצר חדש</h1>
+      <CloseButton text={'X'}  click={props.activePopUp} />
+      <h1>הוספת פריט חדש</h1>
 
       <form>
         <div className="inputHolderDiv marginBottom10">
@@ -56,7 +57,7 @@ function AddProduct(props) {
           </select>
         </div>
 
-        <div className="inputHolderDiv marginBottom10">
+        {/* <div className="inputHolderDiv marginBottom10">
           <label className="label">כמות</label>
           <input type="text"
             className="SearchBar"
@@ -65,7 +66,7 @@ function AddProduct(props) {
             onChange={handleChange}
           />
           
-        </div>
+        </div> */}
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">יחידת מידה</label>
@@ -85,7 +86,7 @@ function AddProduct(props) {
         </div>
 
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">כמות מינימלית</label>
+          <label className="label">כמות מינימלית נדרשת</label>
           <input
             className="SearchBar"
             type="number"
@@ -94,7 +95,7 @@ function AddProduct(props) {
             onChange={handleChange}
           />
         </div>
-
+{/* 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">פעיל</label>
           <input
@@ -103,8 +104,8 @@ function AddProduct(props) {
             checked={productData.is_active}
             onChange={handleChange}
           />
-        </div>
-
+        </div> */}
+<br />
         <PrimaryButton
           text="שמירה"
           click={() => props.addProvider(productData)}

@@ -30,7 +30,7 @@ router.get("/checkAuth", async (req, res,next) => {
 
       if (!token) {
       
-('here')
+
         return res.status(401).json({ success: false, message: "אין אישור: לא נמצא טוקן זיהוי משתמש" });
       }
 

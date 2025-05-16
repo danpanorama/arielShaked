@@ -12,8 +12,8 @@ function ProviderTable({ providers, onDelete,deleteProvider }) {
           <th>מס' טלפון</th>
           <th>כתובת</th>
           <th>מייל</th>
-          <th>פעיל</th>
-          <th>מחק</th>
+          <th>הפעלה \ הקפאה</th>
+       
 
         </tr>
       </thead>
@@ -34,9 +34,9 @@ function ProviderTable({ providers, onDelete,deleteProvider }) {
               <td>{provider.address}</td>
               <td>{provider.email}</td>
               <td>{provider.is_active ? "כן" : "לא"}</td>
-              <td><button onClick={(()=>{
+              {/* <td><button onClick={(()=>{
                 deleteProvider(provider.id)
-              })} > מחק</button></td>
+              })} > מחק</button></td> */}
             </tr>
           ))
         )}

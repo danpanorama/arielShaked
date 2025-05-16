@@ -24,7 +24,6 @@ function Product() {
     setPopUpType(e)
     setIsPopUpActive((prev) => !prev);
   };
-
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -61,6 +60,7 @@ function Product() {
 
       setOriginalProducts((prev) => [...prev, addedProduct]);
       setFilteredProducts((prev) => [...prev, addedProduct]);
+      setIsPopUpActive(false)
     } catch (e) {
       dispatch({
         type: ERROR,
@@ -109,8 +109,8 @@ function Product() {
         return product;
       })
     );
-          console.log(productId,response.data.quantity)
-
+      
+setIsPopUpActive(false)
     setFilteredProducts((prev) =>
       prev.map((product) => {
         console.log(product.id,productId)
@@ -183,8 +183,8 @@ function Product() {
         <div className="flex-row-bet">
           <PrimaryButton click={() => togglePopUp('product')} text="הכנסת פריט חדש" />
           <PrimaryButton click={() => togglePopUp('addStock')} text="החזרת פריט למלאי" />
-          <PrimaryButton click={() => togglePopUp('removeProduct')} text="הוצאת פריט" />
-          <PrimaryButton click={() => togglePopUp('receiveOrder')} text="קבלת הזמנה" />
+          <PrimaryButton click={() => togglePopUp('removeProduct')} text="הוצאת פריט מהמלאי" />
+          <PrimaryButton click={() => togglePopUp('receiveOrder')} text=" קבלת הזמנה" />
 
         </div>
       </div>
@@ -197,7 +197,7 @@ function Product() {
         deleteProductCompletely={deleteProductCompletely}
       />
 
-      <NewPopUp
+      <PopUpGeneral
         type={popUpType}
         click={togglePopUp}
         removeProduct={removeProduct}

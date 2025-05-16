@@ -6,9 +6,12 @@ import AddProduct from "../products/AddProducts";
 import RemoveProduct from "../products/RemoveProduct";
 import AssignProductTiProvider from "../ProvidersProducts/AssignProductTiProvider";
 import SignUpEmployee from "../users/SignUpEmployee";
+import AddToStock from "../products/AddToStock";
+import ReceiveOrderPopup from "../products/ReceiveOrderPopup";
 
 function PopUpGeneral({
-  type,
+   type,
+  addStockToProduct,
   addUser,
   users,
   userData,
@@ -21,8 +24,10 @@ function PopUpGeneral({
   providers,
   addProvider,
   products,
-  deleteProduct,
+  removeProduct,
   associateProductToProvider,
+  deleteProduct,
+  refreshProducts
 }) {
   return (
     <div className={isPopUpActive ? "activeProviderPopUp" : "closeProviderPopUp"}>
@@ -34,7 +39,7 @@ function PopUpGeneral({
           <AddProduct activePopUp={activePopUp} addProvider={addProvider} />
         )}
         {type === "removeProduct" && (
-          <RemoveProduct activePopUp={activePopUp} deleteProduct={deleteProduct} products={products} />
+          <RemoveProduct activePopUp={activePopUp} removeProduct={removeProduct}  products={products} />
         )}
         {type === "provider-products" && (
           <AssignProductTiProvider associateProductToProvider={associateProductToProvider} activePopUp={activePopUp} deleteProduct={deleteProduct} />
@@ -50,6 +55,20 @@ function PopUpGeneral({
             errorMessages={errorMessages}
           />
         )}
+         {type === "addStock" && (
+        <AddToStock
+          products={products}
+          addStockToProduct={addStockToProduct}
+          activePopUp={activePopUp}
+        />
+      )}
+      {type === "receiveOrder" && (
+        <ReceiveOrderPopup
+          products={products}
+          activePopUp={activePopUp}
+          refreshProducts={refreshProducts}
+        />
+      )}
       </div>
     </div>
   );

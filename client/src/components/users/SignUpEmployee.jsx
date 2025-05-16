@@ -1,12 +1,24 @@
-
 import "../../App.css";
 import "../../css/forms.css";
 import "../../css/btn.css";
+import PrimaryButton from "../btn/PrimaryButton";
+import CloseButton from "../btn/CloseButton";
 
-function SignUpEmployee({togglePopUp, userData, handleChange, signUp, isError, errorMessages }) {
+function SignUpEmployee({
+  togglePopUp,
+  userData,
+  handleChange,
+  signUp,
+  isError,
+  errorMessages,
+}) {
   return (
-    <form className=" flex-col-center" onSubmit={signUp}>
-      <p className="close" onClick={togglePopUp}>X</p>
+    <form className=" " onSubmit={signUp}>
+      <CloseButton click={togglePopUp} text={"X"} />
+
+      <br />
+      <br />
+      <h1>הוספת עובד חדש</h1>
       <div className="inputBox">
         <input
           name="name"
@@ -16,7 +28,9 @@ function SignUpEmployee({togglePopUp, userData, handleChange, signUp, isError, e
           value={userData?.name || ""}
           onChange={handleChange}
         />
-        {isError?.name && <span className="errorText">{errorMessages.name}</span>}
+        {isError?.name && (
+          <span className="errorText">{errorMessages.name}</span>
+        )}
       </div>
 
       <div className="inputBox">
@@ -28,7 +42,9 @@ function SignUpEmployee({togglePopUp, userData, handleChange, signUp, isError, e
           value={userData?.email}
           onChange={handleChange}
         />
-        {isError?.email && <span className="errorText">{errorMessages.email}</span>}
+        {isError?.email && (
+          <span className="errorText">{errorMessages.email}</span>
+        )}
       </div>
 
       <div className="inputBox">
@@ -40,7 +56,9 @@ function SignUpEmployee({togglePopUp, userData, handleChange, signUp, isError, e
           value={userData?.phone}
           onChange={handleChange}
         />
-        {isError?.phone && <span className="errorText">{errorMessages.phone}</span>}
+        {isError?.phone && (
+          <span className="errorText">{errorMessages.phone}</span>
+        )}
       </div>
 
       <div className="inputBox">
@@ -52,7 +70,9 @@ function SignUpEmployee({togglePopUp, userData, handleChange, signUp, isError, e
           value={userData?.password}
           onChange={handleChange}
         />
-        {isError?.password && <span className="errorText">{errorMessages.password}</span>}
+        {isError?.password && (
+          <span className="errorText">{errorMessages.password}</span>
+        )}
       </div>
 
       <div className="inputBox">
@@ -64,30 +84,35 @@ function SignUpEmployee({togglePopUp, userData, handleChange, signUp, isError, e
           value={userData?.repeatPassword}
           onChange={handleChange}
         />
-        {isError?.repeatPassword && <span className="errorText">{errorMessages.repeatPassword}</span>}
+        {isError?.repeatPassword && (
+          <span className="errorText">{errorMessages.repeatPassword}</span>
+        )}
       </div>
 
-    <div className="inputBox">
-  <label>
-    תפקיד המשתמש:
-    <select
-      name="permissions"
-      value={userData?.permissions || ""}
-      onChange={handleChange}
-    >
-      <option value="0">בחר תפקיד</option>
-     
-      <option value="0">עובד מאפייה</option>
-      <option value="1">עובד חנות</option>
-      <option value="2">עוזר מנהל</option>
-     
-      <option value="4">מנהל</option>
-    </select>
-  </label>
-</div>
+      <div className="inputBox">
+        <label>
+          תפקיד המשתמש:
+          <select
+            name="permissions"
+            value={userData?.permissions || ""}
+            onChange={handleChange}
+          >
+            <option value="0">בחר תפקיד</option>
 
+            <option value="0">עובד מאפייה</option>
+            <option value="1">עובד חנות</option>
+            <option value="2">עוזר מנהל</option>
 
-      <button className="primaryBtn" type="submit">הרשם</button>
+            <option value="4">מנהל</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="flex-col-center">
+        <button className="PrimaryButton" type="submit">
+          הרשם
+        </button>
+      </div>
     </form>
   );
 }

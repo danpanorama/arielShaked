@@ -8,3 +8,6 @@
 .tables tbody{
     border-radius: 30px;
 }
+body{
+    font-family: arial !important;
+}

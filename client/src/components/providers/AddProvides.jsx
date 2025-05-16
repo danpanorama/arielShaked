@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../../App.css";
 import "../../css/tools.css";
 import PrimaryButton from "../btn/PrimaryButton";
+import CloseButton from "../btn/CloseButton";
 
 function AddProvides(props) {
   const [providerData, setProviderData] = useState({
@@ -23,7 +24,8 @@ function AddProvides(props) {
 
   return (
     <div className="yellowPopUp addProviderFrom">
-      <button className="" onClick={props.activePopUp}>close</button>
+      <CloseButton text={'X'} click={props.activePopUp}/>
+    
       <h1>הוספת ספק חדש</h1>
 
       <form>

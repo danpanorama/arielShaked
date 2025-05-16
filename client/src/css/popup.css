@@ -17,7 +17,7 @@
 }
 
 .closeBtn5 {
-  float: right;
+
   background: none;
   border: none;
   font-size: 18px;
@@ -67,11 +67,7 @@
   margin-bottom: 10px;
 }
 
-input[type="number"] {
-  width: 80px;
-  padding: 4px;
-  margin-right: 10px;
-}
+
 
 .confirmBtn,
 .closeBtn {
