@@ -4,6 +4,13 @@ const pool = require("./mysql2");
 const getAllProducts = () => {
   return pool.execute(`SELECT * FROM products`);
 };
+ 
+
+
+const getAllProductsByCategory = (cat) => {
+  return pool.execute(`SELECT * FROM products WHERE TRIM(category) = ?`, [cat]);
+};
+
 
 // הוספת מוצר חדש
 const insertNewProduct = (name, category, quantity, unit, min_required,last_updated, is_active ) => {
@@ -38,6 +45,13 @@ const updateProductQuantity = (quantity,id) => {
 
 
 
+const changeStatus = (status,id) => {
+  return pool.execute(
+    `UPDATE products SET is_active = ? WHERE id = ?`,
+    [status,id]
+  );
+};
+
 
 
 // מחיקת מוצר לפי ID
@@ -55,7 +69,9 @@ const checkIfProductExistsByName = (name) => {
     [name]
   );
 };
-
+const getAllCategories = () => {
+  return pool.execute(`SELECT DISTINCT TRIM(category) AS category FROM products WHERE is_active = 1`);
+};
 module.exports = {
   getAllProducts,
   insertNewProduct,
@@ -63,5 +79,8 @@ module.exports = {
   deleteProductById,
   checkIfProductExistsByName,
   updateProductQuantity,
-  getProductsById
+  getProductsById,
+  changeStatus,
+  getAllCategories,
+  getAllProductsByCategory
 };

@@ -1,0 +1,60 @@
+.orderCartSidebar {
+  width: 280px;
+  background-color: #fff;
+  border-right: 2px solid #ccc;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 80vh;
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 10px;
+  direction: rtl;
+}
+
+.orderCartTitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.orderCartEmpty {
+  font-size: 14px;
+  color: #999;
+}
+
+.orderCartList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.orderCartItem {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.orderCartItemName {
+  font-weight: bold;
+  color: #333;
+}
+
+.orderCartItemQty {
+  color: #555;
+}
+.orderCartSubmitBtn {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.orderCartSubmitBtn:hover {
+  background-color: #45a049;
+}

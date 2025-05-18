@@ -1,4 +1,7 @@
 const providersOrdersModel = require("../../../models/providerOrder");
+const providers = require("../../../models/providers");
+
+
 
 const providersOrdersController = async (req, res, next) => {
   try {
@@ -11,6 +14,10 @@ const providersOrdersController = async (req, res, next) => {
       estimated_delivery_time,
       items,
     } = req.body;
+
+   let getProviderDeliveryTime = await providers.getProvidersById(provider_id)
+
+deliveryTime = getProviderDeliveryTime[0][0].delivery_time
 
     // בדיקה אם כל השדות הדרושים מולאו
     if (
@@ -39,13 +46,16 @@ let created_at = new Date().toISOString().slice(0, 19).replace("T", " ");
 created_at = created_at.split("T")[0];
 
 let is_approved = 0;
+const deliveryTimeInDays = Number(deliveryTime);
+const estimatedDeliveryDate = new Date();
+estimatedDeliveryDate.setDate(estimatedDeliveryDate.getDate() + deliveryTimeInDays);
 
 // יצירת ההזמנה בספק
 const insertOrderResult = await providersOrdersModel.insertProviderOrder(
   provider_id,
   provider_name,
   priceAsNumber,
-  estimated_delivery_time ?? null,
+  estimatedDeliveryDate.toISOString(), // או פשוט estimatedDeliveryDate
   created_at,
   0, 0, 0, 0
 );
@@ -78,6 +88,8 @@ for (const item of items) {
 
   console.log('here', orderId, id, name, quantity, itemPrice);
 
+
+
   // הכנסת פריט להזמנה
   await providersOrdersModel.insertProviderOrderItem(
     orderId,
@@ -97,6 +109,7 @@ return res.json({
     provider_name,
     price: priceAsNumber,
     items,
+    estimated_delivery_time:estimatedDeliveryDate.toISOString(),
     created_at,
     is_approved
   }

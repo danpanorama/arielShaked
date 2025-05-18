@@ -3,13 +3,21 @@
 import { Link } from "react-router-dom";
 import "../../css/order.css";
 
-function ProviderOrderTabel({ orders }) {
+function ProviderOrderTabel({ orders ,handlePaymentAmount,handlePaymentUpdate}) {
   if (orders.length === 0) {
     return <p>לא נמצאו הזמנות.</p>;
   }
 
   return (
-    <table className="ordersTable">
+   
+    <div>
+       <div className="legend">
+        <span className="legend-item red"> לא שולם</span>
+    
+     
+      </div>
+      <table className="ordersTable">
+      
       <thead>
         <tr>
           <th>מספר הזמנה</th>
@@ -25,22 +33,27 @@ function ProviderOrderTabel({ orders }) {
 
       <tbody>
         {orders.map((order) => (
-          <tr key={order.id}>
+          <tr className={order.is_paid === 1 ? "paid" : "unpaid"} key={order.id}>
             <td>
               <Link to={`/order/${order.id}`}>{order.id}</Link>
             </td>
             <td>{order.provider_name}</td>
-            <td className={order.is_paid === 1 ? "paid" : "unpaid"}>
+            <td >
               {order.price}
             </td>
             <td>{order.created_at?.split("T")[0]}</td>
-            <td className={order.is_approved === 0 ? "pending" : "approved"}>
+            <td >
               {order.is_approved === 0 ? "נשלח" : "קיבל"}
             </td>
             <td className={order.is_paid === 1 ? "paid" : "unpaid"}>
-              {order.is_paid === 1 ? "שולם" : "לא שולם"}
+             {order.price <= order.amount_paid
+  ? "שולם"
+  : order.amount_paid > 0
+    ? "שולם חלקית"
+    : "לא שולם"}
+
             </td>
-            <td>{order.amount_paid}</td>
+            <td><input  onChange={handlePaymentAmount} type="text"placeholder={order.amount_paid} /><button onClick={((e)=>{handlePaymentUpdate(order)})}>שלח</button></td>
             <td>
               {order.estimated_delivery_time
                 ? order.estimated_delivery_time.split("T")[0]
@@ -50,6 +63,7 @@ function ProviderOrderTabel({ orders }) {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }
  

@@ -16,13 +16,14 @@
   background-color: white;
   border: 1px solid #333; /* צבע border כהה יותר */
   display: flex;
-  flex-direction: column;
+  flex-direction: row-reverse;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
  margin: 5px;
+ max-width: 150px;
 }
 
 .PrimaryButton:hover {

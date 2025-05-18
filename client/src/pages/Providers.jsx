@@ -11,6 +11,7 @@ import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
 import { ERROR } from "../redux/contents/errContent";
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
+import Icon1 from '../images/plus.svg'
 
 
 function Providers() {
@@ -18,7 +19,6 @@ function Providers() {
   const [activeProvidersPopUp, setProvidersPopUpState] = useState(false);
   const [providersArray, setProvidersArray] = useState([]);
   const [filteredProvidersArray, setFilteredProvidersArray] = useState([]);
-
   const activePopUp = () => {
     setProvidersPopUpState(!activeProvidersPopUp);
   };
@@ -39,7 +39,6 @@ function Providers() {
       });
     }
   };
-
   useEffect(() => {
     fetchData(
       "/providers",
@@ -51,13 +50,13 @@ function Providers() {
       "שגיאה בטעינת ספקים"
     );
   }, []);
-
   const addProvider = async (newProvider) => {
     try {
       const response = await axiosInstance.post("/providers/addProvider", newProvider, {
         withCredentials: true,
       });
        console.log(response.data.data)
+      setProvidersPopUpState(false)
       setProvidersArray((prev) => [...prev, response.data.data]);
       setFilteredProvidersArray((prev) => [...prev, response.data.data]);
     } catch (e) {
@@ -70,6 +69,48 @@ function Providers() {
       });
     }
   };
+
+
+ const changeStatus = async (provider, status) => {
+  try {
+    const obj = {
+      providerId: provider.id,
+      status: status,
+    };
+
+    const response = await axiosInstance.post("/providers/changeStatus", obj, {
+      withCredentials: true,
+    });
+
+    const updatedProvider = provider;
+
+    // עדכון הספק במערך המקורי לפי ה-ID
+    setProvidersArray((prev) =>
+      prev.map((p) =>
+        p.id === updatedProvider.id
+          ? { ...p, is_active: status }
+          : p
+      )
+    );
+
+    setFilteredProvidersArray((prev) =>
+      prev.map((p) =>
+        p.id === updatedProvider.id
+          ? { ...p, is_active: status }
+          : p
+      )
+    );
+  } catch (e) {
+    dispatch({
+      type: ERROR,
+      data: {
+        message: e?.message || "שגיאה כללית בעדכון סטטוס ספק",
+        header: e?.header || "שגיאה בעדכון סטטוס",
+      },
+    });
+  }
+};
+
 
   const deleteProvider = async (id) => {
     try {
@@ -105,11 +146,11 @@ function Providers() {
       <Headers text="ספקים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={handleSearch} />
-        <PrimaryButton click={activePopUp} text={"הוסף ספק חדש"} />
+        <PrimaryButton icon={Icon1} click={activePopUp} text={"הוסף ספק חדש"} />
       </div>
       <br />
       <br />
-      <ProviderTable providers={filteredProvidersArray} deleteProvider={deleteProvider} />
+      <ProviderTable changeStatus={changeStatus} providers={filteredProvidersArray} deleteProvider={deleteProvider} />
       <PopUpGeneral
         click={activePopUp}
         isPopUpActive={activeProvidersPopUp}

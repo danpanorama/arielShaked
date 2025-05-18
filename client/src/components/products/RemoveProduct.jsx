@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../../App.css";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../config/AxiosConfig";
-
+import Select from "react-select";
 import "../../css/tools.css";
 import PrimaryButton from "../btn/PrimaryButton";
 import { ERROR } from "../../redux/contents/errContent";
@@ -31,8 +31,9 @@ function RemoveProduct(props) {
       alert("אנא מלא את כל השדות.");
       return;
     }
+    setProductData({ productId: "", reason: "", quantity: "" });
     props.removeProduct(productData);
-  }; 
+  };
 
   useEffect(() => {
     getAllProduct();
@@ -62,26 +63,53 @@ function RemoveProduct(props) {
 
   return (
     <div className="yellowPopUp addProviderFrom">
-        <CloseButton text={'X'} click={props.activePopUp} />
-      <h1>הסרת פריט מהמלאי</h1>
+      <CloseButton text={"X"} click={props.activePopUp} />
+      <h1>הוצאת פריט מהמלאי</h1>
 
       <form>
         {/* בחירת מוצר */}
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">בחר מוצר להסרה</label>
-          <select
-            className="SearchBar"
+          <label className="label"> שם</label>
+
+          <Select
             name="productId"
-            value={productData.productId}
+            options={product.map((p) => ({ value: p.id, label: p.name }))}
+            onChange={(selectedOption) => {
+              setProductData((prev) => ({
+                ...prev,
+                productId: selectedOption?.value || "",
+              }));
+            }}
+            placeholder="בחר מוצר"
+            className="SearchBar"
+            classNamePrefix="" // מבטל את ה-prefix שמוסיף classים מיוחדים
+            styles={{
+              control: (base, state) => ({
+                ...base,
+                border: "none",
+                outline: "none",
+                overflow: "hidden",
+                boxShadow: "none",
+                borderRadius: "30px",
+                "&:hover": {
+                  border: "none",
+                },
+              }),
+            }}
+            isClearable
+          />
+        </div>
+        {/* כמות */}
+        <div className="inputHolderDiv marginBottom10">
+          <label className="label">כמות</label>
+          <input
+            className="SearchBar"
+            type="number"
+            name="quantity"
+            value={productData.quantity}
             onChange={handleChange}
-          >
-            <option value="">בחר מוצר</option>
-            {product?.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
-          </select>
+            min="1"
+          />
         </div>
 
         {/* סיבת הוצאה */}
@@ -95,23 +123,9 @@ function RemoveProduct(props) {
           >
             <option value="">בחר סיבה</option>
             <option value="מקולקל">מקולקל</option>
-            <option value="נגנב">נגנב</option>
-            <option value="עבר תוקף">עבר תוקף</option>
-            <option value="אחר">אחר</option>
-          </select>
-        </div>
 
-        {/* כמות */}
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">כמות</label>
-          <input
-            className="SearchBar"
-            type="number"
-            name="quantity"
-            value={productData.quantity}
-            onChange={handleChange}
-            min="1"
-          />
+            <option value="אחר">שימוש בחנות </option>
+          </select>
         </div>
 
         <PrimaryButton type="removeProduct" text="הסר" click={handleRemove} />

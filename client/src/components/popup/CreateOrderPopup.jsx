@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../css/order.css";
 import "../../css/popup.css";
 import "../../css/cart.css";
 import PrimaryButton from "../btn/PrimaryButton";
 import SearchBar from "../searchbar/SearchBar";
+import { filterBySearchTerm } from "../tools/filterBySearchTerm";
 
 function CreateOrderPopup({
   close,
@@ -22,18 +23,32 @@ function CreateOrderPopup({
   sendOrder,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-  // מחזיק כמות זמנית לכל מוצר, לפי id
-  const [quantities, setQuantities] = useState({});
+const [quantities, setQuantities] = useState({});
+
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const filteredProviders = providersList.filter((provider) =>
     provider.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+ const handleQuantityInputChange = (id, value) => {
+  const parsed = parseInt(value);
+  setQuantities((prev) => ({
+    ...prev,
+    [id]: isNaN(parsed) || parsed < 1 ? 1 : parsed,
+  }));
+};
 
-  const handleQuantityInputChange = (itemId, value) => {
-    // אפשר רק מספרים חיוביים או ריק (למחוק ולהקליד מחדש)
-    if (value === "" || (/^\d+$/.test(value) && parseInt(value) > 0)) {
-      setQuantities((prev) => ({ ...prev, [itemId]: value }));
-    }
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
+  const handleProductSearch = (term) => {
+    const filtered = filterBySearchTerm(products, term, [
+      "name",
+      "id",
+      "description",
+    ]); // או איזה שדות שתרצה
+    setFilteredProducts(filtered);
   };
 
   return (
@@ -67,7 +82,7 @@ function CreateOrderPopup({
               <button
                 onClick={() => {
                   setSelectedProvider(null);
-                  setQuantities({});
+                  setQuantities(0);
                 }}
                 className="backBtn"
               >
@@ -79,88 +94,72 @@ function CreateOrderPopup({
             {loadingProducts ? (
               <p>טוען מוצרים...</p>
             ) : (
-              <div className="productsGrid">
-                {products.map((item, idx) => {
-                  const cartItem =
-                    currentCart?.items.find((i) => i.id === item.id) || null;
+              <div className="">
+                <SearchBar onSearch={handleProductSearch} />
 
-                  return (
-                    <div key={idx} className="productCard">
-                      <h3>{item.name}</h3>
-                      <p>₪{item.price}</p>
-                      <div className="quantityControl">
-                        <input
-                          type="number"
-                          min="1"
-                          placeholder="כמות"
-                          value={quantities[item.id] || ""}
-                          onChange={(e) =>
-                            // אם המוצר עדיין לא בעגלה - אפשר להקליד כמות
-                            cartItem
-                              ? null
-                              : handleQuantityInputChange(item.id, e.target.value)
-                          }
-                          disabled={!!cartItem} // אם המוצר בעגלה, לא ניתן לשנות את הכמות כאן
-                        />
+                <div className="productsGrid">
+                  {filteredProducts.map((item, idx) => {
+                    const cartItem =
+                      currentCart?.items.find((i) => i.id === item.id) || null;
 
-                        <button
-                          onClick={() => {
-                            // כמות להצבה - אם ריק או לא תקין, 1
-                            let qty =
-                              parseInt(quantities[item.id]) > 0
-                                ? parseInt(quantities[item.id])
-                                : 1;
-                            addToCart(item, qty);
-                            setQuantities((prev) => ({ ...prev, [item.id]: "" }));
-                          }}
-                        >
-                          הוסף
-                        </button>
+                    return (
+                      <div key={idx} className="productCard">
+                        <h3>{item.name}</h3>
+                        <p>₪{item.price}</p>
+                        <div className="quantityControl">
+     <input
+  type="number"
+  min="1"
+  placeholder="כמות"
+  value={quantities[item.id] || 1}
+  onChange={(e) => handleQuantityInputChange(item.id, e.target.value)}
+/>
 
-                        <button onClick={() => removeFromCart(item)}>הסר</button>
+
+
+                          <button
+                            onClick={() => {
+                              // כמות להצבה - אם ריק או לא תקין, 1
+                              const qty = parseInt(quantities[item.id]) > 0 ? parseInt(quantities[item.id]) : 1;
+addToCart(item, qty);
+
+                            }}
+                          >
+                            הוסף
+                          </button>
+
+                          <button onClick={() => removeFromCart(item)}>
+                            הסר
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             )}
 
-            {currentCart && currentCart.items.length > 0 && (
-              <>
-                <button
-                  onClick={() => setShowCart(true)}
-                  className="viewCartBtn"
-                >
-                  הצג עגלה ({currentCart.items.length})
-                </button>
-
-                {showCart && (
-                  <div className="cartPopup">
-                    <div className="cartContent">
-                      <button
-                        className="closeBtn"
-                        onClick={() => setShowCart(false)}
-                      >
-                        ✖
-                      </button>
-                      <h3>העגלה שלך:</h3>
-                      <div>
-                        <h4>{selectedProvider.name}</h4>
-                        <ul>
-                          {currentCart.items.map((item, idx) => (
-                            <li key={idx}>
-                              {item.name} -{" "}
-                              {isNaN(item.quantity) ? 0 : item.quantity} יחידות
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <PrimaryButton click={sendOrder} text="שלח הזמנה" />
+            <>
+              <div className="cartHolder">
+                <div className="cartPopup">
+                  <div className="cartContent">
+                    <h3>העגלה שלך:</h3>
+                    <div>
+                      <h4>{selectedProvider.name}</h4>
+                      <ul>
+                        {currentCart?.items.map((item, idx) => (
+                          <li key={idx}>
+                            {item.name} -{" "}
+                            {isNaN(item.quantity) ? 0 : item.quantity} יחידות
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+                    <PrimaryButton click={sendOrder} text="שלח הזמנה" />
                   </div>
-                )}
-              </>
-            )}
+                </div>
+              </div>
+            </>
           </>
         )}
       </div>

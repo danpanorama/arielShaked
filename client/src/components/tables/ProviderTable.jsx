@@ -1,7 +1,7 @@
 import "../../App.css";
 import "../../css/tools.css";
 
-function ProviderTable({ providers, onDelete,deleteProvider }) {
+function ProviderTable({ providers, onDelete,deleteProvider,changeStatus }) {
   return (
     <table className="tables">
       <thead>
@@ -33,7 +33,11 @@ function ProviderTable({ providers, onDelete,deleteProvider }) {
               <td>{provider.phone_number}</td>
               <td>{provider.address}</td>
               <td>{provider.email}</td>
-              <td>{provider.is_active ? "כן" : "לא"}</td>
+              <td>{provider.is_active ? <button onClick={((e)=>{
+                changeStatus(provider,0)
+              })}>כבה</button> : <button onClick={((e)=>{
+                changeStatus(provider,1)
+              })}>הפעל</button>}</td>
               {/* <td><button onClick={(()=>{
                 deleteProvider(provider.id)
               })} > מחק</button></td> */}

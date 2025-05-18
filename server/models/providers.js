@@ -9,11 +9,11 @@ const checkIfEmailExists = (email) => {
 };
 
 // הוספת ספק חדש
-const insertNewProvider = (name, contact_name, phone_number, address, email, is_active) => {
+const insertNewProvider = (name, contact_name, phone_number,delivery_time, address, email, is_active) => {
   return pool.execute(
-    `INSERT INTO providers (name, contact_name, phone_number, address, email, is_active)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [name, contact_name, phone_number, address, email, is_active]
+    `INSERT INTO providers (name, contact_name, phone_number,delivery_time, address, email, is_active)
+     VALUES (?, ?, ?, ?, ?, ?,?)`,
+    [name, contact_name, phone_number,delivery_time, address, email, is_active]
   );
 };
 
@@ -57,6 +57,17 @@ const updateAllProductsProviderToZero = (id) => {
   );
 };
 
+
+
+const changeStatus = (status,id) => {
+  return pool.execute(
+    `  UPDATE providers
+    SET is_active = ?
+    WHERE id = ?`,
+    [status,id]
+  );
+};
+
 // ייצוא
 module.exports = {
   checkIfEmailExists,
@@ -65,5 +76,6 @@ module.exports = {
   updateProviderById,
   deleteProviderById,
   getProvidersById,
-  updateAllProductsProviderToZero
+  updateAllProductsProviderToZero,
+  changeStatus
 };

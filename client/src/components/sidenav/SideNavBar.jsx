@@ -12,6 +12,7 @@ function SideNavBar() {
 
 const sideNavLinks = [
   { name: "הזמנות אפייה", url: "/orders", permissions: [2,1, 3,4,0] },
+  { name: "הזמנות ייצור", url: "/bakeryOrders", permissions: [3,4] },
   { name: "ספקים", url: "/providers", permissions: [3,4] },
   { name: "מלאי", url: "/products", permissions: [3,4,2,1] },
   { name: "פרטי-ספק", url: "/providersProducts", permissions: [3,4] },

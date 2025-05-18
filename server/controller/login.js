@@ -13,6 +13,11 @@ const loginController = async (req, res, next) => {
     let getUser = await users.checkIfEmailExists(email);
     if (getUser[0].length > 0) {
       let user = getUser[0][0];
+      if(user.is_active ==0 ){
+         return res.status(400).json({
+        error: { data: { message: "המשתמש הזה חסום    ", header: 'error' } }
+      });
+      }
       let checkpassword = await authbcrypt.checkPassword(password, user.password);
       if (checkpassword) {
         const token = await jwt.makeToken({ id: user.id }, process.env.JWT_TOKEN, { expiresIn: '1h' });

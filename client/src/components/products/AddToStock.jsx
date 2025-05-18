@@ -3,14 +3,14 @@ import "../../App.css";
 import "../../css/tools.css";
 import PrimaryButton from "../btn/PrimaryButton";
 import CloseButton from "../btn/CloseButton";
-
+import Select from "react-select";
 function AddToStock({ products, addStockToProduct, activePopUp }) {
   const [stockData, setStockData] = useState({
     productId: "",
     quantity: "",
     reason: "",
   });
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setStockData((prev) => ({
@@ -20,7 +20,7 @@ function AddToStock({ products, addStockToProduct, activePopUp }) {
   };
 
   const handleSubmit = (e) => {
-    console.log('l')
+   
     e.preventDefault();
     const { productId, quantity } = stockData;
     if (!productId || !quantity) return;
@@ -43,12 +43,12 @@ function AddToStock({ products, addStockToProduct, activePopUp }) {
   return (
     <div className="yellowPopUp addProviderFrom">
 <CloseButton text={'X'} click={activePopUp} />
-      <h1>החזרת פריט למלאי</h1>
+      <h1>  הכנסת פריט למלאי</h1>
 
       <form onSubmit={handleSubmit}>
         <div className="inputHolderDiv marginBottom10">
           <label className="label">בחר מוצר</label>
-          <select
+          {/* <select
             className="SearchBar"
             name="productId"
             value={stockData.productId}
@@ -61,7 +61,47 @@ function AddToStock({ products, addStockToProduct, activePopUp }) {
                 {product.name}
               </option>
             ))}
-          </select>
+          </select> */}
+<Select
+  name="productId"
+  options={products.map((p) => ({ value: p.id, label: p.name }))}
+  value={
+    products
+      .map((p) => ({ value: p.id, label: p.name }))
+      .find((option) => option.value === stockData.productId) || null
+  }
+  onChange={(selectedOption) => {
+    handleChange({
+      target: {
+        name: "productId",
+        value: selectedOption?.value || "",
+      },
+    });
+  }}
+  placeholder="בחר מוצר"
+  className="SearchBar"
+  classNamePrefix=""
+  styles={{
+    control: (base) => ({
+      ...base,
+      border: "none",
+      outline: "none",
+      overflow: "hidden",
+      boxShadow: "none",
+      borderRadius: "30px",
+      backgroundColor: "#f9f9f9",
+      fontSize: "1.2rem",
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "#999",
+    }),
+  }}
+  isClearable
+/>
+
+
+
         </div>
 
         <div className="inputHolderDiv marginBottom10">
@@ -78,19 +118,9 @@ function AddToStock({ products, addStockToProduct, activePopUp }) {
           />
         </div>
 
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">סיבת החזרה (אופציונלי)</label>
-          <input
-            className="SearchBar"
-            type="text"
-            name="reason"
-            placeholder="לדוגמה: חזר מהספק"
-            value={stockData.reason}
-            onChange={handleChange}
-          />
-        </div>
+      
 
-        <PrimaryButton text="הוסף למלאי" click={handleSubmit} />
+        <PrimaryButton text=" הכנסת פריט למלאי" click={handleSubmit} />
       </form>
     </div>
   );

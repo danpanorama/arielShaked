@@ -54,3 +54,29 @@
 .add-stock-form .add-btn:hover {
   background-color: #d48806;
 }
+/* מצב פתוח וסגור */
+.openWindow {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 999;
+  height: 100vh;
+  width: 100%;
+  background-color: #555555ab;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.closeWindow {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+  position: absolute;
+}

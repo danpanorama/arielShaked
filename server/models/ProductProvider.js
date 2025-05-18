@@ -10,6 +10,9 @@ const getProviderProductById = (id) => {
   return pool.execute(`SELECT * FROM provider_products WHERE id = ?`, [id]);
 };
 
+
+
+
 // הוספת מוצר משויך חדש
 const insertNewProviderProduct = (
   item_number,
@@ -17,21 +20,21 @@ const insertNewProviderProduct = (
   provider_name,
   provider_id,
   price,
-  estimated_delivery_time,
+
   min_order_quantity,
   is_active
 ) => {
   return pool.execute(
     `INSERT INTO provider_products 
-    (item_number, name,provider_name, provider_id, price, estimated_delivery_time, min_order_quantity, is_active)
-    VALUES (?,?, ?, ?, ?, ?, ?, ?)`,
+    (item_number, name,provider_name, provider_id, price,  min_order_quantity, is_active)
+    VALUES (?,?, ?, ?, ?, ?, ?)`,
     [
       item_number,
       name,
       provider_name,
       provider_id,
       price,
-      estimated_delivery_time,
+  
       min_order_quantity,
       is_active,
     ]
@@ -54,11 +57,20 @@ const deleteAllProductsFromProvider = async (providerId) => {
   return await pool.execute(sql, [providerId]);
 };
 
+
+const changeStatus = (status,id) => {
+  return pool.execute(
+    `UPDATE provider_products SET is_active = ? WHERE id = ?`,
+    [status,id]
+  );
+};
+
 module.exports = {
   getAllProviderProducts,
   getProviderProductById,
   insertNewProviderProduct,
   getProviderProductByIds,
   getProvidersByProductId,
-  deleteAllProductsFromProvider, // הוספת הפונקציה כאן
+  deleteAllProductsFromProvider,
+  changeStatus // הוספת הפונקציה כאן
 };

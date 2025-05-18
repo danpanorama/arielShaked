@@ -108,7 +108,7 @@ function AddProduct(props) {
 <br />
         <PrimaryButton
           text="שמירה"
-          click={() => props.addProvider(productData)}
+          click={() => props.addProvider(productData,setProductData)}
         />
       </form>
     </div>

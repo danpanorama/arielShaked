@@ -105,8 +105,10 @@ function Users() {
     return valid;
   };
 
-  const signUp = async (e) => {
+  const signUp = async (e,userdata) => {
+    
     e.preventDefault();
+    console.log(user.user.permission)
     if (user.user.permission < 2) {
       return dispatch({
         type: ERROR,
@@ -114,15 +116,15 @@ function Users() {
       });
     }
 
-    if (!validateForm()) return;
+    // if (!validateForm()) return;
 
     try {
 
 
-      console.log(userDataState);
+      
       const response = await axiosInstance.post(
         "/users/adduser",
-        userDataState,
+        userdata,
         { withCredentials: true }
       );
       if(response.data.error){
@@ -135,7 +137,7 @@ function Users() {
         },
       });
       }
-      console.log(response.data)
+     
       setUsers((prev) => [...prev, response.data.user]); 
       togglePopUp();
       // איפוס שדות

@@ -6,6 +6,7 @@ const updatePaymentController = async (req, res) => {
     amountPaid
   } = req.body;
 
+  console.log(req.body)
   try {
     const [orderRows] = await mysql.getOrderById(orderId);
 
@@ -29,7 +30,8 @@ const updatePaymentController = async (req, res) => {
         message: "התשלום גבוה מידי להזמנה "
       });
     }
-    const allPayments = order.amount_paid + amountPaid
+    console.log(order)
+    const allPayments = Number(order.amount_paid) + Number(amountPaid)
     if (order.price < allPayments) {
       return res.status(400).json({
         message: "התשלום גבוה מידי להזמנה "
@@ -39,7 +41,8 @@ const updatePaymentController = async (req, res) => {
     await mysql.updateOrderPayment(orderId, allPayments);
 
     return res.status(200).json({
-      message: "התשלום עודכן בהצלחה"
+      message: "התשלום עודכן בהצלחה",
+      allPayments:allPayments
     });
 
   } catch (err) {

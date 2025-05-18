@@ -21,7 +21,7 @@ const getOrderItemsByOrderId = (order_id) => {
   
 const getUnapprovedOrders = () => {
   const query = `
-    SELECT o.id, o.provider_name AS providerName, o.created_at
+    SELECT o.id, o.provider_name AS providerName, o.created_at,o.price
     FROM provider_orders o
     WHERE o.is_approved = 0
   `;

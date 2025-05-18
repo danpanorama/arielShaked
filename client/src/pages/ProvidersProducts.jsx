@@ -40,24 +40,25 @@ function ProvidersProducts() {
   ]);
 
   async function associateProductToProvider(formData) {
-    try {
+    try { 
       const {
         provider_name,
-        item_number,
+        item_number, 
         provider_id,
         price,
-        estimated_delivery_time,
         min_order_quantity,
       } = formData;
+      if(price <= 0 || min_order_quantity <=0 ){
+     return dispatch({type:ERROR,data:{message:'למלא את כל המידע '}})
+      }
 
-      const response = await axiosInstance.post(
+      const response = await axiosInstance.post( 
         "/providersProducts/assignProduct",
         {
           provider_name,
           item_number,
           provider_id,
           price,
-          estimated_delivery_time,
           min_order_quantity,
         },
         {
@@ -65,10 +66,12 @@ function ProvidersProducts() {
         }
       );
 
-      formData.name = response.data.name;
-      formData.id = response.data.itemId;
-
-      setProvidersProductArray((prev) => [...prev, formData]);
+    
+      setActivePopUp(false)
+      console.log(response.data)
+     setProvidersProductArray((prev) => [...prev, response.data.obj]);
+      setSearchTerm(""); //
+     
     } catch (e) {
       dispatch({
         type: ERROR,
@@ -90,7 +93,7 @@ function ProvidersProducts() {
       </div>
       <br />
       <br />
-      <ProvidersProductTable providersProductArray={filteredProducts} />
+      <ProvidersProductTable providersProductArray={filteredProducts } />
       <PopUpGeneral
         click={associateProductToProvider}
         isPopUpActive={activePopUp}

@@ -7,16 +7,12 @@ function ProvidersProductTable({ providersProductArray, onDelete }) {
     <table className="tables">
       <thead>
         <tr>
-          <th>מספר מזהה</th>
-          <th>מספר פריט</th>
-          <th>שם פריט</th>
-     
+          <th>שם ספק </th>
+          <th> שם פריט</th>
+          <th> מספר פריט</th>
           <th>מספר ספק </th>
-          <th> שם ספק</th>
           <th> מחיר</th>
-          <th>זמן אספקה משוער </th>
-          <th>  כמות מינימלית </th>
-
+          <th>    כמות מינימלית לאספקה </th>
         </tr>
       </thead>
       <tbody>
@@ -28,16 +24,16 @@ function ProvidersProductTable({ providersProductArray, onDelete }) {
           </tr>
         ) : (
           providersProductArray?.map((product, index) => (
-            
+         
+
             <tr key={product.id || index}>
-              <td>{product.id || index}</td>
+                 
+              <td>{product.provider_name || index}</td>
+              <td>{product.name } </td>
               <td>{product.item_number}</td>
-              <td>{product.name}</td>
               <td>{product.provider_id}</td>
-              <td>{product.name}</td>
               <td>{product.price}</td>
-              <td>{product.estimated_delivery_time}</td>
-              <td>{product.min_order_quantity}</td>
+              <td>{product.min_order_quantity?.split(".")[0]}</td>
          
             </tr>
           ))

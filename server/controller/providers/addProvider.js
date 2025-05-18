@@ -3,9 +3,9 @@ const providers = require("../../models/providers");
 const addProviderController = async (req, res, next) => {
   try {
     ("Inside Add Provider Route");
-    ('req.body: ', req.body);
+    console.log('req.body: ', req.body);
 
-    const { name, contact_name, phone, address, email} = req.body;
+    const { name, contact_name,delivery_time, phone, address, email} = req.body;
 
     if (!name || !contact_name || !phone || !address || !email ) {
       return res.status(400).json({
@@ -24,7 +24,7 @@ const addProviderController = async (req, res, next) => {
 
     // הכנסת ספק חדש למסד הנתונים
     const insertResult = await providers.insertNewProvider(
-      name, contact_name, phone, address, email,
+      name, contact_name, phone,delivery_time, address, email,
       1
     );
 

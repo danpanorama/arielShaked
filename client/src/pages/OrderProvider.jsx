@@ -17,7 +17,6 @@ import ProviderOrderTabel from "../components/tables/ProviderOrderTabel";
 
 function OrderProvider() {
   const dispatch = useDispatch();
-
   const [showPopup, setShowPopup] = useState(false);
   const [orders, setOrders] = useState([]);
   const [providers, setProviders] = useState([]);
@@ -28,6 +27,7 @@ function OrderProvider() {
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [cart, setCart] = useState([]);
+   const [amount, setAmount] = useState(0);
   const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
@@ -44,14 +44,20 @@ function OrderProvider() {
       if (res.data) {
         setOrders(res.data);
         setFilteredOrders(res.data);
+        setLoading(false)
       } else {
         throw new Error("לא התקבלו נתונים מהשרת");
       }
     } catch (err) {
       setError("שגיאה בטעינת ההזמנות: " + (err?.message || "לא ידוע"));
-      dispatch({ type: ERROR });
+      dispatch({
+        type: ERROR,
+        data: {
+          message: "שגיאה בטעינת ההזמנות: ",
+          header: err?.message || "לא ידוע",
+        },
+      });
     } finally {
-      setLoading(false);
       dispatch({ type: STOP_LOAD });
     }
   };
@@ -62,7 +68,11 @@ function OrderProvider() {
       const res = await axiosInstance.get("/providers", {
         withCredentials: true,
       });
-      setProviders(res.data);
+      const activeProviders = res.data.filter(
+        (provider) => provider.is_active === 1
+      );
+      setProviders(activeProviders);
+      setLoading(false)
     } catch (err) {
       setError("שגיאה בטעינת הספקים");
       dispatch({ type: ERROR });
@@ -71,15 +81,86 @@ function OrderProvider() {
     }
   };
 
-const handleSearch = (query) => {
-  const loweredQuery = query.toLowerCase();
-  const filtered = orders.filter((order) =>
-    order.provider_name.toLowerCase().includes(loweredQuery) ||
-    String(order.id).includes(loweredQuery) // או order.order_id תלוי בשם השדה
-  );
+  const handleSearch = (query) => {
+    const loweredQuery = query.toLowerCase();
+    const filtered = orders.filter(
+      (order) =>
+        order.provider_name.toLowerCase().includes(loweredQuery) ||
+        String(order.id).includes(loweredQuery) // או order.order_id תלוי בשם השדה
+    );
 
-  setFilteredOrders(filtered);
+    setFilteredOrders(filtered);
+  };
+
+  function handlePaymentAmount(e){
+    setAmount(e.target.value)
+  }
+  
+const handlePaymentUpdate = async (order) => {
+  try {
+    if(amount<=0){
+      return
+    }
+  const res=  await axiosInstance.post(
+      "/providers/update-payment",
+      {
+        orderId: order.id,
+        amountPaid: Number(amount),
+      },
+      { withCredentials: true }
+    );
+
+      
+    const updatedOrder = order;
+    
+    const payment = res.data?.allPayments; // ודא שאתה מקבל את זה נכון מהשרת
+
+setOrders((prevOrders) =>
+  prevOrders.map((o) => {
+    if (o.id === order.id) {
+      const updatedAmountPaid = payment;
+      const isFullyPaid = o.price <= updatedAmountPaid;
+      return {
+        ...o,
+        amount_paid: updatedAmountPaid,
+        is_paid: isFullyPaid ? 1 : 0,
+      };
+    }
+    return o;
+  })
+);
+
+setFilteredOrders((prevFiltered) =>
+  prevFiltered.map((o) => {
+    if (o.id === order.id) {
+      const updatedAmountPaid = payment;
+      const isFullyPaid = o.price <= updatedAmountPaid;
+      return {
+        ...o,
+        amount_paid: updatedAmountPaid,
+        is_paid: isFullyPaid ? 1 : 0,
+      };
+    }
+    return o;
+  })
+);
+
+    // אופציונלי: איפוס שדה תשלום לאחר ההצלחה
+    setAmount(0);
+
+   
+   
+  } catch (err) {
+       dispatch({
+      type: ERROR,
+      data: {
+        message: err?.response?.data?.message || "שגיאה בעדכון התשלום",
+        header: "שגיאה",
+      },
+    });
+  }
 };
+
 
   const fetchProducts = async (provider) => {
     try {
@@ -89,6 +170,7 @@ const handleSearch = (query) => {
         { providerId: provider.id },
         { withCredentials: true }
       );
+
       setProducts(res.data.items);
       setSelectedProvider(provider);
     } catch (err) {
@@ -103,6 +185,7 @@ const handleSearch = (query) => {
 
   const sendOrder = async () => {
     try {
+      console.log(cart)
       for (const providerCart of cart) {
         const totalPrice = providerCart.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
@@ -120,7 +203,8 @@ const handleSearch = (query) => {
           orderToSend,
           { withCredentials: true }
         );
-
+        console.log( res.data.order);
+     
         setFilteredOrders((prev) => [...prev, res.data.order]);
         setOrders((prev) => [...prev, res.data.order]);
       }
@@ -134,6 +218,10 @@ const handleSearch = (query) => {
   };
 
   const addToCart = (item, quantity) => {
+
+    if(quantity <=0){
+      return
+    }
     setCart((prevCart) => {
       const providerId = selectedProvider.id;
       const providerName = selectedProvider.name;
@@ -142,6 +230,7 @@ const handleSearch = (query) => {
         name: item.name,
         price: item.price,
         quantity,
+      
       };
 
       const providerCart = prevCart.find((c) => c.providerId === providerId);
@@ -149,7 +238,9 @@ const handleSearch = (query) => {
         const existingItem = providerCart.items.find((i) => i.id === item.id);
         const updatedItems = existingItem
           ? providerCart.items.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
+              i.id === item.id
+                ? { ...i, quantity: Number(i.quantity) + Number(quantity) }
+                : i
             )
           : [...providerCart.items, itemToAdd];
         return prevCart.map((c) =>
@@ -235,7 +326,7 @@ const handleSearch = (query) => {
         ) : error ? (
           <p style={{ color: "red" }}>{error}</p>
         ) : (
-          <ProviderOrderTabel orders={filteredOrders} />
+          <ProviderOrderTabel handlePaymentUpdate={handlePaymentUpdate} handlePaymentAmount={handlePaymentAmount} orders={filteredOrders} />
         )}
       </div>
     </div>

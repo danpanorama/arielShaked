@@ -26,6 +26,7 @@ const createDatabaseAndTables = async () => {
         name VARCHAR(255) NOT NULL,
         contact_name VARCHAR(255),
         phone_number VARCHAR(20),
+        delivery_time VARCHAR(20),
         address VARCHAR(255),
         email VARCHAR(255),
         is_active BOOLEAN DEFAULT TRUE
@@ -90,7 +91,7 @@ CREATE TABLE IF NOT EXISTS provider_products (
   provider_name VARCHAR(255),
   provider_id INT NOT NULL,
   price DECIMAL(10,2),
-  estimated_delivery_time VARCHAR(100),
+
   min_order_quantity DECIMAL(10,2),
   is_active BOOLEAN DEFAULT TRUE
 );
@@ -112,6 +113,43 @@ CREATE TABLE IF NOT EXISTS provider_order_items (
 
 `;
 await connection.query(createProviderOrderItemsTableQuery);
+
+
+// טבלת הזמנות מאפייה
+const createBakeryOrdersTableQuery = `
+CREATE TABLE IF NOT EXISTS bakery_orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_number VARCHAR(50),
+  order_date DATE,
+  estimated_ready_time VARCHAR(100),
+  is_approved TINYINT(1) DEFAULT 0 CHECK (is_approved IN (0,1)),
+  is_paid TINYINT(1) DEFAULT 0 CHECK (is_paid IN (0,1)),
+  amount_paid DECIMAL(10,2) DEFAULT 0.00,
+  is_delivered TINYINT(1) DEFAULT 0 CHECK (is_delivered IN (0,1)),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+`;
+await connection.query(createBakeryOrdersTableQuery);
+
+// טבלת פריטים בהזמנת מאפייה
+const createBakeryOrderItemsTableQuery = `
+CREATE TABLE IF NOT EXISTS bakery_order_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  product_id INT NOT NULL,
+  product_name VARCHAR(255) NOT NULL,
+  quantity DECIMAL(10,2) NOT NULL,
+  unit_price DECIMAL(10,2),
+  total_price DECIMAL(10,2) AS (quantity * unit_price) STORED,
+  received_quantity DECIMAL(10,2) DEFAULT 0
+);
+
+`;
+await connection.query(createBakeryOrderItemsTableQuery);
+
+
+
 
 
     // שחרור החיבור

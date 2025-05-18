@@ -12,6 +12,7 @@ const { getOrderByIdController } = require('../controller/orders/providerOrders/
 const { getUnapprovedOrders } = require('../controller/orders/providerOrders/getUnapprovedOrders');
 const { approve_order } = require('../controller/orders/providerOrders/approve_order');
 const { updatePaymentController } = require('../controller/orders/providerOrders/updatePaymentController');
+const { changeStatusController } = require('../controller/providers/changeStatusController');
 
 /* GET home page. */
 router.get('/',jwtMiddleware.jwtAuth,getAllProvidersController, function(req, res, next) {
@@ -53,7 +54,9 @@ router.post('/update-payment',jwtMiddleware.jwtAuth,updatePaymentController, fun
 
 });
 
-
+router.post('/changeStatus',jwtMiddleware.jwtAuth,changeStatusController, function(req, res, next) {
+ 
+});
 
 router.post('/editProvider', function(req, res, next) {
   res.render('index', { title: 'Express' });

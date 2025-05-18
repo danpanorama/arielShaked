@@ -84,16 +84,38 @@
 .SearchBar {
   width: 300px;
   min-height: 40px;
-  
   /* padding: 10px; */
   /* padding-right: 20px; */
   border: 1px solid black;
   border-radius: 30px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background-color: #f9f9f9;
   transition: border 0.3s ease;
 }
 
+
+.SearchBarReal {
+  width: 250px;
+  min-height: 40px;
+  position: relative;
+  /* padding: 10px; */
+  padding-right: 50px;
+  border: 1px solid black;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  background-color: #f9f9f9;
+  transition: border 0.3s ease;
+}
+.positionPlace{
+   position: relative;
+}
+.searchIconPosition{
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  border-radius: 50%;
+
+}
 /* ====== Search Icon ====== */
 .searchIcon {
   max-height: 30px;

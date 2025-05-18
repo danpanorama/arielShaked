@@ -80,26 +80,38 @@ const assignProductsController = async (req, res) => {
     console.log(req.body);
     const {
       item_number,
-      provider_name,
+
       provider_id,
       price,
-      estimated_delivery_time,
       min_order_quantity,
       is_active
     } = req.body;
 
-    if (!item_number || !provider_id) {
-      return res.status(400).json({ message: "פרטי מוצר או ספק חסרים." });
+
+    const getProvider = await providers.getProvidersById(provider_id);
+    const provider_name = getProvider[0][0].name
+
+    console.log(getProvider)
+
+
+    if (!item_number || !provider_id || price < 1) {
+      return res.status(400).json({
+        message: "פרטי מוצר או ספק חסרים."
+      });
     }
 
     const [productRows] = await products.getProductsById(item_number);
     if (!productRows.length) {
-      return res.status(404).json({ message: "מוצר לא נמצא." });
+      return res.status(404).json({
+        message: "מוצר לא נמצא."
+      });
     }
 
     const [providerRows] = await providers.getProvidersById(provider_id);
     if (!providerRows.length) {
-      return res.status(404).json({ message: "ספק לא נמצא." });
+      return res.status(404).json({
+        message: "ספק לא נמצא."
+      });
     }
 
     // 🔒 בדיקה אם המוצר כבר משויך לספק כלשהו
@@ -119,24 +131,33 @@ const assignProductsController = async (req, res) => {
       provider_name,
       provider_id,
       price || 0,
-      estimated_delivery_time || null,
+
       min_order_quantity || 1,
       is_active !== undefined ? is_active : true
     );
 
-    let itemId = productProviderId[0].insertId;
+    let id = productProviderId[0].insertId;
+    let obj = {
+    item_number,
+    id,
+      name,
+      provider_name,
+      provider_id,
+      price,
+      min_order_quantity ,
+       is_active
+    }
 
     return res.status(200).json({
       message: "המוצר שויך בהצלחה לספק.",
-      item_number,
-      provider_id,
-      itemId,
-      name
+   obj
     });
 
   } catch (err) {
     console.error("Error assigning product to provider:", err.message);
-    return res.status(500).json({ message: "שגיאה בשיוך המוצר לספק." });
+    return res.status(500).json({
+      message: "שגיאה בשיוך המוצר לספק."
+    });
   }
 };
 

@@ -2,6 +2,7 @@ const products = require("../../models/product");
 
 const getAllProductsController = async (req, res) => {
   try {
+   
     const allProducts = await products.getAllProducts();
     return res.status(200).json(allProducts);
   } catch (err) {

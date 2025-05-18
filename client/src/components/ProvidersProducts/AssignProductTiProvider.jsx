@@ -9,7 +9,6 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
     item_number: "",
     provider_id: "",
     price: "",
-    estimated_delivery_time: "",
     min_order_quantity: "",
   });
 
@@ -23,7 +22,9 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
 
   async function getAllProducts() {
     try {
-      const res = await axiosInstance.get("/products", { withCredentials: true });
+      const res = await axiosInstance.get("/products", {
+        withCredentials: true,
+      });
       setProducts(res.data[0]);
     } catch (err) {
       console.error("שגיאה בטעינת מוצרים", err);
@@ -32,9 +33,10 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
 
   async function getAllProviders() {
     try {
-      const res = await axiosInstance.get("/providers", { withCredentials: true });
+      const res = await axiosInstance.get("/providers", {
+        withCredentials: true,
+      });
       setProviders(res.data);
-   
     } catch (err) {
       console.error("שגיאה בטעינת ספקים", err);
     }
@@ -42,7 +44,7 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "provider_id") {
       const [id, nameValue] = value.split("|");
       setFormData((prev) => ({
@@ -57,15 +59,12 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
       }));
     }
   };
-  
-
-
 
   return (
     <div className="yellowPopUp addProviderFrom">
       <h1 onClick={activePopUp}>X</h1>
       <h1>שיוך מוצר לספק</h1>
-      <form >
+      <form>
         <div className="inputHolderDiv marginBottom10">
           <label className="label">מספר פריט</label>
           <select
@@ -75,13 +74,11 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
             onChange={handleChange}
           >
             <option value="">בחר פריט</option>
-          
-            {products.map((item) => (
 
+            {products.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.id} - {item.name}
               </option>
-              
             ))}
           </select>
         </div>
@@ -94,16 +91,17 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
             value={formData.provider_id}
             onChange={handleChange}
           >
-            <option value="">בחר ספק</option>
+            <option value="">בחר ספק </option> 
             {providers.map((provider) => (
-          <option key={provider.id} value={`${provider.id}|${provider.name}`}>
-          {provider.id} - {provider.name}
-        </option>
-        
+              <option  
+                key={provider.id}
+                value={provider.id}
+              >
+                {provider.id} - {provider.name}
+              </option>
             ))}
           </select>
-        </div>
-  
+        </div> 
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">מחיר</label>
@@ -117,18 +115,7 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
         </div>
 
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">זמן אספקה משוער (ימים)</label>
-          <input
-            className="SearchBar"
-            type="number"
-            name="estimated_delivery_time"
-            value={formData.estimated_delivery_time}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">כמות מינימלית להזמנה</label>
+          <label className="label">  כמות מינימלית לאספקה</label>
           <input
             className="SearchBar"
             type="number"
@@ -138,7 +125,12 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
           />
         </div>
 
-        <PrimaryButton data={formData} click={associateProductToProvider} text="שמירה" type="submit" />
+        <PrimaryButton
+          data={formData}
+          click={associateProductToProvider}
+          text="שמירה"
+          type="submit"
+        />
       </form>
     </div>
   );

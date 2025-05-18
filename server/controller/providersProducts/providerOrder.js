@@ -32,7 +32,9 @@ const providerOrder = async (req, res) => {
       );
     }
 
-    res.status(201).json({ message: 'ההזמנה נוצרה בהצלחה', order_id });
+   
+
+    res.status(201).json({estimated_delivery_time:estimated_delivery_time, message: 'ההזמנה נוצרה בהצלחה', order_id });
 
   } catch (err) {
     console.error('שגיאה ביצירת הזמנת ספק:', err);

@@ -2,7 +2,7 @@ import "../../App.css";
 import "../../css/tools.css";
 
 
-function ProductTable({ Products, onDelete,deleteProductCompletely }) {
+function ProductTable({ Products, onDelete,deleteProductCompletely,changeStatus }) {
   const getRowClass = (product) => {
     if (!product.is_active) return "inactive-row";
     const quantity = parseFloat(product.quantity);
@@ -52,7 +52,11 @@ function ProductTable({ Products, onDelete,deleteProductCompletely }) {
                 <td>{product.unit}</td>
                 <td>{parseFloat(product.min_required).toFixed(0)}</td>
                 <td>{product.last_updated?.split("T")[0]}</td>
-                <td>{product.is_active ? "כן" : "לא"}</td>
+
+
+                <td>{product.is_active == 1? 
+                  <button onClick={((e)=>{changeStatus(product.id,0)})} >כבה</button> :
+                 <button onClick={((e)=>{changeStatus(product.id,1)})}>הפעל</button>}</td>
                
               </tr>
             ))

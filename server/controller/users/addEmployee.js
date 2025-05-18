@@ -5,6 +5,8 @@ const jwt = require("../../auth/jwt");
 const addEmployee = async (req, res, next) => {
 try {
         const { name, password, repeatPassword, email, phone, permissions,is_active } = req.body;
+
+        console.log(req.body)
         if (!name  || !password || !repeatPassword || !email || !phone || permissions === undefined) {
           return res.status(400).json({
             message: "נא למלא את כל השדות",

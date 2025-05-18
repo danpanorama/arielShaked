@@ -10,9 +10,9 @@ function AddProvides(props) {
     contact_name: "",
     phone: "",
     address: "",
+    delivery_time: "",
     email: "",
   });
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,8 +24,8 @@ function AddProvides(props) {
 
   return (
     <div className="yellowPopUp addProviderFrom">
-      <CloseButton text={'X'} click={props.activePopUp}/>
-    
+      <CloseButton text={"X"} click={props.activePopUp} />
+
       <h1>הוספת ספק חדש</h1>
 
       <form>
@@ -63,6 +63,17 @@ function AddProvides(props) {
         </div>
 
         <div className="inputHolderDiv marginBottom10">
+          <label className="label"> זמן אספקה משוער</label>
+          <input
+            className="SearchBar"
+            type="text"
+            name="delivery_time"
+            value={providerData.delivery_time}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="inputHolderDiv marginBottom10">
           <label className="label">כתובת</label>
           <input
             className="SearchBar"
@@ -83,15 +94,13 @@ function AddProvides(props) {
             onChange={handleChange}
           />
         </div>
-       
-   <PrimaryButton
+
+        <PrimaryButton
           text="שמירה"
           click={props.addProvider}
           data={providerData}
         />
-       
-
-     
+        
       </form>
     </div>
   );
