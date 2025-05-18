@@ -121,7 +121,7 @@ const [quantities, setQuantities] = useState({});
                             onClick={() => {
                               // כמות להצבה - אם ריק או לא תקין, 1
                               const qty = parseInt(quantities[item.id]) > 0 ? parseInt(quantities[item.id]) : 1;
-addToCart(item, qty);
+                              addToCart(item, qty);
 
                             }}
                           >
