@@ -1,10 +1,13 @@
 const users = require("../../models/users");
+const bcrypt = require('../../auth/bycrypt')
 
 const getAllUsersController = async (req, res) => {
     try {
         const result = await users.getAllUsers(); // הנחה: הפונקציה הזו קיימת בקובץ models/users.js
         const userList = result[0]; // אם אתה משתמש ב-MySQL עם mysql2 אז התוצאה חוזרת במבנה כזה
         console.log(userList)
+        
+
         return res.status(200).json({
             users: userList
         });

@@ -114,13 +114,13 @@ const assignProductsController = async (req, res) => {
       });
     }
 
-    // 🔒 בדיקה אם המוצר כבר משויך לספק כלשהו
-    const [existingAssignments] = await providersProduct.getProvidersByProductId(item_number);
-    if (existingAssignments.length > 0) {
-      return res.status(409).json({
-        message: "המוצר כבר משויך לספק אחר. יש להסיר את השיוך הקודם לפני שיוך חדש.",
-      });
-    }
+    // // 🔒 בדיקה אם המוצר כבר משויך לספק כלשהו
+    // const [existingAssignments] = await providersProduct.getProvidersByProductId(item_number);
+    // if (existingAssignments.length > 0) {
+    //   return res.status(409).json({
+    //     message: "המוצר כבר משויך לספק אחר. יש להסיר את השיוך הקודם לפני שיוך חדש.",
+    //   });
+    // }
 
     const product = productRows[0];
     const name = product.name;
