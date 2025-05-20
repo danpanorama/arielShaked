@@ -11,6 +11,7 @@ import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
 import { ERROR } from "../redux/contents/errContent";
 import UserTable from "../components/tables/UsersTable";
+import Icon from '../images/plus.svg'
 import SignUpEmployee from "../components/users/SignUpEmployee";
 import {
   validatePassword,
@@ -109,11 +110,22 @@ function Users() {
     
     e.preventDefault();
     console.log(user.user.permission)
+setUserDataState({
+    name: "",
+    password: "",
+    repeatPassword: "",
+    email: "",
+    phone: "",
+    permissions: 0,
+    is_active: 1,})
+    
     if (user.user.permission < 2) {
       return dispatch({
         type: ERROR,
         data: { message: "אין לך הרשאות", header: "אתה לא מנהל" },
       });
+      
+   
     }
 
     // if (!validateForm()) return;
@@ -256,7 +268,7 @@ function Users() {
       <Headers text="משתמשים / עובדים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={handleSearch} />
-        <PrimaryButton click={togglePopUp} text="הוסף משתמש חדש" />
+        <PrimaryButton icon={Icon} click={togglePopUp} text="הוספת משתמש חדש" />
       </div>
       <br />
       <UserTable

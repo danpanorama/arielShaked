@@ -1,15 +1,19 @@
 import "../../App.css";
 import "../../css/tools.css";
 
-
-function ProductTable({ Products, onDelete,deleteProductCompletely,changeStatus }) {
+function ProductTable({
+  Products,
+  onDelete,
+  deleteProductCompletely,
+  changeStatus,
+}) {
   const getRowClass = (product) => {
     if (!product.is_active) return "inactive-row";
     const quantity = parseFloat(product.quantity);
     const minRequired = parseFloat(product.min_required);
 
     if (quantity < minRequired) return "low-stock";
-    
+
     return "";
   };
 
@@ -17,8 +21,6 @@ function ProductTable({ Products, onDelete,deleteProductCompletely,changeStatus 
     <div className="product-table-container">
       <div className="legend">
         <span className="legend-item red">חסר במלאי</span>
-    
-     
       </div>
 
       <table className="tables">
@@ -32,7 +34,6 @@ function ProductTable({ Products, onDelete,deleteProductCompletely,changeStatus 
             <th>כמות מינימלית</th>
             <th>עדכון אחרון</th>
             <th>פעיל</th>
-             
           </tr>
         </thead>
         <tbody>
@@ -53,11 +54,29 @@ function ProductTable({ Products, onDelete,deleteProductCompletely,changeStatus 
                 <td>{parseFloat(product.min_required).toFixed(0)}</td>
                 <td>{product.last_updated?.split("T")[0]}</td>
 
-
-                <td>{product.is_active == 1? 
-                  <button onClick={((e)=>{changeStatus(product.id,0)})} >כבה</button> :
-                 <button onClick={((e)=>{changeStatus(product.id,1)})}>הפעל</button>}</td>
-               
+                {Number(product.quantity) > Number(product.min_required)? (
+                  ""
+                ) : (
+                  <td>
+                    {product.is_active == 1 ? (
+                      <button
+                        onClick={(e) => {
+                          changeStatus(product.id, 0);
+                        }}
+                      >
+                        כבה
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          changeStatus(product.id, 1);
+                        }}
+                      >
+                        הפעל
+                      </button>
+                    )}
+                  </td>
+                )}
               </tr>
             ))
           )}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import "../App.css";
 import "../css/order.css";
 import { Link } from "react-router-dom";
+import Icon from '../images/plus.svg'
 import PrimaryButton from "../components/btn/PrimaryButton";
 import SideNavBar from "../components/sidenav/SideNavBar";
 import Headers from "../components/header/Headers";
@@ -21,13 +22,13 @@ function OrderProvider() {
   const [orders, setOrders] = useState([]);
   const [providers, setProviders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedProvider, setSelectedProvider] = useState(null);
-  const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [cart, setCart] = useState([]);
-   const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(0);
   const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
@@ -259,7 +260,7 @@ setFilteredOrders((prevFiltered) =>
     });
   };
 
-  const removeFromCart = (item) => {
+  const removeFromCart = (item,quantity) => {
     setCart((prevCart) =>
       prevCart.map((c) =>
         c.providerId === selectedProvider.id
@@ -267,11 +268,11 @@ setFilteredOrders((prevFiltered) =>
           : c
       )
     );
+    quantity(1)
   };
   const handleQuantityChange = (itemId, quantity) => {
     // וודא שהכמות חיובית
     if (quantity <= 0) return;
-
     setCart((prevCart) => {
       const providerId = selectedProvider.id;
       const providerName = selectedProvider.name;
@@ -297,7 +298,7 @@ setFilteredOrders((prevFiltered) =>
       <Headers text="הזמנות מספקים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={handleSearch} />
-        <PrimaryButton click={() => setShowPopup(true)} text="הזמנה חדשה" />
+        <PrimaryButton icon={Icon} click={() => setShowPopup(true)} text="הוספת הזמנה חדשה" />
       </div>
 
       {showPopup && (
@@ -317,6 +318,7 @@ setFilteredOrders((prevFiltered) =>
           showCart={showCart}
           setShowCart={setShowCart}
           sendOrder={sendOrder}
+          
         />
       )}
 

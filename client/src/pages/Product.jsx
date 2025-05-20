@@ -200,7 +200,6 @@ function Product() {
         },
         { withCredentials: true }
       );
-
       const updatedProduct = response.data.product[0];
 
       // עדכון סטייטים מקומיים
@@ -237,9 +236,9 @@ function Product() {
         
           <PrimaryButton
             click={() => togglePopUp("removeProduct")}
-            text="הוצאת פריט "
+            text="הוצאת פריט מהמלאי "
             icon={minusIcon}
-          />
+          /> 
             <PrimaryButton
             click={() => togglePopUp("addStock")}
             text="הכנסת פריט למלאי  "
@@ -262,7 +261,7 @@ function Product() {
         deleteProductCompletely={deleteProductCompletely}
       />
       <div className={isCustomPopUpActive ? "openWindow" : "closeWindow"}>
-        <ReceiveOrderPopup activePopUp={openOrdersPopUp} />
+        <ReceiveOrderPopup setOriginalProducts={setOriginalProducts} setFilteredProducts={setFilteredProducts} originalProducts={originalProducts}  products={filteredProducts} activePopUp={openOrdersPopUp} />
       </div>
 
       <PopUpGeneral

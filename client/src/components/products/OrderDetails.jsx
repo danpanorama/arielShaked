@@ -5,7 +5,10 @@ import { ERROR } from "../../redux/contents/errContent";
 function OrderDetails({
   order,
   orderIndex,
+  products,
+  setFilteredProducts,
   setSelectedOrderIndex,
+  setOriginalProducts,
   setPendingOrders,
   dispatch
 }) {
@@ -30,7 +33,51 @@ function OrderDetails({
         { withCredentials: true }
       );
 
+      
+    // עדכון המלאי של המוצרים אחרי אישור ההזמנה
+    setFilteredProducts((prevProducts) =>
+      prevProducts.map((product) => { 
+        const matchedItem = formattedItems.find(
+          (item) => item.product_id === product.id
+        );
+
+        if (matchedItem) {
+          return {
+            ...product,
+            quantity: (
+              parseFloat(product.quantity) + matchedItem.quantity
+            ).toFixed(2),
+          };
+        }
+        return product;
+      })
+    );
+
+
+        // עדכון המלאי של המוצרים אחרי אישור ההזמנה
+    setOriginalProducts((prevProducts) =>
+      prevProducts.map((product) => { 
+        const matchedItem = formattedItems.find(
+          (item) => item.product_id === product.id
+        );
+
+        if (matchedItem) {
+          return {
+            ...product,
+            quantity: (
+              parseFloat(product.quantity) + matchedItem.quantity
+            ).toFixed(2),
+          };
+        }
+        return product;
+      })
+    );
+
       setPendingOrders(prev => prev.filter((o) => o.id !== order.id));
+   
+
+
+      
       setSelectedOrderIndex(null);
     } catch (e) {
       dispatch({

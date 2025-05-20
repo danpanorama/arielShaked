@@ -23,6 +23,15 @@ function SignUpEmployee({ togglePopUp, signUp }) {
     }));
   };
   const handelSignUp = (e)=>{
+
+    setUserData({
+    name: "",
+    email: "",
+    phone: "", 
+    password: "",
+    repeatPassword: "",
+    permissions: "",
+  })
    
  signUp(e, userData)
 
@@ -35,7 +44,7 @@ function SignUpEmployee({ togglePopUp, signUp }) {
 
       <form  >
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">שם מלא</label>
+          <label className="label">שם פרטי</label>
           <input
             type="text"
             name="name"

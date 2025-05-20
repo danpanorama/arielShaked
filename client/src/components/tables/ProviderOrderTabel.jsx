@@ -43,9 +43,11 @@ function ProviderOrderTabel({ orders ,handlePaymentAmount,handlePaymentUpdate}) 
             </td>
             <td>{order.created_at?.split("T")[0]}</td>
             <td >
-              {order.is_approved === 0 ? "נשלח" : "קיבל"}
+              {order.is_approved === 0 ? "נשלח" : "נקלט"}
             </td>
-            <td className={order.is_paid === 1 ? "paid" : "unpaid"}>
+            <td 
+            // className={order.is_paid === 1 ? "paid" : "unpaid"}
+            >
              {order.price <= order.amount_paid
   ? "שולם"
   : order.amount_paid > 0

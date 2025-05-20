@@ -13,7 +13,17 @@ function AddProvides(props) {
     delivery_time: "",
     email: "",
   });
-
+ 
+  const clear = () => {
+    setProviderData({
+      name: "",
+      contact_name: "",
+      phone: "",
+      address: "",
+      delivery_time: "",
+      email: "",
+    });
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProviderData((prev) => ({
@@ -94,12 +104,19 @@ function AddProvides(props) {
             onChange={handleChange}
           />
         </div>
-
-        <PrimaryButton
+        <div onClick={clear} className="flex-col-center">
+   <PrimaryButton
           text="שמירה"
-          click={props.addProvider}
+            click={() => {
+              props.addProvider(providerData);
+              clear();  // לאפס אחרי שליחה
+            }}
+         
           data={providerData}
         />
+        </div>
+
+     
         
       </form>
     </div>

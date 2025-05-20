@@ -11,6 +11,7 @@ import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
 import { ERROR } from "../redux/contents/errContent";
 import { getFromServer } from "../components/tools/FetchData";
+import IconPlus from '../images/plus.svg'
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
 
 function ProvidersProducts() {
@@ -39,7 +40,7 @@ function ProvidersProducts() {
     "name",
   ]);
 
-  async function associateProductToProvider(formData) {
+  async function associateProductToProvider(formData,clearData) {
     try { 
       const {
         provider_name,
@@ -70,7 +71,11 @@ function ProvidersProducts() {
       setActivePopUp(false)
       console.log(response.data)
      setProvidersProductArray((prev) => [...prev, response.data.obj]);
-      setSearchTerm(""); //
+      setSearchTerm("");
+      clearData({    item_number: "",
+    provider_id: "",
+    price: "",
+    min_order_quantity: "",}) //
      
     } catch (e) {
       dispatch({
@@ -89,7 +94,7 @@ function ProvidersProducts() {
       <Headers text="שיוך מוצרים לספקים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={(value) => setSearchTerm(value)} />
-        <PrimaryButton click={activePopUpFunction} text="הוספת שיוך לספק" />
+        <PrimaryButton icon={IconPlus} click={activePopUpFunction} text="הוספת שיוך לספק" />
       </div>
       <br />
       <br />

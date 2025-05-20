@@ -55,7 +55,9 @@ function Providers() {
       const response = await axiosInstance.post("/providers/addProvider", newProvider, {
         withCredentials: true,
       });
+       
        console.log(response.data.data)
+      
       setProvidersPopUpState(false)
       setProvidersArray((prev) => [...prev, response.data.data]);
       setFilteredProvidersArray((prev) => [...prev, response.data.data]);
@@ -146,7 +148,7 @@ function Providers() {
       <Headers text="ספקים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={handleSearch} />
-        <PrimaryButton icon={Icon1} click={activePopUp} text={"הוסף ספק חדש"} />
+        <PrimaryButton icon={Icon1} click={activePopUp} text={"הוספת ספק חדש"} />
       </div>
       <br />
       <br />

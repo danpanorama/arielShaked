@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { ERROR } from "../../redux/contents/errContent";
 import OrderDetails from "./OrderDetails";
 
-function ReceiveOrderPopup({ activePopUp }) {
+function ReceiveOrderPopup({ activePopUp,products,setOriginalProducts,setFilteredProducts }) {
   const dispatch = useDispatch();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
@@ -45,7 +45,7 @@ function ReceiveOrderPopup({ activePopUp }) {
       <tbody>
         {pendingOrders.map((order, index) => (
           <tr key={order.id} onClick={() => setSelectedOrderIndex(index)}>
-            {console.log(order)}
+       
             <td>{order.id}</td>
             <td>{order.providerName}</td>
             <td>{order.created_at.split('T')[0]}</td>
@@ -70,6 +70,10 @@ function ReceiveOrderPopup({ activePopUp }) {
             setSelectedOrderIndex={setSelectedOrderIndex}
             setPendingOrders={setPendingOrders}
             dispatch={dispatch}
+            products={products}
+            setOriginalProducts={setOriginalProducts}
+
+              setFilteredProducts={setFilteredProducts}
           />
         ) : (
           renderOrderTable()

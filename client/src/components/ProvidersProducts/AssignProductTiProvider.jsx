@@ -91,17 +91,14 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
             value={formData.provider_id}
             onChange={handleChange}
           >
-            <option value="">בחר ספק </option> 
+            <option value="">בחר ספק </option>
             {providers.map((provider) => (
-              <option  
-                key={provider.id}
-                value={provider.id}
-              >
+              <option key={provider.id} value={provider.id}>
                 {provider.id} - {provider.name}
               </option>
             ))}
           </select>
-        </div> 
+        </div>
 
         <div className="inputHolderDiv marginBottom10">
           <label className="label">מחיר</label>
@@ -115,7 +112,7 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
         </div>
 
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">  כמות מינימלית לאספקה</label>
+          <label className="label"> כמות מינימלית לאספקה</label>
           <input
             className="SearchBar"
             type="number"
@@ -127,7 +124,9 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
 
         <PrimaryButton
           data={formData}
-          click={associateProductToProvider}
+          click={()=>associateProductToProvider(formData,setFormData)}
+        
+          
           text="שמירה"
           type="submit"
         />

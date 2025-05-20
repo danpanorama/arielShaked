@@ -20,7 +20,7 @@ function SignUp() {
     repeatPassword: "",
     email: "",
     phone: "",
-    permissions: 0,
+    permissions: 4,
   });
 
   const [errorMessages, setErrorMessages] = useState({});
@@ -208,20 +208,7 @@ function SignUp() {
             )}
           </div>
 
-          <div className="inputBox">
-            <label htmlFor="permissions">הרשאות משתמשים</label>
-            <select
-              name="permissions"
-              id="permissions"
-              value={userDataState.permissions}
-              onChange={handleChange}
-            >
-              <option value="1"> עובד מטבח</option>
-              <option value="2"> עובד חנות</option>
-              <option value="3"> מנהל</option>
-              <option value="4">  מנהל בכיר</option>
-            </select>
-          </div>
+       
 
           <button className="bcYellow buttons" type="submit">
             הרשמה

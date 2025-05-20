@@ -128,7 +128,7 @@ const [quantities, setQuantities] = useState({});
                             הוסף
                           </button>
 
-                          <button onClick={() => removeFromCart(item)}>
+                          <button onClick={() => removeFromCart(item,setQuantities)}>
                             הסר
                           </button>
                         </div>
