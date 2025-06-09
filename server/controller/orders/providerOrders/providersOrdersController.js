@@ -15,6 +15,8 @@ const providersOrdersController = async (req, res, next) => {
       items,
     } = req.body;
 
+
+    
    let getProviderDeliveryTime = await providers.getProvidersById(provider_id)
 
 deliveryTime = getProviderDeliveryTime[0][0].delivery_time
@@ -87,7 +89,7 @@ for (const item of items) {
   }
 
   console.log('here', orderId, id, name, quantity, itemPrice);
-
+ 
 
 
   // הכנסת פריט להזמנה

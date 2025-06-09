@@ -19,6 +19,14 @@ function Providers() {
   const [activeProvidersPopUp, setProvidersPopUpState] = useState(false);
   const [providersArray, setProvidersArray] = useState([]);
   const [filteredProvidersArray, setFilteredProvidersArray] = useState([]);
+    const [providerData, setProviderData] = useState({
+    name: "",
+    contact_name: "",
+    phone: "",
+    address: "",
+    delivery_time: "",
+    email: "",
+  });
   const activePopUp = () => {
     setProvidersPopUpState(!activeProvidersPopUp);
   };
@@ -52,21 +60,34 @@ function Providers() {
   }, []);
   const addProvider = async (newProvider) => {
     try {
+      if(!newProvider.name){
+        
+      }
+
+
       const response = await axiosInstance.post("/providers/addProvider", newProvider, {
-        withCredentials: true,
+        withCredentials: true, 
       });
-       
-       console.log(response.data.data)
-      
       setProvidersPopUpState(false)
       setProvidersArray((prev) => [...prev, response.data.data]);
       setFilteredProvidersArray((prev) => [...prev, response.data.data]);
+
+      setProviderData({
+    name: "",
+    contact_name: "",
+    phone: "",
+    address: "",
+    delivery_time: "",
+    email: ""})
+
+
     } catch (e) {
+      console.log(e.response.data.error.message)
       dispatch({
         type: ERROR,
         data: {
-          message: e?.message || "שגיאה כללית בהוספת ספק",
-          header: e?.header || "שגיאה בעת הוספת ספק חדש",
+          message: e?.response.data.error.message || "שגיאה כללית בהוספת ספק",
+          header: e?.response.data.error.header || "שגיאה בעת הוספת ספק חדש",
         },
       });
     }
@@ -103,10 +124,10 @@ function Providers() {
       )
     );
   } catch (e) {
-    dispatch({
+    dispatch({ 
       type: ERROR,
       data: {
-        message: e?.message || "שגיאה כללית בעדכון סטטוס ספק",
+        message:  "שגיאה כללית בעדכון סטטוס ספק",
         header: e?.header || "שגיאה בעדכון סטטוס",
       },
     });
@@ -154,10 +175,12 @@ function Providers() {
       <br />
       <ProviderTable changeStatus={changeStatus} providers={filteredProvidersArray} deleteProvider={deleteProvider} />
       <PopUpGeneral
+      providerData={providerData}
         click={activePopUp}
         isPopUpActive={activeProvidersPopUp}
         addProvider={addProvider}
         activePopUp={activePopUp}
+         setProviderData={setProviderData}
         type="provider"
       />
     </div>

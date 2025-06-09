@@ -64,7 +64,12 @@ const changeStatus = (status,id) => {
     [status,id]
   );
 };
-
+const updatePrice = (price,id) => {
+  return pool.execute(
+    `UPDATE provider_products SET price = ? WHERE id = ?`,
+    [price,id]
+  );
+};
 module.exports = {
   getAllProviderProducts,
   getProviderProductById,
@@ -72,5 +77,6 @@ module.exports = {
   getProviderProductByIds,
   getProvidersByProductId,
   deleteAllProductsFromProvider,
+  updatePrice,
   changeStatus // הוספת הפונקציה כאן
 };

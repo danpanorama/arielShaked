@@ -142,6 +142,8 @@
 
 .legend-item.red {
   background-color: #e74c3c;
+
+  
 }
 
 .legend-item.orange {
@@ -151,7 +153,16 @@
 .legend-item.gray {
   background-color: #95a5a6;
 }
-
+.userNotActive{
+   background-color: red; 
+}
+.userUnActive{
+  background-color: #e74c3c;
+}
+.legend-item.green {
+  background-color: #ddffdd;
+color: black;
+}
 /* Highlight problematic rows */
 .low-stock {
   background-color: #f8d7da;

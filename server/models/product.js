@@ -72,6 +72,20 @@ const checkIfProductExistsByName = (name) => {
 const getAllCategories = () => {
   return pool.execute(`SELECT DISTINCT TRIM(category) AS category FROM products WHERE is_active = 1`);
 };
+
+
+
+const decreaseProductStock = (id, quantityToDecrease) => {
+  return pool.execute(
+    `UPDATE products 
+     SET quantity = quantity - ? 
+     WHERE id = ? AND quantity >= ?`, // לא נוריד אם אין מספיק מלאי
+    [quantityToDecrease, id, quantityToDecrease]
+  );
+};
+
+
+
 module.exports = {
   getAllProducts,
   insertNewProduct,
@@ -82,5 +96,6 @@ module.exports = {
   getProductsById,
   changeStatus,
   getAllCategories,
-  getAllProductsByCategory
+  getAllProductsByCategory,
+  decreaseProductStock
 };

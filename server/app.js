@@ -11,6 +11,8 @@ var loginRouter = require('./routes/login');
 var productsRouter = require('./routes/products');
 var providersProductsRouter = require('./routes/providersProducts')
 var bakeryRouter = require('./routes/bakery')
+var reportsRouter = require('./routes/reports')
+
 var app = express();
 
 // view engine setup
@@ -33,7 +35,7 @@ app.use('/providers',providersRouter)
 app.use('/login',loginRouter)
 app.use('/products',productsRouter)
 app.use('/bakery',bakeryRouter)
-
+app.use('/reports',reportsRouter)
 
 app.use('/providersProducts',providersProductsRouter)
 

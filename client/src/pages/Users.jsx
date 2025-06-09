@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../App.css";
-
 import PrimaryButton from "../components/btn/PrimaryButton";
 import SearchBar from "../components/searchbar/SearchBar";
 import SideNavBar from "../components/sidenav/SideNavBar";
@@ -18,35 +17,55 @@ import {
   validateEmail,
 } from "../components/tools/Validation";
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
-// 👈 שים לב לנתיב הנכון
-// ... (imports שנשארים כמו שהם)
+
 function Users() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [isPopUpActive, setIsPopUpActive] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
-
   const [userDataState, setUserDataState] = useState({
-    name: "",
+       name: "",
+    email: "",
+    phone: "", 
     password: "",
     repeatPassword: "",
-    email: "",
-    phone: "",
-    permissions: 0,
-    is_active: 1, // ערך ברירת מחדל
+    permissions: "",
   });
+
 
   const [errorMessages, setErrorMessages] = useState({});
   const [isError, setIsError] = useState({});
-
   const togglePopUp = () => {
+      setUserDataState({
+    name:  "",
+    password:  "",
+    repeatPassword:  "", // או השאר ריק אם לא נדרש
+    email:  "",
+    phone:  "",
+    permissions:  0,
+    is_active: 1,
+  });
     setIsPopUpActive((prev) => !prev);
   };
+  const handleRowClick = (user) => {
+    console.log(user)
+  setUserDataState({
+    id:user.id||null,
+    name: user.name || "",
+    password: user.password || "",
+    repeatPassword: user.password || "", // או השאר ריק אם לא נדרש
+    email: user.email || "",
+    phone: user.phone || "",
+    permissions: user.permissions ?? 0,
+    is_active: user.is_active ?? 1,
+  });
+
+  setIsPopUpActive(true); // פותח את הפופאפ
+};
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setUserDataState((prevState) => ({
       ...prevState,
       [name]: type === "checkbox" ? checked : value,
@@ -106,18 +125,9 @@ function Users() {
     return valid;
   };
 
-  const signUp = async (e,userdata) => {
-    
+  const signUp = async (e,userdata,setUserData) => {
     e.preventDefault();
-    console.log(user.user.permission)
-setUserDataState({
-    name: "",
-    password: "",
-    repeatPassword: "",
-    email: "",
-    phone: "",
-    permissions: 0,
-    is_active: 1,})
+
     
     if (user.user.permission < 2) {
       return dispatch({
@@ -128,11 +138,7 @@ setUserDataState({
    
     }
 
-    // if (!validateForm()) return;
-
     try {
-
-
       
       const response = await axiosInstance.post(
         "/users/adduser",
@@ -140,7 +146,7 @@ setUserDataState({
         { withCredentials: true }
       );
       if(response.data.error){
-        console.log(response.data)
+       
          return dispatch({
         type: ERROR,
         data: {
@@ -153,19 +159,10 @@ setUserDataState({
       setUsers((prev) => [...prev, response.data.user]); 
       togglePopUp();
       // איפוס שדות
-      setUserDataState({
-        name: "",
-        password: "",
-        repeatPassword: "",
-        email: "",
-        phone: "",
-        permissions: 0,
-        is_active: true,
-      });
+ 
+    
 
-      // איפוס שגיאות
-      setErrorMessages({});
-      setIsError({});
+      
     } catch (e) {
       dispatch({
         type: ERROR,
@@ -262,13 +259,70 @@ setUserDataState({
     setFilteredUsers(filtered);
   };
 
+
+
+const handleUpdate = async (data) => {
+  if (user.user.permission < 2) {
+    return dispatch({
+      type: ERROR,
+      data: { message: "אין לך הרשאות לעדכון משתמש", header: "גישה נדחתה" },
+    });
+  }
+  console.log(data)
+
+  if (!validateForm()) {
+    return dispatch({
+      type: ERROR,
+      data: { message: "יש שדות לא תקינים בטופס", header: "שגיאת אימות" },
+    });
+  }
+
+  try {
+    const response = await axiosInstance.post(
+      "/users/update",
+      userDataState,
+      { withCredentials: true }
+    );
+  
+    if (response.data.error) {
+      return dispatch({
+        type: ERROR,
+        data: {
+          message: response.data.error.message || "שגיאה בעדכון משתמש",
+          header: "שגיאה",
+        },
+      });
+    }
+
+    // עדכון המשתמש ברשימת המשתמשים המקומית
+  setUsers((prevUsers) =>
+  prevUsers.map((u) => (u.id === userDataState.id ? userDataState : u))
+);
+
+
+    togglePopUp();
+
+  } catch (e) {
+    dispatch({
+      type: ERROR,
+      data: {
+        message: e?.response?.data?.message || "שגיאה בעדכון משתמש",
+        header: "שגיאה",
+      },
+    });
+  }
+};
+
+
+
+
   return (
     <div className="providersContainer">
       <SideNavBar />
-      <Headers text="משתמשים / עובדים" />
+      <Headers text=" עובדים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={handleSearch} />
-        <PrimaryButton icon={Icon} click={togglePopUp} text="הוספת משתמש חדש" />
+        <PrimaryButton icon={Icon} click={togglePopUp} text="הוספת עובד חדש" />
       </div>
       <br />
       <UserTable
@@ -276,6 +330,7 @@ setUserDataState({
         onDelete={handleDeleteUser}
         onActiveUsers={handleActiveUsers}
         myUserId={user.user.id}
+         onRowClick={handleRowClick}
       />
 
       <PopUpGeneral
@@ -288,7 +343,10 @@ setUserDataState({
         handleChange={handleChange}
         togglePopUp={togglePopUp}
         isError={isError}
+        setusersData={setUserDataState}
         errorMessages={errorMessages}
+        userDataState={userDataState}
+        handleUpdate={handleUpdate}
       />
     </div>
   );

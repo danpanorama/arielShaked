@@ -83,7 +83,7 @@ function OrderPopUp({
                       <input
                         type="number"
                         className="orderPopup-quantityInput"
-                        placeholder="הכנס כמות"
+                        placeholder="הכנס כמות"   
                         min="0"
                         max={product.quantity}
                         value={quantities[product.id] || ""}
@@ -91,7 +91,7 @@ function OrderPopUp({
                           handleQuantityChange(product.id, e.target.value)
                         }
                       />
-
+              
                       <button
                         className="orderPopup-addBtn"
                         onClick={() => handleAddToCart(product)}

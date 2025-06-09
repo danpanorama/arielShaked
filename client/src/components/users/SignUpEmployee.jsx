@@ -5,35 +5,30 @@ import PrimaryButton from "../btn/PrimaryButton";
 import CloseButton from "../btn/CloseButton";
 import { useState } from "react";
 
-function SignUpEmployee({ togglePopUp, signUp }) {
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    phone: "", 
-    password: "",
-    repeatPassword: "",
-    permissions: "",
-  });
+function SignUpEmployee({ togglePopUp, signUp,usersData,setusersData,handleUpdate }) {
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  // ולידציה פשוטה למייל - לא לאפשר אותיות בעברית
+  if (name === "email") {
+    const hasHebrew = /[\u0590-\u05FF]/.test(value);
+    if (hasHebrew) return; // לא נעדכן סטייט אם יש עברית
+  }
+
+  setusersData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
   const handelSignUp = (e)=>{
 
-    setUserData({
-    name: "",
-    email: "",
-    phone: "", 
-    password: "",
-    repeatPassword: "",
-    permissions: "",
-  })
+
    
- signUp(e, userData)
+ signUp(e, usersData)
+
 
   }
 
@@ -44,11 +39,11 @@ function SignUpEmployee({ togglePopUp, signUp }) {
 
       <form  >
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">שם פרטי</label>
-          <input
+          <label className="label">שם מלא</label>
+          <input 
             type="text"
             name="name"
-            value={userData.name}
+            value={usersData.name}
             onChange={handleChange}
             className="SearchBar"
             placeholder="שם פרטי"
@@ -60,7 +55,7 @@ function SignUpEmployee({ togglePopUp, signUp }) {
           <input
             type="email"
             name="email"
-            value={userData.email}
+            value={usersData.email}
             onChange={handleChange}
             className="SearchBar"
             placeholder="example@email.com"
@@ -72,7 +67,7 @@ function SignUpEmployee({ togglePopUp, signUp }) {
           <input
             type="tel"
             name="phone"
-            value={userData.phone}
+            value={usersData.phone}
             onChange={handleChange}
             className="SearchBar"
             placeholder="050-0000000"
@@ -84,7 +79,7 @@ function SignUpEmployee({ togglePopUp, signUp }) {
           <input
             type="password"
             name="password"
-            value={userData.password}
+            value={usersData.password}
             onChange={handleChange}
             className="SearchBar"
             placeholder="הכנס סיסמה"
@@ -96,7 +91,7 @@ function SignUpEmployee({ togglePopUp, signUp }) {
           <input
             type="password"
             name="repeatPassword"
-            value={userData.repeatPassword}
+            value={usersData.repeatPassword}
             onChange={handleChange}
             className="SearchBar"
             placeholder="הכנס שוב סיסמה"
@@ -107,7 +102,7 @@ function SignUpEmployee({ togglePopUp, signUp }) {
           <label className="label">תפקיד המשתמש</label>
           <select
             name="permissions"
-            value={userData.permissions}
+            value={usersData.permissions}
             onChange={handleChange}
             className="SearchBar"
           >
@@ -118,8 +113,9 @@ function SignUpEmployee({ togglePopUp, signUp }) {
             <option value="4">מנהל</option> 
           </select>
         </div>
+        {usersData.id? <PrimaryButton click={handleUpdate} text="עדכון מזתמש" type="submit" />:<PrimaryButton click={handelSignUp} text="הרשמה" type="submit" />}
 
-     <PrimaryButton click={handelSignUp} text="הרשמה" type="submit" />
+     
 
       </form>
     </div>

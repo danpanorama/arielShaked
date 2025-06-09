@@ -80,7 +80,6 @@ const assignProductsController = async (req, res) => {
     console.log(req.body);
     const {
       item_number,
-
       provider_id,
       price,
       min_order_quantity,
@@ -88,6 +87,7 @@ const assignProductsController = async (req, res) => {
     } = req.body;
 
 
+    
     const getProvider = await providers.getProvidersById(provider_id);
     const provider_name = getProvider[0][0].name
 

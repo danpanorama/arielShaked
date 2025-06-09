@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import "../App.css";
 import "../css/order.css";
 import { Link } from "react-router-dom";
-import Icon from '../images/plus.svg'
+import Icon from "../images/plus.svg";
 import PrimaryButton from "../components/btn/PrimaryButton";
 import SideNavBar from "../components/sidenav/SideNavBar";
 import Headers from "../components/header/Headers";
@@ -45,7 +45,7 @@ function OrderProvider() {
       if (res.data) {
         setOrders(res.data);
         setFilteredOrders(res.data);
-        setLoading(false)
+        setLoading(false);
       } else {
         throw new Error("לא התקבלו נתונים מהשרת");
       }
@@ -73,7 +73,7 @@ function OrderProvider() {
         (provider) => provider.is_active === 1
       );
       setProviders(activeProviders);
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
       setError("שגיאה בטעינת הספקים");
       dispatch({ type: ERROR });
@@ -93,75 +93,70 @@ function OrderProvider() {
     setFilteredOrders(filtered);
   };
 
-  function handlePaymentAmount(e){
-    setAmount(e.target.value)
+  function handlePaymentAmount(e) {
+    setAmount(e.target.value);
   }
-  
-const handlePaymentUpdate = async (order) => {
-  try {
-    if(amount<=0){
-      return
+
+  const handlePaymentUpdate = async (order) => {
+    try {
+      if (amount <= 0) {
+        return;
+      }
+      const res = await axiosInstance.post(
+        "/providers/update-payment",
+        {
+          orderId: order.id,
+          amountPaid: Number(amount),
+        },
+        { withCredentials: true }
+      );
+
+      const updatedOrder = order;
+
+      const payment = res.data?.allPayments; // ודא שאתה מקבל את זה נכון מהשרת
+
+      setOrders((prevOrders) =>
+        prevOrders.map((o) => {
+          if (o.id === order.id) {
+            const updatedAmountPaid = payment;
+            const isFullyPaid = o.price <= updatedAmountPaid;
+            return {
+              ...o,
+              amount_paid: updatedAmountPaid,
+              is_paid: isFullyPaid ? 1 : 0,
+            };
+          }
+          return o;
+        })
+      );
+
+      setFilteredOrders((prevFiltered) =>
+        prevFiltered.map((o) => {
+          if (o.id === order.id) {
+            const updatedAmountPaid = payment;
+            const isFullyPaid = o.price <= updatedAmountPaid;
+            return {
+              ...o,
+              amount_paid: updatedAmountPaid,
+              is_paid: isFullyPaid ? 1 : 0,
+            };
+          }
+          return o;
+        })
+      );
+
+      // אופציונלי: איפוס שדה תשלום לאחר ההצלחה
+      setAmount(0);
+    } catch (err) {
+      dispatch({
+        type: ERROR,
+        data: {
+          message: err?.response?.data?.message || "שגיאה בעדכון התשלום",
+          header: "שגיאה",
+        },
+      });
     }
-  const res=  await axiosInstance.post(
-      "/providers/update-payment",
-      {
-        orderId: order.id,
-        amountPaid: Number(amount),
-      },
-      { withCredentials: true }
-    );
-
-      
-    const updatedOrder = order;
-    
-    const payment = res.data?.allPayments; // ודא שאתה מקבל את זה נכון מהשרת
-
-setOrders((prevOrders) =>
-  prevOrders.map((o) => {
-    if (o.id === order.id) {
-      const updatedAmountPaid = payment;
-      const isFullyPaid = o.price <= updatedAmountPaid;
-      return {
-        ...o,
-        amount_paid: updatedAmountPaid,
-        is_paid: isFullyPaid ? 1 : 0,
-      };
-    }
-    return o;
-  })
-);
-
-setFilteredOrders((prevFiltered) =>
-  prevFiltered.map((o) => {
-    if (o.id === order.id) {
-      const updatedAmountPaid = payment;
-      const isFullyPaid = o.price <= updatedAmountPaid;
-      return {
-        ...o,
-        amount_paid: updatedAmountPaid,
-        is_paid: isFullyPaid ? 1 : 0,
-      };
-    }
-    return o;
-  })
-);
-
-    // אופציונלי: איפוס שדה תשלום לאחר ההצלחה
-    setAmount(0);
-
-   
-   
-  } catch (err) {
-       dispatch({
-      type: ERROR,
-      data: {
-        message: err?.response?.data?.message || "שגיאה בעדכון התשלום",
-        header: "שגיאה",
-      },
-    });
-  }
-};
-
+  };
 
   const fetchProducts = async (provider) => {
     try {
@@ -186,7 +181,7 @@ setFilteredOrders((prevFiltered) =>
 
   const sendOrder = async () => {
     try {
-      console.log(cart)
+      console.log(cart);
       for (const providerCart of cart) {
         const totalPrice = providerCart.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
@@ -198,16 +193,17 @@ setFilteredOrders((prevFiltered) =>
           price: totalPrice,
           items: providerCart.items,
         };
+        console.log(orderToSend)
 
         const res = await axiosInstance.post(
           "/providers/providersOrders",
           orderToSend,
           { withCredentials: true }
         );
-        console.log( res.data.order);
-     
-        setFilteredOrders((prev) => [...prev, res.data.order]);
-        setOrders((prev) => [...prev, res.data.order]);
+        console.log(res.data.order);
+
+        setFilteredOrders((prev) => [res.data.order, ...prev]);
+        setOrders((prev) => [res.data.order, ...prev]);
       }
       setShowPopup(false);
       setSelectedProvider(null);
@@ -219,19 +215,19 @@ setFilteredOrders((prevFiltered) =>
   };
 
   const addToCart = (item, quantity) => {
-
-    if(quantity <=0){
-      return
+    if (quantity <= 0) {
+      return;
     }
+    
     setCart((prevCart) => {
       const providerId = selectedProvider.id;
       const providerName = selectedProvider.name;
+
       const itemToAdd = {
         id: item.id,
         name: item.name,
         price: item.price,
         quantity,
-      
       };
 
       const providerCart = prevCart.find((c) => c.providerId === providerId);
@@ -260,7 +256,7 @@ setFilteredOrders((prevFiltered) =>
     });
   };
 
-  const removeFromCart = (item,quantity) => {
+  const removeFromCart = (item, quantity) => {
     setCart((prevCart) =>
       prevCart.map((c) =>
         c.providerId === selectedProvider.id
@@ -268,7 +264,7 @@ setFilteredOrders((prevFiltered) =>
           : c
       )
     );
-    quantity(1)
+    quantity(1);
   };
   const handleQuantityChange = (itemId, quantity) => {
     // וודא שהכמות חיובית
@@ -298,7 +294,11 @@ setFilteredOrders((prevFiltered) =>
       <Headers text="הזמנות מספקים" />
       <div className="flex-row-bet">
         <SearchBar onSearch={handleSearch} />
-        <PrimaryButton icon={Icon} click={() => setShowPopup(true)} text="הוספת הזמנה חדשה" />
+        <PrimaryButton
+          icon={Icon}
+          click={() => setShowPopup(true)}
+          text="הוספת הזמנה חדשה"
+        />
       </div>
 
       {showPopup && (
@@ -318,7 +318,6 @@ setFilteredOrders((prevFiltered) =>
           showCart={showCart}
           setShowCart={setShowCart}
           sendOrder={sendOrder}
-          
         />
       )}
 
@@ -328,7 +327,11 @@ setFilteredOrders((prevFiltered) =>
         ) : error ? (
           <p style={{ color: "red" }}>{error}</p>
         ) : (
-          <ProviderOrderTabel handlePaymentUpdate={handlePaymentUpdate} handlePaymentAmount={handlePaymentAmount} orders={filteredOrders} />
+          <ProviderOrderTabel
+            handlePaymentUpdate={handlePaymentUpdate}
+            handlePaymentAmount={handlePaymentAmount}
+            orders={filteredOrders}
+          />
         )}
       </div>
     </div>

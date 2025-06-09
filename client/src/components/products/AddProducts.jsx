@@ -14,6 +14,8 @@ function AddProduct(props) {
     is_active: true,
   });
 
+  const [invalidFields, setInvalidFields] = useState([]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setProductData((prev) => ({
@@ -22,16 +24,31 @@ function AddProduct(props) {
     }));
   };
 
+  const validateFields = () => {
+    const required = ["name", "category", "unit", "min_required"];
+    const invalids = required.filter(
+      (field) => !productData[field]?.toString().trim()
+    );
+    setInvalidFields(invalids);
+    return invalids.length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (!validateFields()) return;
+    props.addProvider(productData, setProductData);
+    setInvalidFields([]);
+  };
+
   return (
     <div className="yellowPopUp addProviderFrom">
-      <CloseButton text={'X'}  click={props.activePopUp} />
+      <CloseButton text={"X"} click={props.activePopUp} />
       <h1>הוספת פריט חדש</h1>
 
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">שם מוצר</label>
+          <label className="label">שם מוצר*</label>
           <input
-            className="SearchBar"
+            className={`SearchBar ${invalidFields.includes("name") ? "input-error" : ""}`}
             type="text"
             name="name"
             value={productData.name}
@@ -40,38 +57,24 @@ function AddProduct(props) {
         </div>
 
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">קטגוריה</label>
+          <label className="label">קטגוריה*</label>
           <select
-            className="SearchBar"
+            className={`SearchBar ${invalidFields.includes("category") ? "input-error" : ""}`}
             name="category"
             value={productData.category}
             onChange={handleChange}
           >
             <option value="">בחר קטגוריה</option>
-          
-            <option value=" קפואים"> קפואים</option>
-            <option value="חומרי גלם">חומרי גלם </option>
-            <option value=" יבשים"> יבשים </option>
-
-            {/* תוכל להוסיף כאן עוד קטגוריות כרצונך */}
+            <option value="קפואים">קפואים</option>
+            <option value="חומרי גלם">חומרי גלם</option>
+            <option value="יבשים">יבשים</option>
           </select>
         </div>
 
-        {/* <div className="inputHolderDiv marginBottom10">
-          <label className="label">כמות</label>
-          <input type="text"
-            className="SearchBar"
-            name="quantity"
-            value={productData.quantity}
-            onChange={handleChange}
-          />
-          
-        </div> */}
-
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">יחידת מידה</label>
+          <label className="label">יחידת מידה*</label>
           <select
-            className="SearchBar"
+            className={`SearchBar ${invalidFields.includes("unit") ? "input-error" : ""}`}
             name="unit"
             value={productData.unit}
             onChange={handleChange}
@@ -81,22 +84,21 @@ function AddProduct(props) {
             <option value="חבילה">חבילה</option>
             <option value="ליטר">ליטר</option>
             <option value="יחידה">יחידה</option>
-            {/* תוכל להוסיף או לשנות לפי הצורך */}
           </select>
         </div>
 
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">כמות מינימלית נדרשת</label>
+          <label className="label">כמות מינימלית נדרשת*</label>
           <input
-            className="SearchBar"
+            className={`SearchBar ${invalidFields.includes("min_required") ? "input-error" : ""}`}
             type="number"
             name="min_required"
             value={productData.min_required}
             onChange={handleChange}
           />
         </div>
-{/* 
-        <div className="inputHolderDiv marginBottom10">
+
+        {/* <div className="inputHolderDiv marginBottom10">
           <label className="label">פעיל</label>
           <input
             type="checkbox"
@@ -105,11 +107,9 @@ function AddProduct(props) {
             onChange={handleChange}
           />
         </div> */}
-<br />
-        <PrimaryButton
-          text="שמירה"
-          click={() => props.addProvider(productData,setProductData)}
-        />
+
+        <br />
+        <PrimaryButton text="שמירה" click={handleSubmit} />
       </form>
     </div>
   );

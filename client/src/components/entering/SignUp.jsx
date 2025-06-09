@@ -157,6 +157,7 @@ function SignUp() {
               className={`input ${isError.email ? "inputError" : ""}`}
               type="email"
               value={userDataState.email}
+              
               onChange={handleChange}
             />
             {isError.email && (

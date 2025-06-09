@@ -64,6 +64,7 @@ const checkIfEmailExists = (email) => {
   };
   
 
+
   const updateUserRole = (role, userId) => {
     return pool.execute(
       `UPDATE users 
@@ -73,6 +74,15 @@ const checkIfEmailExists = (email) => {
     );
   };
   
+  const updateUserDetails = (id, name, password, email, phone, permissions, is_active) => {
+  return pool.execute(
+    `UPDATE users 
+     SET name = ?, password = ?, email = ?, phone = ?, permissions = ?, is_active = ?
+     WHERE id = ?`,
+    [name, password, email, phone, permissions, is_active, id]
+  );
+};
+
 
 module.exports.checkIfEmailExists = checkIfEmailExists;
 module.exports.checkIfEmailAndPasswordMatch = checkIfEmailAndPasswordMatch;
@@ -84,6 +94,7 @@ module.exports.updateUserPermission = updateUserPermission
 module.exports.removeUser = removeUser
 module.exports.activate = activate
 
+module.exports.updateUserDetails = updateUserDetails;
 
 
 

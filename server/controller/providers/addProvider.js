@@ -3,7 +3,7 @@ const providers = require("../../models/providers");
 const addProviderController = async (req, res, next) => {
   try {
     ("Inside Add Provider Route");
-    console.log('req.body: ', req.body);
+
 
     const { name, contact_name,delivery_time, phone, address, email} = req.body;
 
@@ -17,6 +17,8 @@ const addProviderController = async (req, res, next) => {
     const existingProvider = await providers.checkIfEmailExists(email);
   
     if (existingProvider[0].length > 0) {
+          
+
       return res.status(400).json({
         error: { message: "כתובת האימייל כבר קיימת במערכת.", header: "הספק כבר קיים" }
       });

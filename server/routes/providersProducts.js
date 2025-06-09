@@ -3,6 +3,7 @@ var router = express.Router();
 const jwtMiddleware = require('../middleware/jwt');
 const { assignProductsController } = require('../controller/providersProducts/assignProductsController');
 const { getAllProvidersProducts } = require('../controller/providersProducts/getAllProvidersProducts');
+const { updatePriceController } = require('../controller/providersProducts/updatePriceController');
 
 /* GET home page. */
 router.get('/',jwtMiddleware.jwtAuth,getAllProvidersProducts, function(req, res, next) {
@@ -14,8 +15,10 @@ router.post('/assignProduct',jwtMiddleware.jwtAuth,assignProductsController, fun
 
 });
 
-
-
+router.post('/update-payment',jwtMiddleware.jwtAuth,updatePriceController, function(req, res, next) {
+console.log('here',req.body)
+});
+ 
 
 
 module.exports = router;

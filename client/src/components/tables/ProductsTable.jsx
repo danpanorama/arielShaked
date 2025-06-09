@@ -5,6 +5,8 @@ function ProductTable({
   Products,
   onDelete,
   deleteProductCompletely,
+  handlePaymentAmount,
+  handlePaymentUpdate,
   changeStatus,
 }) {
   const getRowClass = (product) => {
@@ -20,7 +22,9 @@ function ProductTable({
   return (
     <div className="product-table-container">
       <div className="legend">
+        <p className="write">מקרא:</p>
         <span className="legend-item red">חסר במלאי</span>
+         <span className="legend-item gray"> לא פעיל</span>
       </div>
 
       <table className="tables">

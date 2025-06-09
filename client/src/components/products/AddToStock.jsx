@@ -4,13 +4,16 @@ import "../../css/tools.css";
 import PrimaryButton from "../btn/PrimaryButton";
 import CloseButton from "../btn/CloseButton";
 import Select from "react-select";
+
 function AddToStock({ products, addStockToProduct, activePopUp }) {
   const [stockData, setStockData] = useState({
     productId: "",
     quantity: "",
     reason: "",
   });
- 
+
+  const [invalidFields, setInvalidFields] = useState([]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setStockData((prev) => ({
@@ -19,14 +22,19 @@ function AddToStock({ products, addStockToProduct, activePopUp }) {
     }));
   };
 
+  const validateFields = () => {
+    const required = ["productId", "quantity"];
+    const invalids = required.filter((field) => !stockData[field]?.toString().trim());
+    setInvalidFields(invalids);
+    return invalids.length === 0;
+  };
+
   const handleSubmit = (e) => {
-   
     e.preventDefault();
-    const { productId, quantity } = stockData;
-    if (!productId || !quantity) return;
+    if (!validateFields()) return;
 
     addStockToProduct({
-      productId,
+      productId: stockData.productId,
       quantity: Number(stockData.quantity),
       reason: stockData.reason,
     });
@@ -36,91 +44,68 @@ function AddToStock({ products, addStockToProduct, activePopUp }) {
       quantity: "",
       reason: "",
     });
-
-    activePopUp(); // סגור את הפופאפ
+    setInvalidFields([]);
+    activePopUp(); // סגירת הפופאפ
   };
 
   return (
     <div className="yellowPopUp addProviderFrom">
-<CloseButton text={'X'} click={activePopUp} />
-      <h1>  הכנסת פריט למלאי</h1>
+      <CloseButton text={"X"} click={activePopUp} />
+      <h1>הכנסת פריט למלאי</h1>
 
       <form onSubmit={handleSubmit}>
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">בחר מוצר</label>
-          {/* <select
-            className="SearchBar"
+          <label className="label">בחר מוצר*</label>
+          <Select
             name="productId"
-            value={stockData.productId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">-- בחר מוצר --</option>
-            {products.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
-          </select> */}
-<Select
-  name="productId"
-  options={products.map((p) => ({ value: p.id, label: p.name }))}
-  value={
-    products
-      .map((p) => ({ value: p.id, label: p.name }))
-      .find((option) => option.value === stockData.productId) || null
-  }
-  onChange={(selectedOption) => {
-    handleChange({
-      target: {
-        name: "productId",
-        value: selectedOption?.value || "",
-      },
-    });
-  }}
-  placeholder="בחר מוצר"
-  className="SearchBar"
-  classNamePrefix=""
-  styles={{
-    control: (base) => ({
-      ...base,
-      border: "none",
-      outline: "none",
-      overflow: "hidden",
-      boxShadow: "none",
-      borderRadius: "30px",
-      backgroundColor: "#f9f9f9",
-      fontSize: "1.2rem",
-    }),
-    placeholder: (base) => ({
-      ...base,
-      color: "#999",
-    }),
-  }}
-  isClearable
-/>
-
-
-
+            options={products.map((p) => ({ value: p.id, label: p.name }))}
+            value={
+              products
+                .map((p) => ({ value: p.id, label: p.name }))
+                .find((option) => option.value === stockData.productId) || null
+            }
+            onChange={(selectedOption) => {
+              handleChange({
+                target: {
+                  name: "productId",
+                  value: selectedOption?.value || "",
+                },
+              });
+            }}
+            placeholder="בחר מוצר"
+            className={`SearchBar ${invalidFields.includes("productId") ? "input-error" : ""}`}
+            isClearable
+            styles={{
+              control: (base) => ({
+                ...base,
+                border: invalidFields.includes("productId") ? "1px solid red" : "none",
+                boxShadow: "none",
+                borderRadius: "30px",
+                backgroundColor: "#f9f9f9",
+                fontSize: "1.2rem",
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: "#999",
+              }),
+            }}
+          />
         </div>
 
         <div className="inputHolderDiv marginBottom10">
-          <label className="label">כמות להוספה</label>
+          <label className="label">כמות להוספה*</label>
           <input
-            className="SearchBar"
+            className={`SearchBar ${invalidFields.includes("quantity") ? "input-error" : ""}`}
             type="number"
             name="quantity"
             min="1"
             placeholder="לדוגמה: 50"
             value={stockData.quantity}
             onChange={handleChange}
-            required
           />
         </div>
 
-      
-
-        <PrimaryButton text=" הכנסת פריט למלאי" click={handleSubmit} />
+        <PrimaryButton text="הכנסת פריט למלאי" click={handleSubmit} />
       </form>
     </div>
   );

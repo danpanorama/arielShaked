@@ -13,8 +13,8 @@ const getAllBakeryOrdersController = async (req, res) => {
       const [items] = await mysql.getBakeryOrderItemsByOrderId(order.id);
       return { ...order, items };
     }));
-
-    res.json(ordersWithItems);
+console.log(ordersWithItems)
+    res.json({orders:ordersWithItems});
   } catch (err) {
     console.error("שגיאה בשליפת ההזמנות:", err);
     res.status(500).json({ message: "שגיאה בשרת" });

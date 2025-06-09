@@ -119,15 +119,16 @@ await connection.query(createProviderOrderItemsTableQuery);
 const createBakeryOrdersTableQuery = `
 CREATE TABLE IF NOT EXISTS bakery_orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  order_number VARCHAR(50),
-  order_date DATE,
+  order_id VARCHAR(50),
   estimated_ready_time VARCHAR(100),
   is_approved TINYINT(1) DEFAULT 0 CHECK (is_approved IN (0,1)),
-  is_paid TINYINT(1) DEFAULT 0 CHECK (is_paid IN (0,1)),
-  amount_paid DECIMAL(10,2) DEFAULT 0.00,
-  is_delivered TINYINT(1) DEFAULT 0 CHECK (is_delivered IN (0,1)),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  is_finished TINYINT(1) DEFAULT 0 CHECK (is_finished IN (0,1)),  -- ההזמנה מוכנה
+  category VARCHAR(100),
+  order_date DATE,
+  is_delivered TINYINT(1) DEFAULT 0 CHECK (is_delivered IN (0,1))
 );
+
+
 
 `;
 await connection.query(createBakeryOrdersTableQuery);
@@ -140,10 +141,9 @@ CREATE TABLE IF NOT EXISTS bakery_order_items (
   product_id INT NOT NULL,
   product_name VARCHAR(255) NOT NULL,
   quantity DECIMAL(10,2) NOT NULL,
-  unit_price DECIMAL(10,2),
-  total_price DECIMAL(10,2) AS (quantity * unit_price) STORED,
-  received_quantity DECIMAL(10,2) DEFAULT 0
+  unit VARCHAR(50) NOT NULL
 );
+
 
 `;
 await connection.query(createBakeryOrderItemsTableQuery);

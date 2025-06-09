@@ -12,6 +12,7 @@ import ReceiveOrderPopup from "../products/ReceiveOrderPopup";
 function PopUpGeneral({
    type,
   addStockToProduct,
+  handleUpdate,
   addUser,
   users,
   userData,
@@ -20,6 +21,8 @@ function PopUpGeneral({
   handleChange,
   togglePopUp,
   isError,
+  userDataState,
+  setusersData,
   errorMessages,
   providers,
   addProvider,
@@ -27,13 +30,15 @@ function PopUpGeneral({
   removeProduct,
   associateProductToProvider,
   deleteProduct,
-  refreshProducts
+  refreshProducts,
+     setProviderData,
+     providerData
 }) {
   return (
     <div className={isPopUpActive ? "activeProviderPopUp" : "closeProviderPopUp"}>
       <div className="yellowPopUp">
         {type === "provider" && (
-          <AddProvides activePopUp={activePopUp} addProvider={addProvider} />
+          <AddProvides setProviderData={setProviderData} providerData={providerData } activePopUp={activePopUp} addProvider={addProvider} />
         )}
         {type === "product" && (
           <AddProduct activePopUp={activePopUp} addProvider={addProvider} />
@@ -53,6 +58,9 @@ function PopUpGeneral({
             togglePopUp={togglePopUp}
             isError={isError}
             errorMessages={errorMessages}
+            usersData={userDataState}
+            setusersData={setusersData}
+            handleUpdate={handleUpdate}
           />
         )}
          {type === "addStock" && (

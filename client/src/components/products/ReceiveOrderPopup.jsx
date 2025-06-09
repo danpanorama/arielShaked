@@ -9,11 +9,9 @@ function ReceiveOrderPopup({ activePopUp,products,setOriginalProducts,setFiltere
   const dispatch = useDispatch();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
-
   useEffect(() => {
     fetchUnapprovedOrders();
   }, []);
-
   const fetchUnapprovedOrders = async () => {
     try {
       const response = await axiosInstance.get("/providers/unapprovedOrders", {
@@ -31,7 +29,6 @@ function ReceiveOrderPopup({ activePopUp,products,setOriginalProducts,setFiltere
       });
     }
   };
-
   const renderOrderTable = () => (
     <table className="ordersTable">
       <thead>

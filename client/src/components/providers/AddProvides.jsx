@@ -5,31 +5,38 @@ import PrimaryButton from "../btn/PrimaryButton";
 import CloseButton from "../btn/CloseButton";
 
 function AddProvides(props) {
-  const [providerData, setProviderData] = useState({
-    name: "",
-    contact_name: "",
-    phone: "",
-    address: "",
-    delivery_time: "",
-    email: "",
-  });
- 
-  const clear = () => {
-    setProviderData({
-      name: "",
-      contact_name: "",
-      phone: "",
-      address: "",
-      delivery_time: "",
-      email: "",
-    });
-  };
+  const [invalidFields, setInvalidFields] = useState([]);
+
+
+
+const validateFields = () => {
+  const requiredFields = ["name", "contact_name", "phone", "address", "delivery_time", "email"];
+  const invalids = requiredFields.filter((field) => !props.providerData[field]?.trim());
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const hasHebrew = /[\u0590-\u05FF]/;
+
+  if (props.providerData.email && (!emailRegex.test(props.providerData.email) || hasHebrew.test(props.providerData.email))) {
+    if (!invalids.includes("email")) invalids.push("email");
+  }
+
+  setInvalidFields(invalids);
+  return invalids.length === 0;
+};
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProviderData((prev) => ({
+    props.setProviderData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // הסר את השדה מרשימת השגיאות אם התחיל להקליד בו
+    if (invalidFields.includes(name) && value.trim()) {
+      setInvalidFields((prev) => prev.filter((field) => field !== name));
+    }
   };
 
   return (
@@ -39,85 +46,38 @@ function AddProvides(props) {
       <h1>הוספת ספק חדש</h1>
 
       <form>
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">שם ספק</label>
-          <input
-            className="SearchBar"
-            type="text"
-            name="name"
-            value={providerData.name}
-            onChange={handleChange}
-          />
-        </div>
+        {[
+          { label: "שם ספק*", name: "name" },
+          { label: "שם איש קשר*", name: "contact_name" },
+          { label: "טלפון איש קשר*", name: "phone" },
+          { label: "זמן אספקה משוער*", name: "delivery_time" },
+          { label: "כתובת*", name: "address" },
+          { label: "מייל*", name: "email", type: "email" },
+        ].map((field) => (
+          <div className="inputHolderDiv marginBottom10" key={field.name}>
+            <label className="label">{field.label}</label>
+            <input
+              className={`SearchBar ${invalidFields.includes(field.name) ? "invalid" : ""}`}
+              type={field.type || "text"}
+              name={field.name}
+              value={props.providerData[field.name]} 
+              onChange={handleChange}
+            />
+          </div>
+        ))}
 
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">שם איש קשר</label>
-          <input
-            className="SearchBar"
-            type="text"
-            name="contact_name"
-            value={providerData.contact_name}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">טלפון איש קשר</label>
-          <input
-            className="SearchBar"
-            type="text"
-            name="phone"
-            value={providerData.phone}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label"> זמן אספקה משוער</label>
-          <input
-            className="SearchBar"
-            type="text"
-            name="delivery_time"
-            value={providerData.delivery_time}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">כתובת</label>
-          <input
-            className="SearchBar"
-            type="text"
-            name="address"
-            value={providerData.address}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="inputHolderDiv marginBottom10">
-          <label className="label">מייל</label>
-          <input
-            className="SearchBar"
-            type="email"
-            name="email"
-            value={providerData.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div onClick={clear} className="flex-col-center">
-   <PrimaryButton
-          text="שמירה"
+        <div className="flex-col-center">
+          <PrimaryButton
+            text="שמירה"
             click={() => {
-              props.addProvider(providerData);
-              clear();  // לאפס אחרי שליחה
+              if (validateFields()) {
+                props.addProvider(props.providerData);
+                
+              }
             }}
-         
-          data={providerData}
-        />
+            data={props.providerData}
+          />
         </div>
-
-     
-        
       </form>
     </div>
   );

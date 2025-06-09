@@ -23,21 +23,20 @@ function CreateOrderPopup({
   sendOrder,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-const [quantities, setQuantities] = useState({});
+  const [quantities, setQuantities] = useState({});
 
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   const filteredProviders = providersList.filter((provider) =>
     provider.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
- const handleQuantityInputChange = (id, value) => {
-  const parsed = parseInt(value);
-  setQuantities((prev) => ({
-    ...prev,
-    [id]: isNaN(parsed) || parsed < 1 ? 1 : parsed,
-  }));
-};
-
+  const handleQuantityInputChange = (id, value) => {
+    const parsed = parseInt(value);
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: isNaN(parsed) || parsed < 1 ? 1 : parsed,
+    }));
+  };
 
   useEffect(() => {
     setFilteredProducts(products);
@@ -107,28 +106,33 @@ const [quantities, setQuantities] = useState({});
                         <h3>{item.name}</h3>
                         <p>₪{item.price}</p>
                         <div className="quantityControl">
-     <input
-  type="number"
-  min="1"
-  placeholder="כמות"
-  value={quantities[item.id] || 1}
-  onChange={(e) => handleQuantityInputChange(item.id, e.target.value)}
-/>
-
-
+                          {console.log(item.id)}
+                          <input
+                            type="number"
+                            min="1"
+                            placeholder="כמות"
+                            value={quantities[item.id] || 1}
+                            onChange={(e) =>
+                              handleQuantityInputChange(item.id, e.target.value)
+                            }
+                          />
 
                           <button
                             onClick={() => {
                               // כמות להצבה - אם ריק או לא תקין, 1
-                              const qty = parseInt(quantities[item.id]) > 0 ? parseInt(quantities[item.id]) : 1;
+                              const qty =
+                                parseInt(quantities[item.id]) > 0
+                                  ? parseInt(quantities[item.id])
+                                  : 1;
                               addToCart(item, qty);
-
                             }}
                           >
                             הוסף
                           </button>
 
-                          <button onClick={() => removeFromCart(item,setQuantities)}>
+                          <button
+                            onClick={() => removeFromCart(item, setQuantities)}
+                          >
                             הסר
                           </button>
                         </div>

@@ -25,13 +25,13 @@ try {
             });
         } 
         // הצפנת הסיסמה
-        let hash = await authbcrypt.hashPassport(password);
+
         // יצירת טוקן JWT
         let token = await jwt.makeToken({
-            hash: hash
+            hash: password
         });
         // הוספת המשתמש החדש למסד הנתונים
-        let insertNewUser = await users.insertNewUser(name, email, hash, phone,permissions,is_active||1);
+        let insertNewUser = await users.insertNewUser(name, email, password, phone,permissions,is_active||1);
         if (insertNewUser) {
             // חפש את המשתמש החדש לאחר ההכנסה
             let user = await users.checkIfEmailExists(email);

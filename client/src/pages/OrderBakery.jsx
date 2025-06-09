@@ -11,18 +11,21 @@ import { ERROR } from "../redux/contents/errContent";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../config/AxiosConfig";
 import CartSidebar from "../components/cart/CartSidebar";
+import BakeryOrdersTabels from "../components/tables/BakeryOrdersTabels";
+import { io } from "socket.io-client";
 
 function OrderBakery() {
   const [showPopup, setShowPopup] = useState(false);
   const [products, setProducts] = useState([]);
+  const [bakeryOrders, setBakeryOrders] = useState([]);
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [cart, setCart] = useState([]);
-
   const dispatch = useDispatch();
 
   const handleNewOrderClick = () => {
     setShowPopup(true);
   };
+
   useEffect(() => {
     loadAllProducts();
     loadAllBakeryOrders();
@@ -35,7 +38,6 @@ function OrderBakery() {
         withCredentials: true,
       });
       if (res.data) {
-        console.log(res.data);
         setProducts(res.data);
       }
     } catch (err) {
@@ -60,7 +62,6 @@ function OrderBakery() {
       });
       if (res.data) {
         console.log(res.data);
-
         setCategoryProducts(res.data);
       }
     } catch (err) {
@@ -84,6 +85,7 @@ function OrderBakery() {
       });
       if (res.data) {
         console.log(res.data);
+        setBakeryOrders(res.data.orders);
       }
     } catch (err) {
       console.log(err);
@@ -99,23 +101,106 @@ function OrderBakery() {
     }
   };
 
-const addToCart = (product, quantity) => {
-  setCart((prevCart) => {
-    const existingProduct = prevCart.find((p) => p.id === product.id);
-    if (existingProduct) {
-      return prevCart.map((p) =>
-        p.id === product.id ? { ...p, quantity } : p
-      );
-    } else {
-      return [...prevCart, { ...product, quantity }];
-    }
+  const addToCart = (product, quantity) => {
+    setCart((prevCart) => {
+      const existingProduct = prevCart.find((p) => p.id === product.id);
+      if (existingProduct) {
+        return prevCart.map((p) =>
+          p.id === product.id ? { ...p, quantity } : p
+        );
+      } else {
+        return [...prevCart, { ...product, quantity }];
+      }
+    });
+  };
+
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
+  };
+
+
+
+
+
+useEffect(() => {
+  const socket = io("http://localhost:3000", {
+    withCredentials: true,
   });
-};
+
+  socket.on("order-time-updated", (updatedOrder) => {
+    console.log("עודכן זמן הזמנה:", updatedOrder);
+
+    setBakeryOrders((prevOrders) => {
+      const existingOrder = prevOrders.find(order => order.id === updatedOrder.id);
+
+      if (existingOrder && existingOrder.is_approved === 1) {
+        return prevOrders;
+      }
+
+      if (existingOrder) {
+        return prevOrders.map(order =>
+          order.id === updatedOrder.id ? updatedOrder : order
+        );
+      } else {
+        return [...prevOrders, updatedOrder];
+      }
+    });
+  });
+
+  // NEW: מאזין לסיום הזמנה
+  socket.on("order-finished", (finishedOrder) => {
+    console.log("הזמנה הסתיימה:", finishedOrder);
+    setBakeryOrders((prevOrders) =>
+      prevOrders.filter(order => order.id !== finishedOrder.id)
+    );
+  });
+
+  return () => {
+    socket.off("order-time-updated");
+    socket.off("order-finished");
+    socket.disconnect();
+  };
+}, []);
 
 
-const removeFromCart = (productId) => {
-  setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
-};
+  const handleSendOrder = async () => {
+    try {
+      dispatch({ type: START_LOAD });
+      const res = await axiosInstance.post(
+        "/bakery/newOrder",
+        {
+          estimated_ready_time: 0,
+          is_approved: 0,
+          is_paid: 0,
+          amount_paid: 0,
+          is_delivered: 0,
+          category: cart[0].category,
+          items: cart,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.data) {
+        setCart([]);
+        console.log(res.data.order[0]);
+        // להוסיף את ההזמנה החדשה לרשימת ההזמנות הקיימת
+        setBakeryOrders((prevOrders) => [...prevOrders, res.data.order[0][0]]);
+      }
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: ERROR,
+        data: {
+          message: err.response?.data?.message || "שגיאה בטעינת ההזמנות",
+          header: err.response?.data?.header || "שגיאה בטעינת הזמנות",
+        },
+      });
+    } finally {
+      dispatch({ type: STOP_LOAD });
+    }
+  };
 
   return (
     <div className="providersContainer">
@@ -140,7 +225,10 @@ const removeFromCart = (productId) => {
         />
       )}
 
-      <CartSidebar cart={cart} />
+      <CartSidebar handleSendOrder={handleSendOrder} cart={cart} />
+      <br />
+
+      <BakeryOrdersTabels bakeryOrders={bakeryOrders} />
     </div>
   );
 }

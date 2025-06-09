@@ -1,0 +1,41 @@
+.invalid {
+  border: 2px solid red !important;
+  background-color: #ffe5e5; /* רקע ורדרד לשגיאה */
+}
+.input-error {
+  border: 2px solid red !important;
+  background-color: #fff5f5;
+}
+.errorBorder {
+  border: 2px solid red !important;
+}
+
+.orders-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.order-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.order-card:hover {
+  transform: scale(1.05);
+}
+
+.order-card.approved {
+  background-color: #d4f5d4;
+}
+
+.order-card.not-approved {
+  background-color: #f8d7da;
+}

@@ -1,6 +1,6 @@
 import "../../css/cartSidebar.css";
 
-function CartSidebar({ cart }) {
+function CartSidebar({ cart,handleSendOrder }) {
   // קיבוץ מוצרים לפי קטגוריה
   const groupedByCategory = cart.reduce((acc, item) => {
     const category = item.category || "ללא קטגוריה";
@@ -11,9 +11,7 @@ function CartSidebar({ cart }) {
     return acc;
   }, {});
 
-  const handleSendOrder = () => {
-    alert("שליחת ההזמנה (הפונקציונליות טרם ממומשת)");
-  };
+ 
 
   return (
     <div className="orderCartSidebar">

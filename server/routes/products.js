@@ -36,6 +36,8 @@ router.post('/status',jwtAuth,changeStatusController, function(req, res, next) {
 router.post('/addStock',jwtAuth,AddStockController, function(req, res, next) {
 
 });
+
+
 router.post('/delete',jwtAuth,deleteProductCompletelyController, function(req, res, next) {
 
 });

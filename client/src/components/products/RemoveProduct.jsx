@@ -16,6 +16,11 @@ function RemoveProduct(props) {
     reason: "",
     quantity: "",
   });
+  const [missingFields, setMissingFields] = useState({
+    productId: false,
+    reason: false,
+    quantity: false,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,16 +28,26 @@ function RemoveProduct(props) {
       ...prev,
       [name]: value,
     }));
+    setMissingFields((prev) => ({
+      ...prev,
+      [name]: false,
+    }));
   };
 
   const handleRemove = () => {
     const { productId, reason, quantity } = productData;
-    if (!productId || !reason || !quantity) {
-      alert("אנא מלא את כל השדות.");
-      return;
-    }
-    setProductData({ productId: "", reason: "", quantity: "" });
+    const newMissing = {
+      productId: !productId,
+      reason: !reason,
+      quantity: !quantity,
+    };
+
+    setMissingFields(newMissing);
+
+    if (!productId || !reason || !quantity) return;
+
     props.removeProduct(productData);
+    setProductData({ productId: "", reason: "", quantity: "" });
   };
 
   useEffect(() => {
@@ -45,9 +60,7 @@ function RemoveProduct(props) {
         withCredentials: true,
       });
 
-      if (data.error) {
-        return;
-      }
+      if (data.error) return;
 
       setProduct(data.data[0]);
     } catch (e) {
@@ -69,41 +82,45 @@ function RemoveProduct(props) {
       <form>
         {/* בחירת מוצר */}
         <div className="inputHolderDiv marginBottom10">
-          <label className="label"> שם</label>
-
+          <label className="label">שם</label>
           <Select
             name="productId"
             options={product.map((p) => ({ value: p.id, label: p.name }))}
+            value={
+              product
+                .map((p) => ({ value: p.id, label: p.name }))
+                .find((option) => option.value === productData.productId) || null
+            }
             onChange={(selectedOption) => {
-              setProductData((prev) => ({
-                ...prev,
-                productId: selectedOption?.value || "",
-              }));
+              handleChange({
+                target: {
+                  name: "productId",
+                  value: selectedOption?.value || "",
+                },
+              });
             }}
             placeholder="בחר מוצר"
-            className="SearchBar"
-            classNamePrefix="" // מבטל את ה-prefix שמוסיף classים מיוחדים
+            className={`SearchBar ${missingFields.productId ? "errorBorder" : ""}`}
+            classNamePrefix=""
             styles={{
-              control: (base, state) => ({
+              control: (base) => ({
                 ...base,
                 border: "none",
                 outline: "none",
                 overflow: "hidden",
                 boxShadow: "none",
                 borderRadius: "30px",
-                "&:hover": {
-                  border: "none",
-                },
               }),
             }}
             isClearable
           />
         </div>
+
         {/* כמות */}
         <div className="inputHolderDiv marginBottom10">
           <label className="label">כמות</label>
           <input
-            className="SearchBar"
+            className={`SearchBar ${missingFields.quantity ? "errorBorder" : ""}`}
             type="number"
             name="quantity"
             value={productData.quantity}
@@ -116,15 +133,14 @@ function RemoveProduct(props) {
         <div className="inputHolderDiv marginBottom10">
           <label className="label">סיבת הוצאה</label>
           <select
-            className="SearchBar"
+            className={`SearchBar ${missingFields.reason ? "errorBorder" : ""}`}
             name="reason"
             value={productData.reason}
             onChange={handleChange}
           >
             <option value="">בחר סיבה</option>
             <option value="מקולקל">מקולקל</option>
-
-            <option value="אחר">שימוש בחנות </option>
+            <option value="אחר">שימוש בחנות</option>
           </select>
         </div>
 

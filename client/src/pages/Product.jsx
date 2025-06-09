@@ -21,6 +21,7 @@ function Product() {
   const [originalProducts, setOriginalProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [popUpType, setPopUpType] = useState("");
+
   const [isCustomPopUpActive, setIsCustomPopUpActive] = useState(false);
   const togglePopUp = (e) => {
     setPopUpType(e);
@@ -221,6 +222,19 @@ function Product() {
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="providersContainer">
       <SideNavBar />
@@ -248,7 +262,7 @@ function Product() {
             click={() => openOrdersPopUp("receiveOrder")}
             text="  קליטת הזמנה למלאי"
 
-          />
+          /> 
         </div>
       </div>
 
@@ -265,6 +279,7 @@ function Product() {
       </div>
 
       <PopUpGeneral
+    
         type={popUpType}
         click={togglePopUp}
         removeProduct={removeProduct}

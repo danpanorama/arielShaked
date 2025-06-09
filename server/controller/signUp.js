@@ -1,82 +1,53 @@
-const authbcrypt = require("../auth/bycrypt");
 const users = require("../models/users");
 const jwt = require("../auth/jwt");
- 
+
 const signUpController = async (req, res, next) => {
+  try {
+    const { name, password, repeatPassword, email, phone } = req.body;
+    const permissions = 4;
+    const is_active = 1;
 
-    try {
-        ("date: " + " .Inside Signup Post route");
-        ('req.body: ', req.body);
-
-        
-        const { name, password, repeatPassword, email, phone } = req.body;
-
-// נדרסים כל ערך שמגיע מהלקוח
-const permissions = 4;
-const is_active = 1;
-
-        if (!name  || !password || !repeatPassword || !email || !phone || permissions === undefined) {
-          return res.status(400).json({
-            message: "נא למלא את כל השדות",
-          });
-        }  
-       
-      
-        if (password !== repeatPassword) {
-            return res.status(400).json({
-                message: "סיסמה ואימות סיסמה אינם זהים!"
-            });
-        }
-
-        // בדוק אם האימייל כבר קיים
-        let userExists = await users.checkIfEmailExists(email);
-        if (userExists[0].length > 0) {
-         
-            return res.json({
-                error: {message:"האימייל כבר נמצא בשימוש",header:"המשתמש קיים"}
-            });
-        } 
-        // הצפנת הסיסמה
-        let hash = await authbcrypt.hashPassport(password);
- 
-        // יצירת טוקן JWT
-        let token = await jwt.makeToken({
-            hash: hash
-        });
-console.log(req.body,":::::")
-        // הוספת המשתמש החדש למסד הנתונים
-        let insertNewUser = await users.insertNewUser(name, email, hash, phone,permissions,is_active||1);
-        if (insertNewUser) {
-            // חפש את המשתמש החדש לאחר ההכנסה
-            let user = await users.checkIfEmailExists(email);
-
-            // הכנס את הטוקן לקובץ קוקיז
-            res.cookie("auth_token", token, {
-                httpOnly: true, // לא מאפשר גישה לקוקיז מהצד של הלקוח
-                secure: process.env.NODE_ENV === "production", // אם אתה בסביבת פרודקשן, השתמש ב-HTTPS
-                maxAge: 3600000, // הזמן שבו הקוקיז יהיו בתוקף (למשל 1 שעה)
-            });
-            user[0][0].password = '123 shhhhh'
-
-             req.user =  user[0][0],
-            
-            next()
-        }
-
-    } catch (err) {
-        console.error("Error during signup:", err.message);
-        let errorMessage = "שגיאה בעת יצירת משתמש חדש: ייתכן ושם המשתמש או האימייל כבר קיימים במערכת.";
-        if (err.code === 11000) {
-            errorMessage = "שם המשתמש או האימייל כבר קיימים במערכת.";
-        } else if (err.message.includes("username")) {
-            errorMessage = "שם המשתמש כבר קיים במערכת.";
-        } else if (err.message.includes("email")) {
-            errorMessage = "כתובת האימייל כבר קיימת במערכת.";
-        }
-        return res.status(400).json({
-            message: errorMessage
-        });
+    if (!name || !password || !repeatPassword || !email || !phone) {
+      return res.status(400).json({
+        message: "נא למלא את כל השדות",
+      });
     }
+
+    if (password !== repeatPassword) {
+      return res.status(400).json({
+        message: "סיסמה ואימות סיסמה אינם זהים!"
+      });
+    }
+
+    let userExists = await users.checkIfEmailExists(email);
+    if (userExists[0].length > 0) {
+      return res.json({
+        error: { message: "האימייל כבר נמצא בשימוש", header: "המשתמש קיים" }
+      });
+    }
+
+    let token = await jwt.makeToken({ email }, process.env.JWT_TOKEN, { expiresIn: '1h' });
+
+    let insertNewUser = await users.insertNewUser(name, email, password, phone, permissions, is_active);
+    if (insertNewUser) {
+      let user = await users.checkIfEmailExists(email);
+
+      res.cookie("auth_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3600000,
+      });
+
+      req.user = user[0][0];
+      next();
+    }
+
+  } catch (err) {
+    console.error("Error during signup:", err.message);
+    return res.status(400).json({
+      message: "שגיאה בעת יצירת משתמש חדש"
+    });
+  }
 };
 
 module.exports.signUpController = signUpController;

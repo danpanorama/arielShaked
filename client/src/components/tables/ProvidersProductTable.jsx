@@ -1,18 +1,18 @@
 import "../../App.css";
 import "../../css/tools.css";
 
-function ProvidersProductTable({ providersProductArray, onDelete }) {
+function ProvidersProductTable({ providersProductArray, onDelete,handlePaymentUpdate,handlePaymentAmount }) {
 
   return (
     <table className="tables">
       <thead>
         <tr>
           <th>שם ספק </th>
-          <th> שם פריט</th>
-          <th> מספר פריט</th>
+          <th>שם פריט</th>
+          <th>מספר פריט</th>
           <th>מספר ספק </th>
-          <th> מחיר</th>
-          <th>    כמות מינימלית לאספקה </th>
+          <th>מחיר</th>
+          <th>כמות מינימלית לאספקה </th>
         </tr>
       </thead>
       <tbody>
@@ -32,7 +32,9 @@ function ProvidersProductTable({ providersProductArray, onDelete }) {
               <td>{product.name } </td>
               <td>{product.item_number}</td>
               <td>{product.provider_id}</td>
-              <td>{product.price}</td>
+              <td>
+                 <input  onChange={handlePaymentAmount} type="text"placeholder={product.price} /><button onClick={((e)=>{handlePaymentUpdate(product)})}>שלח</button>
+              </td>
               <td>{product.min_order_quantity?.split(".")[0]}</td>
          
             </tr>

@@ -107,6 +107,10 @@ export const loginAction = (data, navigate) => async (dispatch) => {
         type: CONNECT,
         data: res.data.user,
       });
+       dispatch({
+        type: CLEAR,
+        
+      });
       dispatch({
         type: STOP_LOAD
       })

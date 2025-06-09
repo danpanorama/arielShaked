@@ -2,7 +2,7 @@ const pool = require("./mysql2");
 
 // קבלת כל ההזמנות
 const getAllBakeryOrders = () => {
-  return pool.execute(`SELECT * FROM bakery_orders ORDER BY created_at DESC`);
+  return pool.execute(`SELECT * FROM bakery_orders `);
 };
 
 // קבלת הזמנה לפי ID
@@ -14,32 +14,35 @@ const getBakeryOrderById = (orderId) => {
 const getBakeryOrderItemsByOrderId = (orderId) => {
   return pool.execute(`SELECT * FROM bakery_order_items WHERE order_id = ?`, [orderId]);
 };
-
-// הכנסת הזמנה חדשה
 const insertBakeryOrder = (
-  order_number,
   order_date,
-  estimated_ready_time,
+  estimated_ready_time_formatted,
   is_approved,
-  is_paid,
-  amount_paid,
+  category,
   is_delivered
 ) => {
   return pool.execute(
     `INSERT INTO bakery_orders 
-     (order_number, order_date, estimated_ready_time, is_approved, is_paid, amount_paid, is_delivered)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [order_number, order_date, estimated_ready_time, is_approved, is_paid, amount_paid, is_delivered]
+     (order_date, estimated_ready_time, is_approved, category, is_delivered)
+     VALUES (?, ?, ?, ?, ?)`,
+    [
+      order_date,
+      estimated_ready_time_formatted,
+      is_approved,
+      category,
+      is_delivered
+    ]
   );
 };
 
+
 // הכנסת פריט להזמנה
-const insertBakeryOrderItem = (order_id, product_id, product_name, quantity, unit_price) => {
+const insertBakeryOrderItem = (order_id, product_id, product_name, quantity, unit) => {
   return pool.execute(
     `INSERT INTO bakery_order_items 
-     (order_id, product_id, product_name, quantity, unit_price)
+     (order_id, product_id, product_name, quantity, unit)
      VALUES (?, ?, ?, ?, ?)`,
-    [order_id, product_id, product_name, quantity, unit_price]
+    [order_id, product_id, product_name, quantity, unit]
   );
 };
 
@@ -84,6 +87,32 @@ const deleteBakeryOrder = (orderId) => {
   return pool.execute(`DELETE FROM bakery_orders WHERE id = ?`, [orderId]);
 };
 
+
+// עדכון זמן מוערך של הזמנה
+const updateEstimatedTime = (orderId, estimatedTime) => {
+  return pool.execute(
+    `UPDATE bakery_orders SET estimated_ready_time = ? WHERE id = ?`,
+    [estimatedTime, orderId]
+  );
+};
+
+
+const approveOrder = (orderId) => {
+  return pool.execute(
+    `UPDATE bakery_orders SET is_approved = 1 WHERE id = ?`,
+    [orderId]
+  );
+};
+
+
+const finishOrder = (order_id) => {
+  return pool.execute(
+    `UPDATE bakery_orders SET is_finished = 1 WHERE id = ?`,
+    [order_id]
+  );
+};
+
+
 module.exports = {
   getAllBakeryOrders,
   getBakeryOrderById,
@@ -94,5 +123,8 @@ module.exports = {
   updateBakeryOrderPayment,
   updateBakeryOrderDeliveryStatus,
   updateBakeryItemReceivedQuantity,
-  deleteBakeryOrder
+  deleteBakeryOrder,
+  updateEstimatedTime,
+  approveOrder,
+  finishOrder
 };

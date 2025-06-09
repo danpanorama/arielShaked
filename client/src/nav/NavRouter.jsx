@@ -16,6 +16,8 @@ import OrderBakery from "../pages/OrderBakery";
 import OrderProvider from "../pages/OrderProvider";
 import Entering from "../pages/Entering";
 import OrderDetail from "../pages/OrderDetail";
+import KitchenScreen from "../pages/KitchenScreen";
+import DocumentsReport from "../pages/DocumentsReport";
 
 
 function NavRouter() {
@@ -41,12 +43,23 @@ function NavRouter() {
       <Route path="/providersOrders" element={<PrivateRouter />} exact>
       <Route path="/providersOrders" element={<OrderProvider />} exact />
       </Route>
+
+<Route path="/kitchen" element={<PrivateRouter />} exact>
+      <Route path="/kitchen" element={<KitchenScreen />} exact />
+      </Route>
+
        <Route path="/order/:orderId" element={<PrivateRouter />} exact>
       <Route path="/order/:orderId" element={<OrderDetail />} exact />
       </Route>
       <Route path="/orders" element={<PrivateRouter />} exact>
       <Route path="/orders" element={<OrderBakery />} exact />
       </Route>
+
+  <Route path="/reports" element={<PrivateRouter />} exact>
+      <Route path="/reports" element={<DocumentsReport />} exact />
+      </Route>
+
+
       <Route path="/products" element={<PrivateRouter />} exact>
       <Route path="/products" element={<Product />} exact />
       </Route>

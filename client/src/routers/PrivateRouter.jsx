@@ -30,7 +30,7 @@ const PrivateRouter = () => {
           throw new Error("Not authenticated");
         }
       } catch (error) {
-        console.error('Authentication failed:', error.message);
+     
         dispatch({
           type: ERROR,
           data: {
