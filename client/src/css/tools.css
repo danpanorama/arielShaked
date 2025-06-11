@@ -17,6 +17,11 @@
   justify-content: center;
   margin-top: 20px;
 }
+.bggray{
+ background-color: #f2f2f2;
+    color: #888;
+    font-style: italic;
+}
 
 .order-card {
   border: 1px solid #ccc;

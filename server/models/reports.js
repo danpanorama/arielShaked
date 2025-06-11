@@ -50,9 +50,7 @@ const selectBakerySummary = (where, params) => {
     SELECT 
       bakery_order_items.product_name,
       COUNT(DISTINCT bakery_orders.id) AS total_orders,
-      SUM(bakery_order_items.quantity) AS total_units,
-      ROUND(AVG(bakery_order_items.estimated_baking_time), 1) AS avg_estimated_baking_time,
-      ROUND(AVG(bakery_order_items.actual_baking_time), 1) AS avg_actual_baking_time
+      SUM(bakery_order_items.quantity) AS total_units
     FROM bakery_order_items 
     JOIN bakery_orders ON bakery_order_items.order_id = bakery_orders.id
     ${where}

@@ -72,20 +72,20 @@ function UserTable({ users, onDelete, onActiveUsers, myUserId, onRowClick }) {
             return (
               <tr
                 key={user.id || index}
-                className={`table-row ${user.is_active === 0 ? "userUnActive" : ""}`}
-                onClick={() => onRowClick(user)}
+                className={`table-row ${user.is_active === 0 ? "bggray" : ""}`}  
+               
                 style={{
                   backgroundColor: isCurrentUser ? "#d4edda" : "",
                 }}
               >
-                <td>
+                <td  onClick={() => onRowClick(user)}>
                   {user.name}
                   {user.id === userID.user.id ? "*" : ""}
                 </td>
-                <td>{user.phone}</td>
-                <td>{user.email}</td>
-                <td>{user.password}</td>
-                <td>
+                <td  onClick={() => onRowClick(user)}>{user.phone}</td>
+                <td  onClick={() => onRowClick(user)}>{user.email}</td>
+                <td  onClick={() => onRowClick(user)}>{user.password}</td>
+                <td  onClick={() => onRowClick(user)}>
                   {user.permissions === 0
                     ? "עובד מאפייה"
                     : user.permissions === 1

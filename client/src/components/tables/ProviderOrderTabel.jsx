@@ -26,7 +26,8 @@ function ProviderOrderTabel({
             <th>מספר הזמנה</th>
             <th>ספק</th>
             <th>מחיר</th>
-            <th>תאריך</th>
+            <th>תאריך הזמנה </th>
+             <th>תאריך הגעה צפוי</th>
             <th>סטטוס</th>
             <th>סטטוס תשלום</th>
             <th>סכום ששולם</th>
@@ -36,17 +37,38 @@ function ProviderOrderTabel({
 
         <tbody>
           {orders.map((order) => (
-            <tr
-              className={order.is_paid === 1 ? "paid" : "unpaid"}
-              key={order.id}
-            >
+           <tr
+  className={
+    order.price <= order.amount_paid
+      ? "paid"
+      : order.amount_paid > 0
+      ? "partially-paid"
+      : "unpaid"
+  }
+  key={order.id}
+>
+
               <td>
                 <Link to={`/order/${order.id}`}>{order.id}</Link>
               </td>
               <td>{order.provider_name}</td>
               <td>{order.price}</td>
               <td>{order.created_at?.split("T")[0]}</td>
+<td>
+  {
+    order.estimated_delivery_time
+      ? `זמן אספקה משוער: ${
+          Math.floor(
+            (new Date(order.estimated_delivery_time) - new Date(order.created_at)) /
+            (1000 * 60 * 60 * 24)
+          )
+        } ימים`
+      : "לא צויין"
+  }
+</td>
+
               <td>{order.is_approved === 0 ? "נשלח לספק" : "נקלט במלאי"}</td>
+
               <td
               // className={order.is_paid === 1 ? "paid" : "unpaid"}
               >

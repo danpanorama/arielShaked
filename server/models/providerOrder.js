@@ -109,6 +109,20 @@ const updateOrderPayment = (orderId, amountPaid) => {
   );
 };
 
+const updateOrderPrice = (orderId, newPrice) => {
+  return pool.execute(
+    `UPDATE provider_orders SET price = ? WHERE id = ?`,
+    [newPrice, orderId]
+  );
+};
+
+const getOrderItem = (orderId, productId) => {
+  return pool.execute(
+    `SELECT * FROM provider_order_items WHERE order_id = ? AND product_id = ?`,
+    [orderId, productId]
+  );
+};
+
 module.exports = {
   getAllProviderOrders,
   insertProviderOrder,
@@ -122,5 +136,7 @@ module.exports = {
   getUnapprovedOrders,
   updateOrderReceivedStatus,
   updateOrderItemReceivedQuantity,
-  updateOrderPayment
+  updateOrderPayment,
+  updateOrderPrice, // ✳️ הוסף כאן
+  getOrderItem       // ✳️ הוסף כאן
 };

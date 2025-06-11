@@ -4,7 +4,7 @@ import SignUp from '../components/entering/SignUp';
 import '../css/entering.css';
 import Login from './Login';
 import axiosInstance from '../config/AxiosConfig';
-import { ERROR } from '../redux/contents/errContent';
+import { CLEAR, ERROR } from '../redux/contents/errContent';
 import { useDispatch } from 'react-redux';
 
 function Entering() {
@@ -25,6 +25,9 @@ function Entering() {
           type: ERROR,
           data: { message: 'שגיאה במשיכת משתמשים', header: 'קבלת כל המשתמשים נכשלה' },
         });
+               setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
         return;
       }
 
@@ -40,6 +43,9 @@ function Entering() {
         type: ERROR,
         data: { message: 'שגיאה במשיכת משתמשים', header: 'קבלת כל המשתמשים נכשלה' },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   }
 

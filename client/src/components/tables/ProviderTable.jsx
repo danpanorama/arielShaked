@@ -50,6 +50,7 @@ function ProviderTable({ providers, onDelete, deleteProvider, changeStatus }) {
           <th>מס' טלפון</th>
           <th>כתובת</th>
           <th>מייל</th>
+          <th>זמן אספקה בימים</th>
           <th>הפעלה \ הקפאה</th>
         </tr>
       </thead>
@@ -72,11 +73,15 @@ function ProviderTable({ providers, onDelete, deleteProvider, changeStatus }) {
               <td>{provider.phone_number}</td>
               <td>{provider.address}</td>
               <td>{provider.email}</td>
+              <td>{provider.delivery_time} ימים</td>
+
               <td>
                 {provider.is_active ? (
                   <button onClick={() => changeStatus(provider, 0)}>כבה</button>
                 ) : (
-                  <button onClick={() => changeStatus(provider, 1)}>הפעל</button>
+                  <button onClick={() => changeStatus(provider, 1)}>
+                    הפעל
+                  </button>
                 )}
               </td>
             </tr>

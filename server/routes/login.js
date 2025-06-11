@@ -6,7 +6,7 @@ var router = express.Router();
 
 /* GET home page */
 router.post('/', login.loginController, function(req, res, next) {
-  req.user.password = '**********no no no '
+
   res.json({user:req.user,message:'user log in '});
 });
 router.post('/signup',signup.signUpController, function(req, res, next) {

@@ -32,10 +32,10 @@ const getOpenOrdersReport = async (req, res) => {
 // דוח סיכום הזמנות אפייה
 const getBakerySummaryReport = async (req, res) => {
   try {
-    const { from, to, product } = req.query;
+    const { from, to, product } = req.body;  // <-- כאן
 
     let where = 'WHERE 1=1';
-    const params = []; 
+    const params = [];
 
     if (from && to) {
       where += ' AND bakery_orders.order_date BETWEEN ? AND ?';
@@ -51,9 +51,11 @@ const getBakerySummaryReport = async (req, res) => {
 
     res.json(summary);
   } catch (err) {
+    console.error('Error in getBakerySummaryReport:', err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 module.exports = {

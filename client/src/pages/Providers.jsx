@@ -9,7 +9,7 @@ import "../css/providers.css";
 import PopUpGeneral from "../components/popup/PopUpGeneral";
 import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
 import Icon1 from '../images/plus.svg'
 
@@ -45,6 +45,9 @@ function Providers() {
           header: errorHeader,
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
   useEffect(() => {
@@ -90,6 +93,9 @@ function Providers() {
           header: e?.response.data.error.header || "שגיאה בעת הוספת ספק חדש",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -131,6 +137,9 @@ function Providers() {
         header: e?.header || "שגיאה בעדכון סטטוס",
       },
     });
+           setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
   }
 };
 
@@ -155,6 +164,9 @@ function Providers() {
           header: "שגיאה בעת מחיקת ספק",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 

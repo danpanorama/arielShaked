@@ -1,7 +1,7 @@
 import "../../App.css";
 import "../../css/tools.css";
 
-function ProvidersProductTable({ providersProductArray, onDelete,handlePaymentUpdate,handlePaymentAmount }) {
+function ProvidersProductTable({ providersProductArray, onDelete,handlePaymentUpdate,handlePaymentAmount,handleMinQtyUpdate,handleMinQtyChange }) {
 
   return (
     <table className="tables">
@@ -24,20 +24,29 @@ function ProvidersProductTable({ providersProductArray, onDelete,handlePaymentUp
           </tr>
         ) : (
           providersProductArray?.map((product, index) => (
-         
+         <tr key={product.id || index}>
+  <td>{product.provider_name || index}</td>
+  <td>{product.name}</td>
+  <td>{product.item_number}</td>
+  <td>{product.provider_id}</td>
+  <td>
+    <input
+      onChange={handlePaymentAmount}
+      type="text"
+      placeholder={product.price}
+    />
+    <button onClick={() => handlePaymentUpdate(product)}>עדכן מחיר</button>
+  </td>
+  <td>
+    <input
+      type="number"
+      placeholder={product.min_order_quantity?.split(".")[0]}
+      onChange={(e) => handleMinQtyChange(e, product)}
+    />
+    <button onClick={() => handleMinQtyUpdate(product)}>עדכן כמות מינ'</button>
+  </td>
+</tr>
 
-            <tr key={product.id || index}>
-                 
-              <td>{product.provider_name || index}</td>
-              <td>{product.name } </td>
-              <td>{product.item_number}</td>
-              <td>{product.provider_id}</td>
-              <td>
-                 <input  onChange={handlePaymentAmount} type="text"placeholder={product.price} /><button onClick={((e)=>{handlePaymentUpdate(product)})}>שלח</button>
-              </td>
-              <td>{product.min_order_quantity?.split(".")[0]}</td>
-         
-            </tr>
           ))
         )}
       </tbody>

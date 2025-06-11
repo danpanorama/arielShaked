@@ -76,7 +76,7 @@ const navigate = useNavigate()
           <div className="inputBox">
             <input
               name="email"
-              placeholder="שם פרטי"
+              placeholder=" אימייל"
               className={`input ${isError.email ? "inputError" : ""}`}
               type="text"
               value={userDataState.email}

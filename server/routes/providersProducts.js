@@ -4,6 +4,7 @@ const jwtMiddleware = require('../middleware/jwt');
 const { assignProductsController } = require('../controller/providersProducts/assignProductsController');
 const { getAllProvidersProducts } = require('../controller/providersProducts/getAllProvidersProducts');
 const { updatePriceController } = require('../controller/providersProducts/updatePriceController');
+const { updateMinQtyController } = require('../controller/providersProducts/updateMinQtyController');
 
 /* GET home page. */
 router.get('/',jwtMiddleware.jwtAuth,getAllProvidersProducts, function(req, res, next) {
@@ -12,6 +13,11 @@ router.get('/',jwtMiddleware.jwtAuth,getAllProvidersProducts, function(req, res,
 
 
 router.post('/assignProduct',jwtMiddleware.jwtAuth,assignProductsController, function(req, res, next) {
+
+});
+
+router.post('/update-min-qty',jwtMiddleware.jwtAuth,updateMinQtyController, function(req, res, next) {
+    
 
 });
 

@@ -2,6 +2,7 @@ import "../../css/order.css";
 import "../../css/popup.css";
 import "../../css/cart.css";
 import { useState } from "react";
+import CartSidebar from "../cart/CartSidebar";
 
 function OrderPopUp({
   close,
@@ -11,6 +12,7 @@ function OrderPopUp({
   cart,
   addToCart,
   removeFromCart,
+  handleSendOrder
 }) {
   const categories = Array.isArray(products) ? products : [];
 
@@ -46,9 +48,9 @@ function OrderPopUp({
   return (
     <div className="popupOverlay">
       <div className="popupContainer">
-        <button className="closeBtn" onClick={close}>
+        {/* <button className="closeBtn" onClick={close}>
           ✖
-        </button>
+        </button> */}
 
         <h2 className="popupTitle">בחר קטגוריה</h2>
         <div className="categoriesGrid">
@@ -64,7 +66,7 @@ function OrderPopUp({
             </div>
           ))}
         </div>
-
+<br />
         {categoryProducts.length > 0 && (
           <>
             <h2 className="popupTitle">מוצרים בקטגוריה</h2>
@@ -116,6 +118,9 @@ function OrderPopUp({
             </div>
           </>
         )}
+         <CartSidebar handleSendOrder={handleSendOrder} cart={cart} />
+
+        <button className="orderCartSubmitBtn" onClick={handleSendOrder} > אישור</button>
       </div>
     </div>
   );

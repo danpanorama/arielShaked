@@ -30,7 +30,7 @@ export const signUpAction = (data, navigate) => async (dispatch) => {
 
     if (res.data.error) {
 
-   dispatch({
+   dispatch({ 
       type: STOP_LOAD
     })
       dispatch({

@@ -24,7 +24,6 @@ function CreateOrderPopup({
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [quantities, setQuantities] = useState({});
-
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   const filteredProviders = providersList.filter((provider) =>
@@ -37,6 +36,7 @@ function CreateOrderPopup({
       [id]: isNaN(parsed) || parsed < 1 ? 1 : parsed,
     }));
   };
+ 
 
   useEffect(() => {
     setFilteredProducts(products);
@@ -49,6 +49,9 @@ function CreateOrderPopup({
     ]); // או איזה שדות שתרצה
     setFilteredProducts(filtered);
   };
+
+
+
 
   return (
     <div className="popupOverlay">
@@ -105,11 +108,12 @@ function CreateOrderPopup({
                       <div key={idx} className="productCard">
                         <h3>{item.name}</h3>
                         <p>₪{item.price}</p>
+                          <p>{item.id}</p>
                         <div className="quantityControl">
-                          {console.log(item.id)}
+                    
                           <input
                             type="number"
-                            min="1"
+                            min={1}
                             placeholder="כמות"
                             value={quantities[item.id] || 1}
                             onChange={(e) =>

@@ -7,7 +7,7 @@ import SideNavBar from "../components/sidenav/SideNavBar";
 import Headers from "../components/header/Headers";
 import OrderPopUp from "../components/popup/OrderPopUp";
 import { START_LOAD, STOP_LOAD } from "../redux/contents/loaderContent";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../config/AxiosConfig";
 import CartSidebar from "../components/cart/CartSidebar";
@@ -48,6 +48,9 @@ function OrderBakery() {
           header: err?.message || "לא ידוע",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -71,7 +74,11 @@ function OrderBakery() {
           message: "שגיאה בטעינת ההזמנות: ",
           header: err?.message || "לא ידוע",
         },
+
       });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -84,7 +91,7 @@ function OrderBakery() {
         withCredentials: true,
       });
       if (res.data) {
-        console.log(res.data);
+     
         setBakeryOrders(res.data.orders);
       }
     } catch (err) {
@@ -96,6 +103,9 @@ function OrderBakery() {
           header: err.response?.data?.header || " שגיאה בטעינת הזמנות",
         },
       });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 2000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -128,7 +138,7 @@ useEffect(() => {
   });
 
   socket.on("order-time-updated", (updatedOrder) => {
-    console.log("עודכן זמן הזמנה:", updatedOrder);
+     
 
     setBakeryOrders((prevOrders) => {
       const existingOrder = prevOrders.find(order => order.id === updatedOrder.id);
@@ -138,6 +148,7 @@ useEffect(() => {
       }
 
       if (existingOrder) {
+        console.log("עודכן זמן הזמנה:", updatedOrder);
         return prevOrders.map(order =>
           order.id === updatedOrder.id ? updatedOrder : order
         );
@@ -145,6 +156,31 @@ useEffect(() => {
         return [...prevOrders, updatedOrder];
       }
     });
+  });
+ 
+
+  
+
+   
+  socket.on("order-time-updated-update", (fullOrder) => {
+  
+    setBakeryOrders((prevOrders) => {
+      const existingOrder = prevOrders.find(order => order.id === fullOrder.id);
+
+      // if (existingOrder && existingOrder.is_approved === 1) {
+      //   return prevOrders;
+      // }
+
+      if (existingOrder) {
+        console.log("עודכן זמן הזמנה:", fullOrder);
+        return prevOrders.map(order =>
+          order.id === fullOrder.id ? fullOrder : order
+        );
+      } else {
+        return [...prevOrders, fullOrder];
+      }
+    });
+ 
   });
 
   // NEW: מאזין לסיום הזמנה
@@ -158,6 +194,7 @@ useEffect(() => {
   return () => {
     socket.off("order-time-updated");
     socket.off("order-finished");
+    socket.off("order-time-updated-update");
     socket.disconnect();
   };
 }, []);
@@ -166,6 +203,12 @@ useEffect(() => {
   const handleSendOrder = async () => {
     try {
       dispatch({ type: START_LOAD });
+
+      if(cart.length ==0 ){
+         setShowPopup(false)
+         return
+      }
+
       const res = await axiosInstance.post(
         "/bakery/newOrder",
         {
@@ -183,6 +226,7 @@ useEffect(() => {
       );
 
       if (res.data) {
+        setShowPopup(false)
         setCart([]);
         console.log(res.data.order[0]);
         // להוסיף את ההזמנה החדשה לרשימת ההזמנות הקיימת
@@ -197,6 +241,9 @@ useEffect(() => {
           header: err.response?.data?.header || "שגיאה בטעינת הזמנות",
         },
       });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -222,10 +269,12 @@ useEffect(() => {
           cart={cart}
           addToCart={addToCart}
           removeFromCart={removeFromCart}
+          handleSendOrder={handleSendOrder} 
+         
         />
       )}
 
-      <CartSidebar handleSendOrder={handleSendOrder} cart={cart} />
+      {/* <CartSidebar handleSendOrder={handleSendOrder} cart={cart} /> */}
       <br />
 
       <BakeryOrdersTabels bakeryOrders={bakeryOrders} />

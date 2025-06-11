@@ -8,7 +8,7 @@ import "../css/products.css";
 import PopUpGeneral from "../components/popup/PopUpGeneral";
 import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import ProductsTable from "../components/tables/ProductsTable";
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
 import ReceiveOrderPopup from "../components/products/ReceiveOrderPopup";
@@ -21,7 +21,6 @@ function Product() {
   const [originalProducts, setOriginalProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [popUpType, setPopUpType] = useState("");
-
   const [isCustomPopUpActive, setIsCustomPopUpActive] = useState(false);
   const togglePopUp = (e) => {
     setPopUpType(e);
@@ -51,9 +50,11 @@ function Product() {
           header: "שגיאה בטעינת פריטים",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
-
   const addProduct = async (newProduct, setProductData) => {
     try {
       const data = await axiosInstance.post(
@@ -63,9 +64,7 @@ function Product() {
           withCredentials: true,
         }
       );
-
       const addedProduct = data.data.product[0];
-
       setOriginalProducts((prev) => [...prev, addedProduct]);
       setFilteredProducts((prev) => [...prev, addedProduct]);
       setIsPopUpActive(false);
@@ -96,7 +95,6 @@ function Product() {
           withCredentials: true,
         }
       );
-
       setOriginalProducts((prev) => prev.filter((p) => p.id !== productId));
       setFilteredProducts((prev) => prev.filter((p) => p.id !== productId));
     } catch (e) {
@@ -107,6 +105,9 @@ function Product() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -126,9 +127,7 @@ function Product() {
           return product;
         })
       );
-
       setIsPopUpActive(false);
-      
       setFilteredProducts((prev) =>
         prev.map((product) => {
           console.log(product.id, productId);
@@ -148,6 +147,9 @@ function Product() {
           header: "שגיאה בעת מחיקת פריט",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -166,16 +168,13 @@ function Product() {
         productId: productId,
         status: status,
       };
-
       const response = await axiosInstance.post("/products/status", obj, {
         withCredentials: true,
       });
-
       // עדכון סטייטים מקומיים בצורה תקינה
       setOriginalProducts((prev) =>
         prev.map((p) => (p.id === productId ? { ...p, is_active: status } : p))
       );
-
       setFilteredProducts((prev) =>
         prev.map((p) => (p.id === productId ? { ...p, is_active: status } : p))
       );
@@ -187,6 +186,9 @@ function Product() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -202,7 +204,6 @@ function Product() {
         { withCredentials: true }
       );
       const updatedProduct = response.data.product[0];
-
       // עדכון סטייטים מקומיים
       setOriginalProducts((prev) =>
         prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
@@ -219,20 +220,11 @@ function Product() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   return (
@@ -275,11 +267,10 @@ function Product() {
         deleteProductCompletely={deleteProductCompletely}
       />
       <div className={isCustomPopUpActive ? "openWindow" : "closeWindow"}>
-        <ReceiveOrderPopup setOriginalProducts={setOriginalProducts} setFilteredProducts={setFilteredProducts} originalProducts={originalProducts}  products={filteredProducts} activePopUp={openOrdersPopUp} />
+        <ReceiveOrderPopup setIsCustomPopUpActive={setIsCustomPopUpActive} setOriginalProducts={setOriginalProducts} setFilteredProducts={setFilteredProducts} originalProducts={originalProducts}  products={filteredProducts} activePopUp={openOrdersPopUp} />
       </div>
 
       <PopUpGeneral
-    
         type={popUpType}
         click={togglePopUp}
         removeProduct={removeProduct}

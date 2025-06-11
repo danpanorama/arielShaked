@@ -15,7 +15,7 @@ const providersOrdersController = async (req, res, next) => {
       items,
     } = req.body;
 
-
+console.log(estimated_delivery_time)
     
    let getProviderDeliveryTime = await providers.getProvidersById(provider_id)
 

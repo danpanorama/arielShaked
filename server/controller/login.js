@@ -21,12 +21,12 @@ const loginController = async (req, res, next) => {
 
       // השוואה רגילה, לא עם bcrypt
       if (password === user.password) {
-        const token = await jwt.makeToken({ id: user.id }, process.env.JWT_TOKEN, { expiresIn: '1h' });
+        const token = await jwt.makeToken({ id: user.id }, process.env.JWT_TOKEN, { expiresIn: '5d' });
         res.cookie('auth_token', token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'Strict',
-          maxAge: 3600000
+          maxAge: 360000000
         });
         req.user = user;
         return next();

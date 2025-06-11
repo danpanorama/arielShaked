@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../config/AxiosConfig";
 import Headers from "../components/header/Headers";
 import "../css/order.css";
-import { ERROR } from '../redux/contents/errContent';
+import { CLEAR, ERROR } from '../redux/contents/errContent';
 import { useDispatch } from "react-redux";
 function OrderDetail() {
   const { orderId } = useParams(); // מקבל את מזהה ההזמנה מה-URL
@@ -45,6 +45,9 @@ const handlePaymentUpdate = async () => {
         header: "שגיאה",
       },
     });
+           setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
   }
 };
 
@@ -100,7 +103,9 @@ const handlePaymentUpdate = async () => {
             {order.items?.map((item, index) => (
               <li key={index}>
                 <p><strong>שם מוצר:</strong> {item.product_name}</p>
-                <p><strong>כמות:</strong> {item.quantity}</p>
+                <p><strong>כמות שהוזמנה :</strong> {item.quantity}</p>
+
+                  <p><strong>כמות שהתקבלה:</strong> {item.received_quantity}</p>
                 <p><strong>מחיר למוצר:</strong> {item.total_price} ש"ח</p>
               </li>
             ))}

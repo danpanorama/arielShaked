@@ -5,6 +5,7 @@ const { getAllBakeryOrdersController } = require('../controller/orders/bakeryOrd
 const { NewOrderController } = require('../controller/orders/bakeryOrders/NewOrderController');
 const { SetTimeController } = require('../controller/orders/bakeryOrders/SetTimeController');
 const { FinishOrder } = require('../controller/orders/bakeryOrders/FinishOrder');
+const { UpdateTimeDeliver } = require('../controller/orders/bakeryOrders/UpdateTimeDeliver');
 
 /* GET home page. */
 router.get('/',jwtMiddleware.jwtAuth,getAllBakeryOrdersController, function(req, res, next) {
@@ -29,7 +30,10 @@ router.post('/estimated-time',jwtMiddleware.jwtAuth,SetTimeController, function(
  
 }); 
 
+router.post('/estimated-update-time',jwtMiddleware.jwtAuth,UpdateTimeDeliver, function(req, res, next) {
 
+ 
+}); 
 
 
 module.exports = router;

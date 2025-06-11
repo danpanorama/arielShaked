@@ -8,7 +8,7 @@ import "../css/users.css";
 import PopUpGeneral from "../components/popup/PopUpGeneral";
 import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import UserTable from "../components/tables/UsersTable";
 import Icon from '../images/plus.svg'
 import SignUpEmployee from "../components/users/SignUpEmployee";
@@ -25,7 +25,7 @@ function Users() {
   const [isPopUpActive, setIsPopUpActive] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [userDataState, setUserDataState] = useState({
-       name: "",
+    name: "",
     email: "",
     phone: "", 
     password: "",
@@ -134,6 +134,9 @@ function Users() {
         type: ERROR,
         data: { message: "אין לך הרשאות", header: "אתה לא מנהל" },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
       
    
     }
@@ -171,6 +174,9 @@ function Users() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
   const handleDeleteUser = async (userId) => {
@@ -179,6 +185,9 @@ function Users() {
         type: ERROR,
         data: { message: "אין לך הרשאות למחיקת משתמשים", header: "גישה נדחתה" },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
 
     try {
@@ -197,6 +206,9 @@ function Users() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
   const handleActiveUsers = async (userId, permission) => {
@@ -228,6 +240,9 @@ function Users() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -240,6 +255,9 @@ function Users() {
         type: ERROR,
         data: { message: "שגיאה בטעינה", header: "טעינת משתמשים נכשלה" },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -310,6 +328,9 @@ const handleUpdate = async (data) => {
         header: "שגיאה",
       },
     });
+           setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
   }
 };
 
@@ -347,6 +368,7 @@ const handleUpdate = async (data) => {
         errorMessages={errorMessages}
         userDataState={userDataState}
         handleUpdate={handleUpdate}
+        Icon={Icon}
       />
     </div>
   );

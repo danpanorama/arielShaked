@@ -104,12 +104,12 @@ function AssignProductTiProvider({ activePopUp, associateProductToProvider }) {
           <select
             className={`SearchBar ${invalidFields.includes("provider_id") ? "invalid" : ""}`}
             name="provider_id"
-            value={formData.provider_id}
+            value={formData.provider_id} 
             onChange={handleChange}
           >
             <option value="">בחר ספק*</option>
             {providers.map((provider) => (
-              <option key={provider.id} value={`${provider.id}|${provider.name}`}>
+              <option key={provider.id} value={provider.id}>
                 {provider.id} - {provider.name}
               </option>
             ))}

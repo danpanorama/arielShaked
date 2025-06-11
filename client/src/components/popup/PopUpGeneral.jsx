@@ -11,6 +11,7 @@ import ReceiveOrderPopup from "../products/ReceiveOrderPopup";
 
 function PopUpGeneral({
    type,
+   Icon,
   addStockToProduct,
   handleUpdate,
   addUser,
@@ -61,6 +62,7 @@ function PopUpGeneral({
             usersData={userDataState}
             setusersData={setusersData}
             handleUpdate={handleUpdate}
+            Icon={Icon}
           />
         )}
          {type === "addStock" && (

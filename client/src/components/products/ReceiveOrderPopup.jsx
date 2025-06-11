@@ -3,9 +3,9 @@ import "../../css/popup.css";
 import axiosInstance from "../../config/AxiosConfig";
 import { useDispatch } from "react-redux";
 import { ERROR } from "../../redux/contents/errContent";
-import OrderDetails from "./OrderDetails";
+import OrderDetails from "./OrderDetails"; 
 
-function ReceiveOrderPopup({ activePopUp,products,setOriginalProducts,setFilteredProducts }) {
+function ReceiveOrderPopup({ activePopUp,setIsCustomPopUpActive,products,setOriginalProducts,setFilteredProducts }) {
   const dispatch = useDispatch();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
@@ -69,8 +69,8 @@ function ReceiveOrderPopup({ activePopUp,products,setOriginalProducts,setFiltere
             dispatch={dispatch}
             products={products}
             setOriginalProducts={setOriginalProducts}
-
               setFilteredProducts={setFilteredProducts}
+              setIsCustomPopUpActive={setIsCustomPopUpActive}
           />
         ) : (
           renderOrderTable()

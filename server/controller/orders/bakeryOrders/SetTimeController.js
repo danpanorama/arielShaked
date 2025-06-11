@@ -58,6 +58,11 @@ const SetTimeController = async (req, res) => {
       order_id
     } = req.body;
 
+  
+
+
+ 
+
 
     if (estimated_ready_time == null || order_id == null) {
       return res.status(400).json({
@@ -69,7 +74,7 @@ const SetTimeController = async (req, res) => {
     // שליפה של ההזמנה והפריטים
     const [orders] = await bakeryModel.getBakeryOrderById(order_id);
     const [items] = await bakeryModel.getBakeryOrderItemsByOrderId(order_id);
-    console.log(orders, ":::::", items)
+ 
 
     // בדיקת זמינות מלאי לכל פריט
     for (const item of items) {

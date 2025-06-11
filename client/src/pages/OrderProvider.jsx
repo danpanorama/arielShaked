@@ -12,7 +12,7 @@ import CreateOrderPopup from "../components/popup/CreateOrderPopup";
 import SearchBar from "../components/searchbar/SearchBar";
 import axiosInstance from "../config/AxiosConfig";
 import { useDispatch } from "react-redux";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import { START_LOAD, STOP_LOAD } from "../redux/contents/loaderContent";
 import ProviderOrderTabel from "../components/tables/ProviderOrderTabel";
 
@@ -58,6 +58,9 @@ function OrderProvider() {
           header: err?.message || "לא ידוע",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -76,7 +79,13 @@ function OrderProvider() {
       setLoading(false);
     } catch (err) {
       setError("שגיאה בטעינת הספקים");
-      dispatch({ type: ERROR });
+      dispatch({ type: ERROR,data: {
+          message:"שגיאה בטעינת הספקים",
+          header: "שגיאה",
+        } });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -155,6 +164,9 @@ function OrderProvider() {
           header: "שגיאה",
         },
       });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -167,13 +179,17 @@ function OrderProvider() {
         { withCredentials: true }
       );
 
+     
       setProducts(res.data.items);
       setSelectedProvider(provider);
     } catch (err) {
       dispatch({
         type: ERROR,
-        data: err?.response?.data?.message || "שגיאה בטעינת מוצרים",
+        data:{message:'ספק לא משוייך',header:"שגיאה "},
       });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       setLoadingProducts(false);
     }
@@ -181,23 +197,24 @@ function OrderProvider() {
 
   const sendOrder = async () => {
     try {
-      console.log(cart);
       for (const providerCart of cart) {
         const totalPrice = providerCart.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
           0
         );
+        
         const orderToSend = {
           provider_id: providerCart.providerId,
           provider_name: providerCart.providerName,
           price: totalPrice,
           items: providerCart.items,
+          estimated_delivery_time:selectedProvider.delivery_time
         };
-        console.log(orderToSend)
+    
 
         const res = await axiosInstance.post(
           "/providers/providersOrders",
-          orderToSend,
+          orderToSend, 
           { withCredentials: true }
         );
         console.log(res.data.order);
@@ -211,6 +228,9 @@ function OrderProvider() {
       setCart([]);
     } catch (err) {
       dispatch({ type: ERROR, data: { message: "שליחת ההזמנה נכשלה" } });
+         setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -218,13 +238,17 @@ function OrderProvider() {
     if (quantity <= 0) {
       return;
     }
+    if(item.min_order_quantity > quantity){
+    return  alert('הכמות המינימלית להזמנה היא ' + item.min_order_quantity)
+    }
+ console.log(item)
     
     setCart((prevCart) => {
       const providerId = selectedProvider.id;
       const providerName = selectedProvider.name;
 
       const itemToAdd = {
-        id: item.id,
+        id: item.item_number,
         name: item.name,
         price: item.price,
         quantity,

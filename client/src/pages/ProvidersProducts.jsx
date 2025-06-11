@@ -9,13 +9,15 @@ import "../css/providers.css";
 import PopUpGeneral from "../components/popup/PopUpGeneral";
 import Headers from "../components/header/Headers";
 import axiosInstance from "../config/AxiosConfig";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import { getFromServer } from "../components/tools/FetchData";
 import IconPlus from "../images/plus.svg";
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
 
 function ProvidersProducts() {
   const dispatch = useDispatch();
+  const [minQtyChanges, setMinQtyChanges] = useState({});
+
   const [activePopUp, setActivePopUp] = useState(false);
   const [providersProductArray, setProvidersProductArray] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +25,60 @@ function ProvidersProducts() {
   const activePopUpFunction = () => {
     setActivePopUp(!activePopUp);
   };
+  const handleMinQtyChange = (e, product) => {
+  const value = e.target.value;
+  setMinQtyChanges(prev => ({
+    ...prev,
+    [product.id]: value
+  }));
+};
+const handleMinQtyUpdate  = async (product) => {
+  const newQty = minQtyChanges[product.id];
+  if (!newQty || newQty <= 0) {
+    dispatch({
+      type: ERROR,
+      data: { message: "יש להזין כמות חוקית", header: "שגיאה" },
+    });
+    setTimeout(() => dispatch({ type: CLEAR }), 3000);
+    return;
+  }
+
+  try {
+    const res = await axiosInstance.post(
+      "/providersProducts/update-min-qty",
+      {
+        productId: product.id,
+        minQty: Number(newQty),
+      },
+      { withCredentials: true }
+    );
+
+    // עדכון במערך המקומי
+    setProvidersProductArray(prev =>
+      prev.map(p =>
+        p.id === product.id ? { ...p, min_order_quantity: newQty } : p
+      )
+    );
+
+    // אפס את שדה הטקסט
+    setMinQtyChanges(prev => {
+      const newState = { ...prev };
+      delete newState[product.id];
+      return newState;
+    });
+
+  } catch (err) {
+    dispatch({
+      type: ERROR,
+      data: {
+        message: err?.response?.data?.message || "שגיאה בעדכון כמות מינ'",
+        header: "שגיאה",
+      },
+    });
+    setTimeout(() => dispatch({ type: CLEAR }), 3000);
+  }
+};
+
 
   useEffect(() => {
     getFromServer(
@@ -88,6 +144,9 @@ function ProvidersProducts() {
           header: "שגיאה בשיוך",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   }
 
@@ -97,7 +156,7 @@ function ProvidersProducts() {
 
   const handlePaymentUpdate = async (product) => {
     try {
-      console.log(product);
+      
       if (amountState <= 0) {
         return;
       }
@@ -109,42 +168,9 @@ function ProvidersProducts() {
         },
         { withCredentials: true }
       );
-      console.log(res.data);
 
-      //     const updatedOrder = products;
 
-      //     const payment = res.data?.allPayments; // ודא שאתה מקבל את זה נכון מהשרת
-
-      // setOrders((prevOrders) =>
-      //   prevOrders.map((o) => {
-      //     if (o.id === order.id) {
-      //       const updatedAmountPaid = payment;
-      //       const isFullyPaid = o.price <= updatedAmountPaid;
-      //       return {
-      //         ...o,
-      //         amount_paid: updatedAmountPaid,
-      //         is_paid: isFullyPaid ? 1 : 0,
-      //       };
-      //     }
-      //     return o;
-      //   })
-      // );
-
-      // setFilteredOrders((prevFiltered) =>
-      //   prevFiltered.map((o) => {
-      //     if (o.id === order.id) {
-      //       const updatedAmountPaid = payment;
-      //       const isFullyPaid = o.price <= updatedAmountPaid;
-      //       return {
-      //         ...o,
-      //         amount_paid: updatedAmountPaid,
-      //         is_paid: isFullyPaid ? 1 : 0,
-      //       };
-      //     }
-      //     return o;
-      //   })
-      // );
-      // אופציונלי: איפוס שדה תשלום לאחר ההצלחה
+  
       setAmount(0);
     } catch (err) {
       dispatch({
@@ -154,6 +180,9 @@ function ProvidersProducts() {
           header: "שגיאה",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     }
   };
 
@@ -175,6 +204,8 @@ function ProvidersProducts() {
         handlePaymentAmount={handlePaymentAmount}
         handlePaymentUpdate={handlePaymentUpdate}
         providersProductArray={filteredProducts}
+        handleMinQtyUpdate={handleMinQtyUpdate} 
+        handleMinQtyChange={handleMinQtyChange}
       />
       <PopUpGeneral
         click={associateProductToProvider}

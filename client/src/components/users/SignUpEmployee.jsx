@@ -5,7 +5,7 @@ import PrimaryButton from "../btn/PrimaryButton";
 import CloseButton from "../btn/CloseButton";
 import { useState } from "react";
 
-function SignUpEmployee({ togglePopUp, signUp,usersData,setusersData,handleUpdate }) {
+function SignUpEmployee({ togglePopUp,Icon, signUp,usersData,setusersData,handleUpdate }) {
 
 
 const handleChange = (e) => {
@@ -35,7 +35,7 @@ const handleChange = (e) => {
   return (
     <div className="yellowPopUp">
       <CloseButton click={togglePopUp} text={"X"} />
-      <h1>הוספת עובד חדש</h1>
+      {usersData.id? <h1>  עדכון  עובד </h1>:  <h1>הוספת משתמש חדש</h1>  }
 
       <form  >
         <div className="inputHolderDiv marginBottom10">
@@ -46,7 +46,7 @@ const handleChange = (e) => {
             value={usersData.name}
             onChange={handleChange}
             className="SearchBar"
-            placeholder="שם פרטי"
+        
           />
         </div>
 
@@ -61,7 +61,6 @@ const handleChange = (e) => {
             placeholder="example@email.com"
           />
         </div>
-
         <div className="inputHolderDiv marginBottom10">
           <label className="label">טלפון</label>
           <input
@@ -73,11 +72,11 @@ const handleChange = (e) => {
             placeholder="050-0000000"
           />
         </div>
-
+        
         <div className="inputHolderDiv marginBottom10">
           <label className="label">סיסמה</label>
           <input
-            type="password"
+            type="text"
             name="password"
             value={usersData.password}
             onChange={handleChange}
@@ -85,11 +84,10 @@ const handleChange = (e) => {
             placeholder="הכנס סיסמה"
           />
         </div>
-
         <div className="inputHolderDiv marginBottom10">
           <label className="label">אימות סיסמה</label>
           <input
-            type="password"
+            type="text"
             name="repeatPassword"
             value={usersData.repeatPassword}
             onChange={handleChange}
@@ -97,7 +95,6 @@ const handleChange = (e) => {
             placeholder="הכנס שוב סיסמה"
           />
         </div>
-
         <div className="inputHolderDiv marginBottom10">
           <label className="label">תפקיד המשתמש</label>
           <select
@@ -113,7 +110,7 @@ const handleChange = (e) => {
             <option value="4">מנהל</option> 
           </select>
         </div>
-        {usersData.id? <PrimaryButton click={handleUpdate} text="עדכון מזתמש" type="submit" />:<PrimaryButton click={handelSignUp} text="הרשמה" type="submit" />}
+        {usersData.id? <PrimaryButton icon={Icon} click={handleUpdate} text="עדכון משתמש" type="submit" />:<PrimaryButton click={handelSignUp} icon={Icon} text="הוספת משתמש חדש" type="submit" />}
 
      
 

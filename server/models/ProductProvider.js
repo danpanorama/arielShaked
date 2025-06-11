@@ -70,7 +70,14 @@ const updatePrice = (price,id) => {
     [price,id]
   );
 };
+const updateMinQty = (minQty, id) => {
+  return pool.execute(
+    `UPDATE provider_products SET min_order_quantity = ? WHERE id = ?`,
+    [minQty, id]
+  );
+};
 module.exports = {
+  updateMinQty,
   getAllProviderProducts,
   getProviderProductById,
   insertNewProviderProduct,

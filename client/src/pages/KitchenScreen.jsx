@@ -7,7 +7,7 @@ import SearchBar from "../components/searchbar/SearchBar";
 import SideNavBar from "../components/sidenav/SideNavBar";
 import Headers from "../components/header/Headers";
 import { START_LOAD, STOP_LOAD } from "../redux/contents/loaderContent";
-import { ERROR } from "../redux/contents/errContent";
+import { CLEAR, ERROR } from "../redux/contents/errContent";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../config/AxiosConfig";
 
@@ -56,6 +56,9 @@ function KitchenScreen() {
           header: err?.message || "לא ידוע",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -77,6 +80,9 @@ function KitchenScreen() {
           header: err.response?.data?.header || " שגיאה בטעינת הזמנות",
         },
       });
+             setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -111,11 +117,54 @@ function KitchenScreen() {
       console.log(err)
       dispatch({type:ERROR,data:{message:err.response?.data.error.message,header:'שגיאה'}})
      alert(err.response?.data?.error?.message || "שגיאה בעדכון זמן מוערך");
-
+       setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
   };
+
+
+
+
+
+  const updateEstimatedTime = async (order) => {
+    if (!estimatedTimes[order.id]) {
+      alert("נא להכניס זמן תקין");
+      return;
+    }
+    try {
+      dispatch({ type: START_LOAD });
+      await axiosInstance.post(
+        `/bakery/estimated-update-time`,
+        { estimated_ready_time: estimatedTimes[order.id], order_id: order.id },
+        { withCredentials: true }
+      );
+      // עדכון הזמנה מקומית כדי להציג שינויים בלי לרענן את כל הרשימה
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === order.id
+            ? { ...o, estimated_ready_time: estimatedTimes[order.id] }
+            : o
+        )
+      );
+      alert("הזמן עודכן בהצלחה");
+    } catch (err) {
+      console.log(err)
+      dispatch({type:ERROR,data:{message:err.response?.data.error.message,header:'שגיאה'}})
+     alert(err.response?.data?.error?.message || "שגיאה בעדכון זמן מוערך");
+       setTimeout(() => {
+      dispatch({ type: CLEAR });
+    }, 3000);
+    } finally {
+      dispatch({ type: STOP_LOAD });
+    }
+  };
+
+
+
+
 
   // סיום הזמנה (סימון כמוכנה)
   const finishOrder = async (order) => {
@@ -194,6 +243,17 @@ function KitchenScreen() {
             <p>הזמנה #{order.id}</p>
             <p>קטגוריה: {order.category}</p>
             <p>זמן מוערך: {order.estimated_ready_time} דקות</p>
+               <input
+              type="number"
+              min="1"
+              placeholder="זמן הכנה בדקות"
+              value={estimatedTimes[order.id] || ""}
+              onChange={(e) => handleTimeChange(order.id, e.target.value)}
+            />
+            <PrimaryButton
+              text="שלח זמן מוערך"
+              click={() => updateEstimatedTime(order)}
+            />
             <PrimaryButton text="סיים הזמנה" click={() => finishOrder(order)} />
           </div>
         ))}
