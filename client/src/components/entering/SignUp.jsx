@@ -138,7 +138,7 @@ function SignUp() {
           <div className="inputBox">
             <input
               name="name"
-              placeholder="שם פרטי"
+              placeholder="שם מלא"
               className={`input ${isError.name ? "inputError" : ""}`}
               type="text"
               value={userDataState.name}
