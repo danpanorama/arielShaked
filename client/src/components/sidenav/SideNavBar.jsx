@@ -17,7 +17,7 @@ const sideNavLinks = [
   { name: "מלאי", url: "/products", permissions: [3,4,2,1,0] },
   { name: "פריט-ספק", url: "/providersProducts", permissions: [3,4] },
   { name: "הזמנות ספקים", url: "/providersOrders", permissions: [3,4] },
-  { name: "הרשאות", url: "/users", permissions: [3,4] },
+  { name: "הרשאות", url: "/users", permissions: [4] },
   { name: "דוחות", url: "/reports", permissions: [3,4] },
 ];
 
@@ -43,7 +43,7 @@ const sideNavLinks = [
 
         <p className="userPermissions">
             {user.user.permissions === 0
-    ? "עובד מאפייה"
+    ? "עובד "
     : user.user.permissions === 1
     ? "עובד חנות"
     : user.user.permissions === 2

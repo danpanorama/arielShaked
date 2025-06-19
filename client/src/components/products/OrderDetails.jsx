@@ -74,24 +74,26 @@ function OrderDetails({
     }
   };
 
-  const confirmOrder = () => {
-    const formattedItems = order.items.map((item) => ({
-      product_id: item.product_id,
-      product_name: item.product_name,
-      quantity: Number(item.quantity),
-      receivedQuantity: Number(item.receivedQuantity ?? item.quantity),
-    }));
+const confirmOrder = () => {
+  const formattedItems = order.items.map((item) => ({
+    product_id: item.product_id,
+    product_name: item.product_name,
+    quantity: Number(item.quantity),
+    receivedQuantity: Number(item.receivedQuantity ?? item.quantity),
+  }));
 
-    const missingItems = formattedItems.filter(
-      (item) => item.receivedQuantity < item.quantity
-    );
+  const missingItems = formattedItems.filter(
+    (item) => item.receivedQuantity < item.quantity
+  );
 
-    if (missingItems.length > 0) {
-      setMissingItemsPopup(missingItems);
-    } else {
-      handleSendConfirmation(formattedItems);
-    }
-  };
+  if (missingItems.length > 0) {
+    setMissingItemsPopup(missingItems);
+  } else {
+    // שולח את כל הפריטים תמיד
+    handleSendConfirmation(formattedItems);
+  }
+};
+
 
   return (
     <div className="orderDetails">
@@ -131,14 +133,22 @@ function OrderDetails({
               window.location.href = "/providersOrders"; // ניתן לשנות ל־navigate אם אתה עם React Router
             }}>כן</button>
 
-            <button className="logoutBtn" onClick={() => {
-              const confirmedItems = missingItemsPopup.map(item => ({
-                product_id: item.product_id,
-                quantity: item.receivedQuantity,
-              }));
-              handleSendConfirmation(confirmedItems);
-              setMissingItemsPopup(null);
-            }}>לא</button>
+           <button
+  className="logoutBtn"
+  onClick={() => {
+    // במקום לשלוח רק missingItems, שולח את כל הפריטים עם הכמויות המלאות
+    const formattedItems = order.items.map((item) => ({
+      product_id: item.product_id,
+      quantity: Number(item.receivedQuantity ?? item.quantity),
+    }));
+
+    handleSendConfirmation(formattedItems);
+    setMissingItemsPopup(null);
+  }}
+>
+  לא
+</button>
+
           </div>
         </div>
       )}

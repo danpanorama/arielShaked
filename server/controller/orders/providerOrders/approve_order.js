@@ -45,6 +45,7 @@
 // };
 
 // module.exports.approve_order = approve_order;
+
 const mysql = require("../../../models/providerOrder");
 const productsDB = require("../../../models/product");
 
@@ -63,8 +64,9 @@ const approve_order = async (req, res) => {
     // עבור כל פריט שנשלח מהקליינט:
     for (const item of items) {
       
-      const productId = item.product_id;
-      const receivedQty = Number(item.quantity); // מה שהגיע בפועל
+     const productId = item.product_id;
+     const receivedQty = Number(item.receivedQuantity) || Number(item.quantity);
+
 
       // עדכון שדה received_quantity בטבלת ההזמנות
       await mysql.updateOrderItemReceivedQuantity(orderId, productId, receivedQty);

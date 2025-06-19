@@ -88,8 +88,8 @@ width: 100vw;
 }
 
 .partially-paid {
-  background-color: #fff3cd; /* כתום בהיר */
-  color: #856404;
+  background-color: #f39c12; /* כתום בהיר */
+  color: #271e01;
 }
 
 .unpaid {

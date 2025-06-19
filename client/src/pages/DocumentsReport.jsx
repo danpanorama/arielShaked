@@ -7,9 +7,51 @@ import axiosInstance from '../config/AxiosConfig';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  // הופך מ-ISO "2024-06-12T14:30:00Z" ל-"2024-06-12 14:30"
+  return dateStr.replace('T', ' ').replace('Z', '').slice(0, 16);
+}
+
+// מילון כותרות בעברית לכל שדה בדוחות
+const headersMap = {
+  // inventory
+  id: 'מספר מוצר',
+  name: 'שם מוצר',
+  quantity: 'כמות',
+  min_required: 'כמות מינימום',
+  is_active: 'פעיל',
+
+  // open orders
+  provider_name: 'ספק',
+  created_at: 'תאריך יצירה',
+  price: 'מחיר',
+  amount_paid: 'סכום ששולם',
+  is_received: 'התקבל',
+  is_paid: 'שולם',
+
+  // bakery summary
+  product_name: 'שם מוצר אפייה',
+  total_orders: 'מספר הזמנות',
+  total_units: 'כמות יחידות',
+
+  // summary fields
+  total_open_orders: 'סך הכל הזמנות פתוחות',
+  total_order_value: 'סך כל הערך',
+  total_paid: 'סך כל ששולם',
+  total_remaining_to_pay: 'סכום לתשלום',
+  unpaid_received_orders: 'הזמנות לא משולמות שהתקבלו',
+  unpaid_received_total: 'סכום לא משולם בהזמנות שהתקבלו',
+  
+};
+
+function translateHeader(key) {
+  return headersMap[key] || key;
+}
+
 function DocumentsReport() {
   const [reportData, setReportData] = useState(null);
-  const [orders, setOrders] = useState(null);           // חדש - הזמנות פתוחות
+  const [orders, setOrders] = useState(null);
   const [summary, setSummary] = useState(null);
   const [reportTitle, setReportTitle] = useState('');
 
@@ -19,7 +61,7 @@ function DocumentsReport() {
       switch (type) {
         case 'inventory':
           response = await axiosInstance.get('/reports/inventory-zero');
-          setReportTitle('דוח מלאי 0-');
+          setReportTitle("דוח חוסרים במלאי");
           setReportData(response.data);
           setOrders(null);
           setSummary(null);
@@ -61,6 +103,32 @@ function DocumentsReport() {
     saveAs(data, `${reportTitle || 'report'}.xlsx`);
   };
 
+  // פונקציה להצגת שדות בטבלה, עם טיפול מיוחד בתאריך
+  const renderTable = (data) => (
+    <table className="report-table">
+      <thead>
+        <tr>
+          {Object.keys(data[0]).map((key) => (
+            <th key={key}>{translateHeader(key)}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr key={index}>
+            {Object.entries(item).map(([key, value], i) => (
+              <td key={i}>
+                {key.toLowerCase().includes('date') || key === 'created_at'
+                  ? formatDate(value)
+                  : String(value)}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+
   return (
     <div className="report-container providersContainer">
       <SideNavBar />
@@ -75,27 +143,10 @@ function DocumentsReport() {
 
         {reportTitle && <h2 className="report-subtitle">{reportTitle}</h2>}
 
-        {/* טבלה לדוחות מסוג inventory או bakery */}
+        {/* דוח inventory או bakery */}
         {reportData && Array.isArray(reportData) && reportData.length > 0 ? (
           <>
-            <table className="report-table">
-              <thead>
-                <tr>
-                  {Object.keys(reportData[0]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {reportData.map((item, index) => (
-                  <tr key={index}>
-                    {Object.values(item).map((value, i) => (
-                      <td key={i}>{String(value)}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {renderTable(reportData)}
             <button onClick={downloadExcel} style={{ marginTop: '20px' }}>
               הורד לאקסל
             </button>
@@ -104,28 +155,11 @@ function DocumentsReport() {
           <p className="report-empty">אין תוצאות להצגה בדוח זה.</p>
         ) : null}
 
-        {/* טבלה לדוח הזמנות פתוחות */}
+        {/* דוח הזמנות פתוחות */}
         {orders && orders.length > 0 ? (
           <>
             <h3>פרטי כל ההזמנות שלא נסגרו:</h3>
-            <table className="report-table">
-              <thead>
-                <tr>
-                  {Object.keys(orders[0]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order, idx) => (
-                  <tr key={idx}>
-                    {Object.values(order).map((val, i) => (
-                      <td key={i}>{String(val)}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {renderTable(orders)}
             <button onClick={downloadExcel} style={{ marginTop: '20px' }}>
               הורד הזמנות לאקסל
             </button>
@@ -142,7 +176,7 @@ function DocumentsReport() {
               <tbody>
                 {Object.entries(summary).map(([key, value]) => (
                   <tr key={key}>
-                    <td className="summary-key">{key}</td>
+                    <td className="summary-key">{translateHeader(key)}</td>
                     <td className="summary-value">{String(value)}</td>
                   </tr>
                 ))}

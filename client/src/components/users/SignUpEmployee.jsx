@@ -35,7 +35,7 @@ const handleChange = (e) => {
   return (
     <div className="yellowPopUp">
       <CloseButton click={togglePopUp} text={"X"} />
-      {usersData.id? <h1>  עדכון  עובד </h1>:  <h1>הוספת משתמש חדש</h1>  }
+      {usersData.id? <h1>  עדכון  עובד </h1>:  <h1>הוספת עובד חדש</h1>  }
 
       <form  >
         <div className="inputHolderDiv marginBottom10">
@@ -106,11 +106,11 @@ const handleChange = (e) => {
             <option value="">בחר תפקיד</option>
             <option value="0">עובד מאפייה</option>
             <option value="1">עובד חנות</option>
-            <option value="2">עוזר מנהל</option>
+            <option value="3">עוזר מנהל</option>
             <option value="4">מנהל</option> 
           </select>
         </div>
-        {usersData.id? <PrimaryButton icon={Icon} click={handleUpdate} text="עדכון משתמש" type="submit" />:<PrimaryButton click={handelSignUp} icon={Icon} text="הוספת משתמש חדש" type="submit" />}
+        {usersData.id? <PrimaryButton icon={Icon} click={handleUpdate} text="עדכון עובד" type="submit" />:<PrimaryButton click={handelSignUp} icon={Icon} text="הוספת עובד חדש" type="submit" />}
 
      
 

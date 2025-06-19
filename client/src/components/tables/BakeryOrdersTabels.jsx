@@ -1,9 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "../../App.css";
 import "../../css/tools.css";
+import SearchBar from "../searchbar/SearchBar";
+import { filterBySearchTerm } from "../tools/filterBySearchTerm"; // בדוק את הנתיב
 
 function BakeryOrdersCards({ bakeryOrders }) {
   const navigate = useNavigate();
+
+  // הוספת state לשני שדות החיפוש
+  const [searchUnapproved, setSearchUnapproved] = useState("");
+  const [searchApproved, setSearchApproved] = useState("");
 
   const handleClick = (orderId) => {
     navigate(`/order-details/${orderId}`);
@@ -21,9 +28,27 @@ function BakeryOrdersCards({ bakeryOrders }) {
       order.is_finished === 0 // רק הזמנות שלא הסתיימו
   );
 
+  // סינון לפי חיפוש עבור לא מאושרות
+  const filteredUnapproved = filterBySearchTerm(
+    unapprovedOrders,
+    searchUnapproved,
+    ["id", "category", "order_date"] // אפשר להוסיף עוד שדות לפי הצורך
+  );
+console.log("unapprovedOrders", unapprovedOrders);
+console.log("approvedOrders", approvedOrders);
+
+  // סינון לפי חיפוש עבור מאושרות
+  const filteredApproved = filterBySearchTerm(
+    approvedOrders,
+    searchApproved,
+    ["id", "category", "order_date"]
+  );
+
   if (bakeryOrders.length === 0) {
     return (
-      <p style={{ textAlign: "center", marginTop: "20px" }}>אין הזמנות להצגה</p>
+      <p style={{ textAlign: "center", marginTop: "20px" }}>
+        אין הזמנות להצגה
+      </p>
     );
   }
 
@@ -33,6 +58,7 @@ function BakeryOrdersCards({ bakeryOrders }) {
       <h2 style={{ textAlign: "center", color: "darkred" }}>
         הזמנות לא מאושרות
       </h2>
+      <SearchBar onSearch={setSearchUnapproved} />
       <div
         className="orders-cards-container"
         style={{
@@ -43,8 +69,8 @@ function BakeryOrdersCards({ bakeryOrders }) {
           marginBottom: "40px",
         }}
       >
-        {unapprovedOrders.length === 0 && <p>אין הזמנות לא מאושרות</p>}
-        {unapprovedOrders.map((order) => {
+        {filteredUnapproved.length === 0 && <p>אין הזמנות לא מאושרות</p>}
+        {filteredUnapproved.map((order) => {
           const orderDate =
             order.order_date && order.order_date !== "0"
               ? new Date(order.order_date).toLocaleDateString("he-IL")
@@ -80,6 +106,7 @@ function BakeryOrdersCards({ bakeryOrders }) {
       <h2 style={{ textAlign: "center", color: "green" }}>
         הזמנות מאושרות שלא הסתיימו
       </h2>
+      <SearchBar onSearch={setSearchApproved} />
       <div
         className="orders-cards-container"
         style={{
@@ -89,8 +116,8 @@ function BakeryOrdersCards({ bakeryOrders }) {
           justifyContent: "center",
         }}
       >
-        {approvedOrders.length === 0 && <p>אין הזמנות מאושרות להצגה</p>}
-        {approvedOrders.map((order) => {
+        {filteredApproved.length === 0 && <p>אין הזמנות מאושרות להצגה</p>}
+        {filteredApproved.map((order) => {
           const orderDate =
             order.order_date && order.order_date !== "0"
               ? new Date(order.order_date).toLocaleDateString("he-IL")

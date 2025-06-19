@@ -1,4 +1,3 @@
-
 const bakeryModel = require("../../../models/bakery");
 const products = require("../../../models/product");
 
@@ -24,10 +23,7 @@ const UpdateTimeDeliver = async (req, res) => {
 
     // עדכון זמן מוערך + אישור ההזמנה
     await bakeryModel.updateEstimatedTime(order_id, estimated_ready_time);
- 
-
     orders[0].estimated_ready_time = estimated_ready_time
-  
     const fullOrder = {
       ...orders[0],
       items

@@ -13,6 +13,7 @@ import axiosInstance from "../config/AxiosConfig";
 import CartSidebar from "../components/cart/CartSidebar";
 import BakeryOrdersTabels from "../components/tables/BakeryOrdersTabels";
 import { io } from "socket.io-client";
+import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
 
 function OrderBakery() {
   const [showPopup, setShowPopup] = useState(false);
@@ -21,14 +22,19 @@ function OrderBakery() {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const dispatch = useDispatch();
+const [filteredOrders, setFilteredOrders] = useState([]);
+
+
 
   const handleNewOrderClick = () => {
-    setShowPopup(true);
+    getCategoryProducts({ category: "קפואים" });
+  setShowPopup(true);
   };
-
+console.log(categoryProducts)
   useEffect(() => {
     loadAllProducts();
     loadAllBakeryOrders();
+   
   }, []);
 
   const loadAllProducts = async () => {
@@ -64,7 +70,7 @@ function OrderBakery() {
         withCredentials: true,
       });
       if (res.data) {
-        console.log(res.data);
+        console.log(res.data); 
         setCategoryProducts(res.data);
       }
     } catch (err) {
@@ -159,6 +165,7 @@ useEffect(() => {
   });
  
 
+
   
 
    
@@ -249,12 +256,19 @@ useEffect(() => {
     }
   };
 
+
+
+
+
   return (
     <div className="providersContainer">
       <SideNavBar />
-      <Headers text="הזמנות מאפייה" />
+      <Headers text="הזמנות אפייה" />
       <div className="flex-row-bet">
-        <SearchBar />
+ 
+<div></div>
+       
+
         <div className="flex-row-bet">
           <PrimaryButton click={handleNewOrderClick} text="הזמנה חדשה" />
         </div>
@@ -277,7 +291,8 @@ useEffect(() => {
       {/* <CartSidebar handleSendOrder={handleSendOrder} cart={cart} /> */}
       <br />
 
-      <BakeryOrdersTabels bakeryOrders={bakeryOrders} />
+  <BakeryOrdersTabels bakeryOrders={filteredOrders.length > 0 ? filteredOrders : bakeryOrders} />
+
     </div>
   );
 }

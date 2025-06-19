@@ -87,7 +87,7 @@ function UserTable({ users, onDelete, onActiveUsers, myUserId, onRowClick }) {
                 <td  onClick={() => onRowClick(user)}>{user.password}</td>
                 <td  onClick={() => onRowClick(user)}>
                   {user.permissions === 0
-                    ? "עובד מאפייה"
+                    ? "עובד אפייה"
                     : user.permissions === 1
                     ? "עובד חנות"
                     : user.permissions === 2
