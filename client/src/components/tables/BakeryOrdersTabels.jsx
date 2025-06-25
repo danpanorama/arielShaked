@@ -32,23 +32,21 @@ function BakeryOrdersCards({ bakeryOrders }) {
   const filteredUnapproved = filterBySearchTerm(
     unapprovedOrders,
     searchUnapproved,
-    ["id", "category", "order_date"] // אפשר להוסיף עוד שדות לפי הצורך
+    ["id", "category"] // אפשר להוסיף עוד שדות לפי הצורך
   );
-console.log("unapprovedOrders", unapprovedOrders);
-console.log("approvedOrders", approvedOrders);
+  console.log("unapprovedOrders", unapprovedOrders);
+  console.log("approvedOrders", approvedOrders);
 
   // סינון לפי חיפוש עבור מאושרות
-  const filteredApproved = filterBySearchTerm(
-    approvedOrders,
-    searchApproved,
-    ["id", "category", "order_date"]
-  );
+  const filteredApproved = filterBySearchTerm(approvedOrders, searchApproved, [
+    "id",
+    "category",
+    
+  ]);
 
   if (bakeryOrders.length === 0) {
     return (
-      <p style={{ textAlign: "center", marginTop: "20px" }}>
-        אין הזמנות להצגה
-      </p>
+      <p style={{ textAlign: "center", marginTop: "20px" }}>אין הזמנות להצגה</p>
     );
   }
 
@@ -92,11 +90,32 @@ console.log("approvedOrders", approvedOrders);
               onClick={() => handleClick(order.id)}
             >
               <h3>מספר הזמנה: {order.id}</h3>
-              <p><strong>קטגוריה:</strong> {order.category}</p>
-              <p><strong>תאריך הזמנה:</strong> {orderDate}</p>
-              <p><strong>זמן הכנה מוערך:</strong> לא צויין עדיין</p>
-              <p><strong>מאושרת:</strong> לא</p>
-              <p><strong>נשלחה:</strong> {order.is_delivered ? "כן" : "לא"}</p>
+
+              <p>
+                <strong>תאריך הזמנה:</strong> {orderDate}
+              </p>
+              <p>
+                <strong>זמן הכנה מוערך:</strong> לא צויין עדיין
+              </p>
+              <p>
+                <strong>מאושרת:</strong> לא
+              </p>
+              <p>
+                <strong>נשלחה:</strong> {order.is_delivered ? "כן" : "לא"}
+              </p>
+              <p className="s">
+                <strong>פרטי הזמנה</strong>
+              </p>
+
+              {order.items
+                ? order.items.map((e) => {
+                    return (
+                      <p className="orderitem">
+                        {e.product_name}-{e.quantity?.split(".")[0]}
+                      </p>
+                    );
+                  })
+                : ""}
             </div>
           );
         })}
@@ -139,11 +158,30 @@ console.log("approvedOrders", approvedOrders);
               onClick={() => handleClick(order.id)}
             >
               <h3>מספר הזמנה: {order.id}</h3>
-              <p><strong>קטגוריה:</strong> {order.category}</p>
-              <p><strong>תאריך הזמנה:</strong> {orderDate}</p>
-              <p><strong>זמן הכנה מוערך:</strong> {order.estimated_ready_time} דקות</p>
-              <p><strong>מאושרת:</strong> כן</p>
-              <p><strong>נשלחה:</strong> {order.is_delivered ? "כן" : "לא"}</p>
+         
+              <p>
+                <strong>תאריך הזמנה:</strong> {orderDate}
+              </p>
+              <p>
+                <strong>זמן הכנה מוערך:</strong> {order.estimated_ready_time}{" "}
+                דקות
+              </p>
+              <p>
+                <strong>מאושרת:</strong> כן
+              </p>
+              <p>
+                <strong>נשלחה:</strong> {order.is_delivered ? "כן" : "לא"}
+              </p>
+
+                 {order.items
+                ? order.items.map((e) => {
+                    return (
+                      <p className="orderitem">
+                        {e.product_name}-{e.quantity?.split(".")[0]}
+                      </p>
+                    );
+                  })
+                : ""}
             </div>
           );
         })}

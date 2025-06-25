@@ -51,7 +51,6 @@ const productsDB = require("../../../models/product");
 
 const approve_order = async (req, res) => {
   const { orderId, items } = req.body;
-  console.log(req.body,"iiiiiiiiiiiiiiiiiiiiiiiii")
   try {
     const [orderRows] = await mysql.getOrderById(orderId);
     if (orderRows.length === 0) return res.status(404).json({ message: "ההזמנה לא נמצאה" });
@@ -67,10 +66,12 @@ const approve_order = async (req, res) => {
      const productId = item.product_id;
      const receivedQty = Number(item.receivedQuantity) || Number(item.quantity);
 
+     
+
 
       // עדכון שדה received_quantity בטבלת ההזמנות
       await mysql.updateOrderItemReceivedQuantity(orderId, productId, receivedQty);
-      console.log(req.body)
+  
  
       // שליפת מחיר יחידה מה-db
       const [orderItemRows] = await mysql.getOrderItem(orderId, productId);
@@ -88,8 +89,9 @@ const approve_order = async (req, res) => {
         console.warn(`מוצר לא נמצא: ${productId}`);
         continue;
       }
-
+console.log(receivedQty,"::::",productRows[0].quantity)
       const newStock = Number(productRows[0].quantity) + receivedQty;
+    console.log(newStock)
       await productsDB.updateProductQuantity(newStock, productId);
     }
 

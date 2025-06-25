@@ -241,7 +241,7 @@ function OrderProvider() {
     if(item.min_order_quantity > quantity){
     return  alert('הכמות המינימלית להזמנה היא ' + item.min_order_quantity)
     }
- console.log(item)
+
     
     setCart((prevCart) => {
       const providerId = selectedProvider.id;
@@ -253,13 +253,15 @@ function OrderProvider() {
         price: item.price,
         quantity,
       };
+     
 
       const providerCart = prevCart.find((c) => c.providerId === providerId);
       if (providerCart) {
-        const existingItem = providerCart.items.find((i) => i.id === item.id);
+        const existingItem = providerCart.items.find((i) => i.id === item.item_number);
+        console.log(existingItem,item.item_number)
         const updatedItems = existingItem
           ? providerCart.items.map((i) =>
-              i.id === item.id
+              i.id === item.item_number
                 ? { ...i, quantity: Number(i.quantity) + Number(quantity) }
                 : i
             )

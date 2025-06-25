@@ -22,11 +22,8 @@ function SignUp() {
     phone: "",
     permissions: 4,
   });
-
   const [errorMessages, setErrorMessages] = useState({});
   const [isError, setIsError] = useState({});
-
-
   const validateField = (name, value) => {
     let valid = true;
     let newErrorMessages = {};

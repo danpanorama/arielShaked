@@ -16,12 +16,12 @@ router.get('/',jwtMiddleware.jwtAuth,getAllBakeryOrdersController, function(req,
 
 
 router.post('/finish',jwtMiddleware.jwtAuth,FinishOrder, function(req, res, next) {
-    console.log(req.body)
+   
  
 }); 
 
 router.post('/newOrder',jwtMiddleware.jwtAuth,NewOrderController, function(req, res, next) {
-    console.log(req.body)
+   
  
 }); 
 

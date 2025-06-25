@@ -30,7 +30,7 @@ function OrderDetails({
         if (matched) {
           return {
             ...product,
-            quantity: (parseFloat(product.quantity) + matched.quantity).toFixed(2),
+            quantity: (parseFloat(product.quantity) + matched.receivedQuantity).toFixed(2),
           };
         }
         return product;
@@ -58,6 +58,7 @@ function OrderDetails({
         { orderId: order.id, items: formattedItems },
         { withCredentials: true }
       );
+      console.log(formattedItems)
 
       updateInventory(formattedItems);
       setPendingOrders((prev) => prev.filter((o) => o.id !== order.id));

@@ -104,7 +104,7 @@ const handleChange = (e) => {
             className="SearchBar"
           >
             <option value="">בחר תפקיד</option>
-            <option value="0">עובד מאפייה</option>
+            <option value="0">עובד אפייה</option>
             <option value="1">עובד חנות</option>
             <option value="3">עוזר מנהל</option>
             <option value="4">מנהל</option> 
