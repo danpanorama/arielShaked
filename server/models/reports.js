@@ -33,8 +33,8 @@ const selectAllOrders = () => {
       po.price,
       po.amount_paid,
       po.is_received,
-      po.is_paid,
-      po.is_approved
+      po.is_paid
+     
     FROM provider_orders po
     JOIN providers p ON po.provider_id = p.id
   `);
@@ -55,10 +55,24 @@ const selectOpenOrdersSummary = () => {
       is_approved = 1
       AND (
         is_received = 0
-        OR (is_paid = 0 OR amount_paid < price)
+
+        OR (is_paid = 0 OR amount_paid < price)  
       );
   `);
 };
+
+const selectUnapprovedOrdersSummary = () => {
+  return pool.query(`
+    SELECT 
+      COUNT(*) AS total_unapproved_orders,
+      SUM(price) AS total_order_value,
+      SUM(amount_paid) AS total_paid,
+      SUM(price - amount_paid) AS total_remaining_to_pay
+    FROM provider_orders
+    WHERE is_approved = 0;
+  `);
+};
+
 
 
 const selectBakerySummary = (where, params) => {
@@ -108,6 +122,7 @@ const selectInventoryRemovalHistory = () => {
 
 module.exports = {
   selectInventoryZero,
+  selectUnapprovedOrdersSummary,
   selectInventoryRemovalHistory,
   selectOpenOrders,
   selectOpenOrdersSummary,

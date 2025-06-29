@@ -10,6 +10,7 @@ import { saveAs } from "file-saver";
 import SummaryBarChart from "../components/charts/SummaryBarChart";
 import PreparationTimeBarChart from "../components/charts/PreparationTimeBarChart";
 import RemovalPieChart from "../components/charts/RemovalPieChart";
+import OpenOrderChart from "../components/charts/OpenOrderChart";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -18,7 +19,7 @@ function formatDate(dateStr) {
 
 const headersMap = {
   id: "מספר מוצר",
-  orderId:'מספר הזמנה',
+  orderId: "מספר הזמנה",
   name: "שם מוצר",
   quantity: "כמות",
   min_required: "כמות מינימום",
@@ -31,20 +32,21 @@ const headersMap = {
   amount_paid: "סכום ששולם",
   is_received: "התקבל",
   is_paid: "שולם",
-    category: "קטגוריה",
-    last_updated:"עדכון אחרון",
-    unit:"יחידת מידה ",
+  category: "קטגוריה",
+  last_updated: "עדכון אחרון",
+  unit: "יחידת מידה ",
   product_name: "שם מוצר אפייה",
   total_orders: "מספר הזמנות",
   total_units: "כמות יחידות",
-  total_open_orders: "סך הכל הזמנות פתוחות",
+  total_open_orders: "סך הכל הזמנות פתוחות (שעדיין לא שולמו אך התקבלו)",
   total_order_value: "סך כל הערך",
   total_paid: "סך כל ששולם",
   total_remaining_to_pay: "סכום לתשלום",
   unpaid_received_orders: "הזמנות לא משולמות שהתקבלו",
   unpaid_received_total: "סכום לא משולם בהזמנות שהתקבלו",
-  is_approved:'האם התקבל למלאי',
-  product_id:"מספר מוצר",
+  is_approved: "האם התקבל למלאי",
+  product_id: "מספר מוצר",
+  total_unapproved_orders: "הזמנות שלא התקבלו למלאי",
 };
 
 function translateHeader(key) {
@@ -55,10 +57,10 @@ function DocumentsReport() {
   const [reportData, setReportData] = useState(null);
   const [reportData2, setReportData2] = useState(null);
   const [orders, setOrders] = useState(null);
+  const [unApproveOrders, setunApproveOrder] = useState(null);
   const [avregeTime, setAvrageTime] = useState(0);
   const [summary, setSummary] = useState(null);
   const [reportTitle, setReportTitle] = useState("");
-
   const fetchReport = async (type) => {
     try {
       let response;
@@ -80,6 +82,8 @@ function DocumentsReport() {
           console.log("📊 Summary data:", response.data.summary); // בדיקת סיכום
           setReportTitle("דוח הזמנות פתוחות");
           setOrders(response.data.orders || []);
+          console.log(response.data);
+          setunApproveOrder(response.data.unApproveOrder[0]);
           setSummary(response.data.summary || null);
           setReportData(null);
           break;
@@ -98,10 +102,9 @@ function DocumentsReport() {
           setReportTitle("דוח סיכום הזמנות אפייה");
           // setReportData(response.data);
           setReportData(response.data.summary);
-         
 
           setAvrageTime({
-            time: response.data.average_preparation_time,   
+            time: response.data.average_preparation_time,
             second: response.data.average_seconds,
           });
 
@@ -176,7 +179,6 @@ function DocumentsReport() {
                 {key.toLowerCase().includes("date") || key === "created_at"
                   ? formatDate(value)
                   : String(value)}
-                  
               </td>
             ))}
           </tr>
@@ -185,40 +187,40 @@ function DocumentsReport() {
     </table>
   );
 
-
-  
   const renderOrdersTable = (orders) => (
-  <table className="report-table">
-    <thead>
-      <tr>
-        {Object.keys(orders[0]).map((key) => (
-          <th key={key}>{translateHeader(key)}</th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {orders.map((order, index) => (
-        <tr key={index}>
-          {Object.entries(order).map(([key, value], i) => (
-            <td key={i}>
-              
-              {key.toLowerCase().includes("date") || key === "created_at"
-                ? formatDate(value)
-                : typeof value === "boolean"
-                ? value ? "✔️" : "❌"
-                : (value === 1 || value === 0) && key.toLowerCase() !== "orderId" 
-                ? value === 1 ? "כן" : "לא"
-                : String(value)}
-            </td>
+    <table className="report-table">
+      <thead>
+        <tr>
+          {Object.keys(orders[0]).map((key) => (
+            <th key={key}>{translateHeader(key)}</th>
           ))}
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
-
-
-
+      </thead>
+      <tbody>
+        {orders.map((order, index) => (
+          <tr key={index}>
+            {Object.entries(order).map(([key, value], i) => (
+              <td key={i}>
+         
+                {key.toLowerCase().includes("date") || key === "created_at"
+                  ? formatDate(value)
+                  : typeof value === "boolean"
+                  ? value
+                    ? "✔️"
+                    : "❌"
+                  : (value === 1 || value === 0) &&
+                    key.toLowerCase() !== "orderid"
+                  ? value === 1
+                    ? "כן"
+                    : "לא"
+                  : String(value)}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 
   return (
     <div className="report-container providersContainer">
@@ -238,9 +240,7 @@ function DocumentsReport() {
           </button>
         </div>
 
-
-        
-    {reportTitle === "היסטוריית הוצאה מהמלאי" && reportData && (
+        {reportTitle === "היסטוריית הוצאה מהמלאי" && reportData && (
           <>
             <RemovalPieChart data={reportData} />
 
@@ -252,27 +252,23 @@ function DocumentsReport() {
         )}
 
         {reportTitle === "דוח סיכום הזמנות אפייה" && reportData && (
-            <div>
-              <p className="text">זמן ממוצע להזמנה: {avregeTime.time}</p>
-            </div>
+          <div>
+            <p className="text">זמן ממוצע להזמנה: {avregeTime.time}</p>
+          </div>
         )}
-
-
         {reportTitle && <h2 className="report-subtitle">{reportTitle}</h2>}
-
         {reportTitle === "דוח חוסרים במלאי" && reportData && (
           <InventoryPieChart data={reportData} products={reportData2} />
         )}
 
-
-
         {reportData && Array.isArray(reportData) && reportData.length > 0 ? (
           <>
-         
-
             {renderTable(reportData)}
-
-            <button className="exelbtn" onClick={downloadExcel} style={{ marginTop: "20px" }}>
+            <button
+              className="exelbtn"
+              onClick={downloadExcel}
+              style={{ marginTop: "20px" }}
+            >
               הורד לאקסל
             </button>
           </>
@@ -280,12 +276,25 @@ function DocumentsReport() {
           <p className="report-empty">אין תוצאות להצגה בדוח זה.</p>
         ) : null}
 
-    
 
-        <div className="summary-cont">
+     
+       {orders && orders.length > 0 ? (
+          <>
+        <div className="flexRow">
+          <div className="report-summary">
+     <OrdersPieCharts orders={orders} />
+          </div>
+       <div className="report-summary">
+        <OpenOrderChart orders={orders}/>
+       </div>
+
+            
+        </div>
+  <div className="summary-cont">
           {summary && (
             <div className="report-summary">
-              <h3>טבלת סיכום:</h3>
+       
+                <h3>טבלת סיכום הזמנות שהתקבלו אך לא שולמו:</h3>
               <table className="summary-table">
                 <tbody>
                   {Object.entries(summary).map(([key, value]) => (
@@ -296,28 +305,36 @@ function DocumentsReport() {
                   ))}
                 </tbody>
               </table>
+              
             </div>
           )}
-      
-        </div>
+    
+          {unApproveOrders && (
+            <div className="report-summary mr2">
+                  <h3>טבלת סיכום הזמנות שלא התקבלו למלאי :</h3>
+              <table className="summary-table">
+                <tbody>
+                  {Object.entries(unApproveOrders).map(([key, value]) => (
+                    <tr key={key}>
+                      <td className="summary-key">{translateHeader(key)}</td>
+                      <td className="summary-value">{String(value)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div><br />
 
 
-
-        
-
-
-
-        <br />
-        <br />
-
-        {orders && orders.length > 0 ? (
-          <>
-          
-            <OrdersPieCharts orders={orders} />
-            
             <h3>פרטי כל ההזמנות שלא נסגרו:</h3>
+
             {renderOrdersTable(orders)}
-            <button className="exelbtn" onClick={downloadExcel} style={{ marginTop: "20px" }}>
+            <button
+              className="exelbtn"
+              onClick={downloadExcel}
+              style={{ marginTop: "20px" }}
+            >
               הורד הזמנות לאקסל
             </button>
           </>
@@ -325,17 +342,19 @@ function DocumentsReport() {
           <p className="report-empty">אין הזמנות פתוחות להצגה.</p>
         ) : null}
 
+      
+       
 
+        <br />
+        <br />
 
-
+      
       </div>
     </div>
   );
 }
 
 export default DocumentsReport;
-
-
 
 // import "../App.css";
 // import SideNavBar from "../components/sidenav/SideNavBar";
@@ -406,7 +425,7 @@ export default DocumentsReport;
 //       switch (type) {
 //         case "inventory":
 //           response = await axiosInstance.get("/reports/inventory-zero");
-      
+
 //           setReportTitle("דוח חוסרים במלאי");
 //           setReportData(response.data.data);
 //           setReportData2(response.data.products);
@@ -416,7 +435,7 @@ export default DocumentsReport;
 //           break;
 //         case "orders":
 //           response = await axiosInstance.get("/reports/open-orders");
-   
+
 //           setReportTitle("דוח הזמנות פתוחות");
 //           setOrders(response.data.orders || []);
 //           setSummary(response.data.summary || null);
@@ -545,8 +564,8 @@ export default DocumentsReport;
 //           </button>
 //         </div>
 
-//         {/* {reportData2? 
-        
+//         {/* {reportData2?
+
 //         <HosarioBaMlay data={reportData} />
 //       :""} */}
 
@@ -556,12 +575,9 @@ export default DocumentsReport;
 //           <div className="o">
 //               <InventoryPieChart data={reportData} products={reportData2} />
 
-
-
 //           </div>
-        
-//         )}
 
+//         )}
 
 //         <div className="summary-cont">
 //           {summary && (
@@ -614,84 +630,9 @@ export default DocumentsReport;
 //           </>
 //         )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// {/* z=doh sicom hazmanot afiya 
+// {/* z=doh sicom hazmanot afiya
 //  */}
 
-
- 
 //         {reportData && Array.isArray(reportData) && reportData.length > 0 ? (
 //           <>
 //             <br />
@@ -712,11 +653,6 @@ export default DocumentsReport;
 //         ) : reportData ? (
 //           <p className="report-empty">אין תוצאות להצגה בדוח זה.</p>
 //         ) : null}
-
-
-
-
-
 
 //       </div>
 

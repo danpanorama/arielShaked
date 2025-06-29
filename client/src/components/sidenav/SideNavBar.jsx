@@ -58,18 +58,20 @@ const sideNavLinks = [
       {sideNavLinks
   .filter((link) => link.permissions.includes(user.user?.permissions))
   .map((e) => (
-    <div key={e.url} className="linkHolder flex-col-center">
-      <NavLink
+       <NavLink
         className={({ isActive }) =>
           isActive
-            ? "sideNavLink activeLink flex-col-center"
-            : "sideNavLink flex-col-center"
+            ? "sideNavLink activeLink flex-col-center linkHolder flex-col-center"
+            : "sideNavLink flex-col-center linkHolder flex-col-center"
         }
         to={e.url}
       >
+    <div key={e.url} className="">
+   
         {e.name}
-      </NavLink>
+      
     </div>
+    </NavLink>
 ))}
 
 

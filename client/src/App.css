@@ -6,7 +6,9 @@
   margin: 0;
 }
 
-
+.mr2{
+  margin-right: 10px;
+}
 
 :root{
   --yellow-color:rgb(240, 234, 75);

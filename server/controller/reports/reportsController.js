@@ -4,7 +4,8 @@ const {
   selectAllOrders,
   selectOpenOrdersSummary,
   selectAveragePreparationTime,
-  selectBakerySummary
+  selectBakerySummary,
+  selectUnapprovedOrdersSummary
 } = require('../../models/reports');
 const {
 getAllProducts
@@ -22,14 +23,15 @@ const [products] = await getAllProducts();
     res.status(500).json({ error: err.message });
   }
 };
-
+ 
 // דוח הזמנות פתוחות
 const getOpenOrdersReport = async (req, res) => {
   try {
     const [orders] = await selectAllOrders();
+    const [unApproveOrder] = await selectUnapprovedOrdersSummary()
     
     const [summary] = await selectOpenOrdersSummary();  
-    res.json({ orders, summary: summary[0] });
+    res.json({ orders, summary: summary[0],unApproveOrder:unApproveOrder });
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: err.message });

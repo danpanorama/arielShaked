@@ -94,6 +94,8 @@ function UserTable({ users, onDelete, onActiveUsers, myUserId, onRowClick }) {
                     ? "עוזר מנהל"
                     : user.permissions === 4
                     ? "מנהל"
+                     : user.permissions === 3
+                    ? "עוזר מנהל"
                     : "לא מוגדר"}
                 </td>
                 <td>

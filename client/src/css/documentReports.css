@@ -69,16 +69,27 @@
 .summary-cont{
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
+
+  gap: 20px;
   width: 100%;
 }
 .recharts-surface{
  
 }
+.flexRow{
+display: flex;
+flex-direction: row;
+align-items: center;
+gap: 20px;
+
+
+
+}
+
 .report-summary {
-  width: 600px;
-  height: 400px;
+  max-width: 600px;
+  min-width: 400px;
+  max-height: 400px;
   margin-top: 2rem;
   background: #fff3cd;
   padding: 1rem;
