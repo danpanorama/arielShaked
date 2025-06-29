@@ -120,6 +120,8 @@ const createBakeryOrdersTableQuery = `
 CREATE TABLE IF NOT EXISTS bakery_orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id VARCHAR(50),
+ ordered_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- מתי הוזמן (זמן מדויק)
+  ready_at DATETIME DEFAULT NULL, 
   estimated_ready_time VARCHAR(100),
   is_approved TINYINT(1) DEFAULT 0 CHECK (is_approved IN (0,1)),
   is_finished TINYINT(1) DEFAULT 0 CHECK (is_finished IN (0,1)),  -- ההזמנה מוכנה
@@ -147,6 +149,20 @@ CREATE TABLE IF NOT EXISTS bakery_order_items (
 
 `;
 await connection.query(createBakeryOrderItemsTableQuery);
+
+
+// טבלת היסטוריית הוצאות מהמלאי
+const createProductRemovalHistoryTableQuery = `
+CREATE TABLE IF NOT EXISTS product_removal_history (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  product_name VARCHAR(255) NOT NULL,
+  quantity_removed DECIMAL(10,2) NOT NULL,
+  removal_reason ENUM('מקולקל', 'שימוש בחנות', 'אחר') NOT NULL,
+  removed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`;
+await connection.query(createProductRemovalHistoryTableQuery);
 
 
 

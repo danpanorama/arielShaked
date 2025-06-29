@@ -22,19 +22,16 @@ function OrderBakery() {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const dispatch = useDispatch();
-const [filteredOrders, setFilteredOrders] = useState([]);
-
-
+  const [filteredOrders, setFilteredOrders] = useState([]);
 
   const handleNewOrderClick = () => {
     getCategoryProducts({ category: "קפואים" });
-  setShowPopup(true);
+    setShowPopup(true);
   };
-console.log(categoryProducts)
+  console.log(categoryProducts);
   useEffect(() => {
     loadAllProducts();
     loadAllBakeryOrders();
-   
   }, []);
 
   const loadAllProducts = async () => {
@@ -54,9 +51,9 @@ console.log(categoryProducts)
           header: err?.message || "לא ידוע",
         },
       });
-             setTimeout(() => {
-      dispatch({ type: CLEAR });
-    }, 3000);
+      setTimeout(() => {
+        dispatch({ type: CLEAR });
+      }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -70,7 +67,7 @@ console.log(categoryProducts)
         withCredentials: true,
       });
       if (res.data) {
-        console.log(res.data); 
+        console.log(res.data);
         setCategoryProducts(res.data);
       }
     } catch (err) {
@@ -80,11 +77,10 @@ console.log(categoryProducts)
           message: "שגיאה בטעינת ההזמנות: ",
           header: err?.message || "לא ידוע",
         },
-
       });
-         setTimeout(() => {
-      dispatch({ type: CLEAR });
-    }, 3000);
+      setTimeout(() => {
+        dispatch({ type: CLEAR });
+      }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -97,7 +93,6 @@ console.log(categoryProducts)
         withCredentials: true,
       });
       if (res.data) {
-     
         setBakeryOrders(res.data.orders);
       }
     } catch (err) {
@@ -109,9 +104,9 @@ console.log(categoryProducts)
           header: err.response?.data?.header || " שגיאה בטעינת הזמנות",
         },
       });
-         setTimeout(() => {
-      dispatch({ type: CLEAR });
-    }, 2000);
+      setTimeout(() => {
+        dispatch({ type: CLEAR });
+      }, 2000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
@@ -134,86 +129,85 @@ console.log(categoryProducts)
     setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
   };
 
-
-
-
-
-useEffect(() => {
-  const socket = io("http://localhost:3000", {
-    withCredentials: true,
-  });
-
-  socket.on("order-time-updated", (updatedOrder) => {
-     
-
-    setBakeryOrders((prevOrders) => {
-      const existingOrder = prevOrders.find(order => order.id === updatedOrder.id);
-
-      if (existingOrder && existingOrder.is_approved === 1) {
-        return prevOrders;
-      }
-
-      if (existingOrder) {
-        console.log("עודכן זמן הזמנה:", updatedOrder);
-        return prevOrders.map(order =>
-          order.id === updatedOrder.id ? updatedOrder : order
-        );
-      } else {
-        return [...prevOrders, updatedOrder];
-      }
+  useEffect(() => {
+    const socket = io("http://localhost:3000", {
+      withCredentials: true,
     });
-  });
- 
 
-
-  
-
-   
-  socket.on("order-time-updated-update", (fullOrder) => {
-  
-    setBakeryOrders((prevOrders) => {
-      const existingOrder = prevOrders.find(order => order.id === fullOrder.id);
-
-      // if (existingOrder && existingOrder.is_approved === 1) {
-      //   return prevOrders;
-      // }
-
-      if (existingOrder) {
-        console.log("עודכן זמן הזמנה:", fullOrder);
-        return prevOrders.map(order =>
-          order.id === fullOrder.id ? fullOrder : order
+    socket.on("order-time-updated", (updatedOrder) => {
+      setBakeryOrders((prevOrders) => {
+        const existingOrder = prevOrders.find(
+          (order) => order.id === updatedOrder.id
         );
-      } else {
-        return [...prevOrders, fullOrder];
-      }
+
+        if (existingOrder && existingOrder.is_approved === 1) {
+          return prevOrders;
+        }
+
+        if (existingOrder) {
+          console.log("עודכן זמן הזמנה:", updatedOrder);
+          return prevOrders.map((order) =>
+            order.id === updatedOrder.id ? updatedOrder : order
+          );
+        } else {
+          return [...prevOrders, updatedOrder];
+        }
+      });
     });
- 
-  });
 
-  // NEW: מאזין לסיום הזמנה
-  socket.on("order-finished", (finishedOrder) => {
-    console.log("הזמנה הסתיימה:", finishedOrder);
-    setBakeryOrders((prevOrders) =>
-      prevOrders.filter(order => order.id !== finishedOrder.id)
-    );
-  });
+    socket.on("newOrder", (data) => {
+      console.log(data);
+      console.log("הגיעה הזמנה חדשה:", data.order);
+      const newOrder = Array.isArray(data.order) ? data.order[0] : data.order;
+      const orderObj = Array.isArray(newOrder) ? newOrder[0] : newOrder;
+      setBakeryOrders((prevOrders) => [...prevOrders, orderObj]);
+    });
 
-  return () => {
-    socket.off("order-time-updated");
-    socket.off("order-finished");
-    socket.off("order-time-updated-update");
-    socket.disconnect();
-  };
-}, []);
+    socket.on("order-time-updated-update", (fullOrder) => {
+      setBakeryOrders((prevOrders) => {
+        const existingOrder = prevOrders.find(
+          (order) => order.id === fullOrder.id
+        );
 
+        // if (existingOrder && existingOrder.is_approved === 1) {
+        //   return prevOrders;
+        // }
+
+        if (existingOrder) {
+          console.log("עודכן זמן הזמנה:", fullOrder);
+          return prevOrders.map((order) =>
+            order.id === fullOrder.id ? fullOrder : order
+          );
+        } else {
+          return [...prevOrders, fullOrder];
+        }
+      });
+    });
+
+    // NEW: מאזין לסיום הזמנה
+    socket.on("order-finished", (finishedOrder) => {
+      console.log("הזמנה הסתיימה:", finishedOrder);
+      setBakeryOrders((prevOrders) =>
+        prevOrders.filter((order) => order.id !== finishedOrder.id)
+      );
+    });
+
+    return () => {
+      socket.off("order-time-updated");
+      socket.off("order-finished");
+      socket.off("order-time-updated-update");
+      socket.off("newOrder");
+      socket.disconnect();
+    };
+  }, []);
 
   const handleSendOrder = async () => {
     try {
       dispatch({ type: START_LOAD });
 
-      if(cart.length ==0 ){
-         setShowPopup(false)
-         return
+      if (cart.length == 0) {
+        setShowPopup(false);
+        return;
       }
 
       const res = await axiosInstance.post(
@@ -233,11 +227,10 @@ useEffect(() => {
       );
 
       if (res.data) {
-        setShowPopup(false)
+        setShowPopup(false);
         setCart([]);
-        console.log(res.data.order[0]);
-        // להוסיף את ההזמנה החדשה לרשימת ההזמנות הקיימת
-        setBakeryOrders((prevOrders) => [...prevOrders, res.data.order[0][0]]);
+
+        // setBakeryOrders((prevOrders) => [...prevOrders, res.data.order[0][0]]);
       }
     } catch (err) {
       console.log(err);
@@ -248,26 +241,20 @@ useEffect(() => {
           header: err.response?.data?.header || "שגיאה בטעינת הזמנות",
         },
       });
-         setTimeout(() => {
-      dispatch({ type: CLEAR });
-    }, 3000);
+      setTimeout(() => {
+        dispatch({ type: CLEAR });
+      }, 3000);
     } finally {
       dispatch({ type: STOP_LOAD });
     }
   };
-
-
-
-
 
   return (
     <div className="providersContainer">
       <SideNavBar />
       <Headers text="הזמנות אפייה" />
       <div className="flex-row-bet">
- 
-<div></div>
-       
+        <div></div>
 
         <div className="flex-row-bet">
           <PrimaryButton click={handleNewOrderClick} text="הזמנה חדשה" />
@@ -283,16 +270,16 @@ useEffect(() => {
           cart={cart}
           addToCart={addToCart}
           removeFromCart={removeFromCart}
-          handleSendOrder={handleSendOrder} 
-         
+          handleSendOrder={handleSendOrder}
         />
       )}
 
       {/* <CartSidebar handleSendOrder={handleSendOrder} cart={cart} /> */}
       <br />
 
-  <BakeryOrdersTabels bakeryOrders={filteredOrders.length > 0 ? filteredOrders : bakeryOrders} />
-
+      <BakeryOrdersTabels
+        bakeryOrders={filteredOrders.length > 0 ? filteredOrders : bakeryOrders}
+      />
     </div>
   );
 }

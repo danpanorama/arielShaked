@@ -359,7 +359,22 @@ h1 {
   padding: 1rem;
   width: 250px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  background-color: #fff;
+  background-color:rgb(248, 215, 218);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-boxg {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  width: 250px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color:rgb(212, 245, 212);
+
+
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

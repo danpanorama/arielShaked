@@ -15,25 +15,30 @@ const getBakeryOrderItemsByOrderId = (orderId) => {
   return pool.execute(`SELECT * FROM bakery_order_items WHERE order_id = ?`, [orderId]);
 };
 const insertBakeryOrder = (
+  ordered_at,
   order_date,
-  estimated_ready_time_formatted,
+  ready_at,
+  estimated_ready_time,
   is_approved,
   category,
   is_delivered
 ) => {
   return pool.execute(
     `INSERT INTO bakery_orders 
-     (order_date, estimated_ready_time, is_approved, category, is_delivered)
-     VALUES (?, ?, ?, ?, ?)`,
+     (order_date,ordered_at, ready_at, estimated_ready_time, is_approved, category, is_delivered)
+     VALUES (?,?, ?, ?, ?, ?, ?)`,
     [
+      ordered_at,
       order_date,
-      estimated_ready_time_formatted,
+      ready_at,
+      estimated_ready_time,
       is_approved,
       category,
       is_delivered
     ]
   );
 };
+
 
 
 // הכנסת פריט להזמנה
@@ -105,12 +110,13 @@ const approveOrder = (orderId) => {
 };
 
 
-const finishOrder = (order_id) => {
+const finishOrder = (order_id, ready_at) => {
   return pool.execute(
-    `UPDATE bakery_orders SET is_finished = 1 WHERE id = ?`,
-    [order_id]
+    `UPDATE bakery_orders SET is_finished = 1, ready_at = ? WHERE id = ?`,
+    [ready_at, order_id]
   );
 };
+
 
 
 module.exports = {

@@ -2,7 +2,8 @@
 const products = require("../../models/product");
 const removeProductController = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity,reason } = req.body;
+    console.log(req.body)
     if (!productId || quantity === undefined) {
       return res.status(400).json({ message: "חובה לספק מזהה מוצר וכמות למחיקה." });
     }
@@ -21,6 +22,9 @@ const removeProductController = async (req, res) => {
 
     await products.updateProductQuantity(newQuantity, productId);
 
+    await products.updateHistory(productId, product.name, deleteQuantity, reason);
+
+    
     const message =
       newQuantity === 0
         ? "המוצר עודכן בהצלחה לכמות 0."

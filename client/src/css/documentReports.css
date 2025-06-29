@@ -59,8 +59,26 @@
 .report-table th {
   background-color: #f0f0f0;
 }
-
+.exelbtn{
+  padding: 10px 20px ;
+  background-color: rgb(37, 153, 41);
+  border: none;
+  border-radius: 3px;
+  color: white;
+}
+.summary-cont{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+}
+.recharts-surface{
+ 
+}
 .report-summary {
+  width: 600px;
+  height: 400px;
   margin-top: 2rem;
   background: #fff3cd;
   padding: 1rem;

@@ -111,11 +111,11 @@ function Product() {
     }
   };
 
-  const removeProduct = async ({ productId, quantity }) => {
+  const removeProduct = async ({ productId, quantity,reason }) => {
     try {
       const response = await axiosInstance.post(
         `/products/removeProduct/`,
-        { productId, quantity },
+        { productId, quantity,reason },
         { withCredentials: true }
       );
       const newQuantity = response.data.quantity;

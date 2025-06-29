@@ -43,6 +43,18 @@ const updateProductQuantity = (quantity,id) => {
   );
 };
 
+const updateHistory = (productId, productName, deleteQuantity, reason) => {
+  return pool.query(`
+    INSERT INTO product_removal_history (product_id, product_name, quantity_removed, removal_reason)
+    VALUES (?, ?, ?, ?)
+  `, [productId, productName, deleteQuantity, reason]);
+};
+
+
+
+
+  
+
 
 
 const changeStatus = (status,id) => {
@@ -97,5 +109,6 @@ module.exports = {
   changeStatus,
   getAllCategories,
   getAllProductsByCategory,
-  decreaseProductStock
+  decreaseProductStock,
+  updateHistory
 };

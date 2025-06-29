@@ -79,7 +79,7 @@ const handlePaymentUpdate = async () => {
         <div className="orderDetail">
           <h3>מספר הזמנה: {order.id}</h3>
           <p><strong>ספק:</strong> {order.provider_name}</p>
-          <p><strong>מחיר:</strong> {order.price} ש"ח</p>
+          <p><strong>מחיר כל ההזמנה הכללת:</strong> {order.price} ש"ח</p>
           <p><strong>סטטוס הזמנה:</strong> {order.is_approved === 0 ? "נשלח" : "קיבל"}</p>
           <p><strong>סטטוס תשלום:</strong> {order.is_paid === 0 ? "לא שולם" : "שולם"}</p>
           {order.is_approved === 1 && (
@@ -104,9 +104,11 @@ const handlePaymentUpdate = async () => {
               <li key={index}>
                 <p><strong>שם מוצר:</strong> {item.product_name}</p>
                 <p><strong>כמות שהוזמנה :</strong> {item.quantity}</p>
-
                   <p><strong>כמות שהתקבלה:</strong> {item.received_quantity}</p>
-                <p><strong>מחיר למוצר:</strong> {item.total_price} ש"ח</p>
+                  {console.log(item)}
+                <p><strong>מחיר למוצר יחיד:</strong> {item.unit_price} ש"ח</p>
+
+                
               </li>
             ))}
           </ul>

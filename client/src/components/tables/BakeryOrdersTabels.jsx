@@ -91,18 +91,7 @@ function BakeryOrdersCards({ bakeryOrders }) {
             >
               <h3>מספר הזמנה: {order.id}</h3>
 
-              <p>
-                <strong>תאריך הזמנה:</strong> {orderDate}
-              </p>
-              <p>
-                <strong>זמן הכנה מוערך:</strong> לא צויין עדיין
-              </p>
-              <p>
-                <strong>מאושרת:</strong> לא
-              </p>
-              <p>
-                <strong>נשלחה:</strong> {order.is_delivered ? "כן" : "לא"}
-              </p>
+        
               <p className="s">
                 <strong>פרטי הזמנה</strong>
               </p>
@@ -159,19 +148,13 @@ function BakeryOrdersCards({ bakeryOrders }) {
             >
               <h3>מספר הזמנה: {order.id}</h3>
          
-              <p>
-                <strong>תאריך הזמנה:</strong> {orderDate}
-              </p>
+           
               <p>
                 <strong>זמן הכנה מוערך:</strong> {order.estimated_ready_time}{" "}
                 דקות
               </p>
-              <p>
-                <strong>מאושרת:</strong> כן
-              </p>
-              <p>
-                <strong>נשלחה:</strong> {order.is_delivered ? "כן" : "לא"}
-              </p>
+            
+          
 
                  {order.items
                 ? order.items.map((e) => {

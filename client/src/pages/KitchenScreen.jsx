@@ -197,10 +197,10 @@ function KitchenScreen() {
 
       <h3>הזמנות ללא זמן מוערך - הזן זמן הכנה</h3>
       <SearchBar onSearch={setSearchPending} />
-      <div className="orders-grid">
+      <div className="orders-grid ">
         {filteredPending.length === 0 && <p>אין הזמנות ללא זמן מוערך כרגע</p>}
         {filteredPending.map((order) => (
-          <div key={order.id} className="order-box">
+          <div key={order.id} className="order-box bbgg">
             <p>הזמנה #{order.id}</p>
             {order.items?.map((item, idx) => (
               <div key={idx}>
@@ -227,9 +227,16 @@ function KitchenScreen() {
       <div className="orders-grid">
         {filteredTimed.length === 0 && <p>אין הזמנות עם זמן מוערך כרגע</p>}
         {filteredTimed.map((order) => (
-          <div key={order.id} className="order-box">
+          <div key={order.id} className="order-boxg">
             <p>הזמנה #{order.id}</p>
             <p>זמן מוערך: {order.estimated_ready_time} דקות</p>
+
+   {order.items?.map((item, idx) => (
+              <div key={idx}>
+                <p>{item.product_name} - {item.quantity}</p>
+              </div>
+            ))}
+
             <input
               type="number"
               min="1"
@@ -237,7 +244,7 @@ function KitchenScreen() {
               value={estimatedTimes[order.id] || ""}
               onChange={(e) => handleTimeChange(order.id, e.target.value)}
             />
-            <PrimaryButton text="שלח זמן מוערך" click={() => updateEstimatedTime(order)} />
+            <PrimaryButton text="עדכן זמן מוערך" click={() => updateEstimatedTime(order)} />
             <PrimaryButton text="אישור וסיום הזמנה" click={() => finishOrder(order)} />
           </div>
         ))}
