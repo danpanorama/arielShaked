@@ -276,7 +276,7 @@ function OrderBakery() {
 
       {/* <CartSidebar handleSendOrder={handleSendOrder} cart={cart} /> */}
       <br />
-      <h1>אושרית</h1>
+     
 
       <BakeryOrdersTabels
         bakeryOrders={filteredOrders.length > 0 ? filteredOrders : bakeryOrders}
