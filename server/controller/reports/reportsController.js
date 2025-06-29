@@ -28,7 +28,7 @@ const getOpenOrdersReport = async (req, res) => {
   try {
     const [orders] = await selectAllOrders();
     
-    const [summary] = await selectOpenOrdersSummary();
+    const [summary] = await selectOpenOrdersSummary();  
     res.json({ orders, summary: summary[0] });
   } catch (err) {
     console.log(err)

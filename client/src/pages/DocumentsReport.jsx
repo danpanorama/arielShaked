@@ -18,7 +18,7 @@ function formatDate(dateStr) {
 
 const headersMap = {
   id: "מספר מוצר",
-
+  orderId:'מספר הזמנה',
   name: "שם מוצר",
   quantity: "כמות",
   min_required: "כמות מינימום",
@@ -206,7 +206,7 @@ function DocumentsReport() {
                 ? formatDate(value)
                 : typeof value === "boolean"
                 ? value ? "✔️" : "❌"
-                : (value === 1 || value === 0) && key.toLowerCase() !== "id"
+                : (value === 1 || value === 0) && key.toLowerCase() !== "orderId" 
                 ? value === 1 ? "כן" : "לא"
                 : String(value)}
             </td>

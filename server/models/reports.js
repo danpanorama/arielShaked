@@ -27,7 +27,7 @@ const selectOpenOrders = () => {
 const selectAllOrders = () => {
   return pool.query(`
     SELECT 
-      po.id,
+      po.id AS orderId,
       p.name AS provider_name,
       po.created_at,
       po.price,
