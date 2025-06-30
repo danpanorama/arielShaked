@@ -164,7 +164,9 @@ function DocumentsReport() {
 
   const renderTable = (data) => (
     <table className="report-table">
+   
       <thead>
+           
         <tr>
           {Object.keys(data[0]).map((key) => (
             <th key={key}>{translateHeader(key)}</th>
@@ -187,21 +189,27 @@ function DocumentsReport() {
     </table>
   );
 
-  const renderOrdersTable = (orders) => (
+const renderOrdersTable = (orders) => {
+  const filteredOrders = orders.filter(
+    order => !order.is_paid && !order.is_received
+  );
+
+  if (filteredOrders.length === 0) return <p>אין הזמנות מתאימות להצגה</p>;
+
+  return (
     <table className="report-table">
       <thead>
         <tr>
-          {Object.keys(orders[0]).map((key) => (
+          {Object.keys(filteredOrders[0]).map((key) => (
             <th key={key}>{translateHeader(key)}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {orders.map((order, index) => (
+        {filteredOrders.map((order, index) => (
           <tr key={index}>
             {Object.entries(order).map(([key, value], i) => (
               <td key={i}>
-         
                 {key.toLowerCase().includes("date") || key === "created_at"
                   ? formatDate(value)
                   : typeof value === "boolean"
@@ -221,6 +229,8 @@ function DocumentsReport() {
       </tbody>
     </table>
   );
+};
+
 
   return (
     <div className="report-container providersContainer">
