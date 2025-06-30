@@ -135,7 +135,13 @@ function CreateOrderPopup({
                           </button>
 
                           <button
-                            onClick={() => removeFromCart(item, setQuantities)}
+                            onClick={() => 
+                            {
+                              console.log(item, setQuantities)
+                              removeFromCart(item, setQuantities)
+                            }
+
+                            }
                           >
                             הסר
                           </button>

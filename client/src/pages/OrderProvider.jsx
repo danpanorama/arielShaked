@@ -283,10 +283,11 @@ function OrderProvider() {
   };
 
   const removeFromCart = (item, quantity) => {
+    console.log(item,quantity)
     setCart((prevCart) =>
       prevCart.map((c) =>
         c.providerId === selectedProvider.id
-          ? { ...c, items: c.items.filter((i) => i.id !== item.id) }
+          ? { ...c, items: c.items.filter((i) => i.id !== item.item_number) }
           : c
       )
     );
