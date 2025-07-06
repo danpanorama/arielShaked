@@ -263,7 +263,9 @@ function OrderBakery() {
         </div>
       </div>
 
-        <Headers text="הזמנות אפייה" />
+         <h1 className="x22">
+הזמנות אפייה
+    </h1>
 
       {showPopup && (
         <OrderPopUp
@@ -279,7 +281,7 @@ function OrderBakery() {
       )}
 
       {/* <CartSidebar handleSendOrder={handleSendOrder} cart={cart} /> */}
-      <br />
+  
      
 
       <BakeryOrdersTabels

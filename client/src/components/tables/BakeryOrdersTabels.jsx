@@ -51,7 +51,7 @@ function BakeryOrdersCards({ bakeryOrders }) {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "0" }}>
       {/* הזמנות לא מאושרות */}
       <h2 style={{ textAlign: "center", color: "darkred" }}>
         הזמנות לא מאושרות
