@@ -386,3 +386,11 @@ h1 {
   border-radius: 4px;
   border: 1px solid #ddd;
 }
+
+.trss{
+  transform: translateY(40px);
+}
+.flexendCol{
+
+  justify-content: space-between;
+}

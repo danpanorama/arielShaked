@@ -14,6 +14,7 @@ import CartSidebar from "../components/cart/CartSidebar";
 import BakeryOrdersTabels from "../components/tables/BakeryOrdersTabels";
 import { io } from "socket.io-client";
 import { filterBySearchTerm } from "../components/tools/filterBySearchTerm";
+import PlusIcon from '../images/plus.svg'
 
 function OrderBakery() {
   const [showPopup, setShowPopup] = useState(false);
@@ -252,14 +253,17 @@ function OrderBakery() {
   return (
     <div className="providersContainer">
       <SideNavBar />
-      <Headers text="הזמנות אפייה" />
+    <br /><br />
       <div className="flex-row-bet">
-        <div></div>
+        <div></div> 
 
-        <div className="flex-row-bet">
-          <PrimaryButton click={handleNewOrderClick} text="הזמנה חדשה" />
+
+        <div className="flex-row-bet trss">
+          <PrimaryButton icon={PlusIcon} click={handleNewOrderClick} text="הזמנה חדשה" />
         </div>
       </div>
+
+        <Headers text="הזמנות אפייה" />
 
       {showPopup && (
         <OrderPopUp

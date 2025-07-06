@@ -200,15 +200,20 @@ function KitchenScreen() {
       <div className="orders-grid ">
         {filteredPending.length === 0 && <p>אין הזמנות ללא זמן מוערך כרגע</p>}
         {filteredPending.map((order) => (
-          <div key={order.id} className="order-box bbgg">
-            <p>הזמנה #{order.id}</p>
-            {order.items?.map((item, idx) => (
+          <div key={order.id} className="order-box bbgg flexendCol">
+           
+
+           <div className="flexcol">
+             <p>הזמנה #{order.id}</p>
+             {order.items?.map((item, idx) => (
               <div key={idx}>
                 <p>{item.product_name} - {item.quantity}</p>
               </div>
             ))}
+           </div>
 
-            <input
+          <div className="flexend">
+              <input
               type="number"
               min="1"
               placeholder="זמן הכנה בדקות"
@@ -216,6 +221,7 @@ function KitchenScreen() {
               onChange={(e) => handleTimeChange(order.id, e.target.value)}
             />
             <PrimaryButton text="שלח זמן מוערך" click={() => sendEstimatedTime(order)} />
+          </div>
           </div>
         ))}
       </div>

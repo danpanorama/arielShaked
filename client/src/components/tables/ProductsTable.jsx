@@ -29,7 +29,7 @@ function ProductTable({
     if (!product.is_active) return "inactive-row";
     const quantity = parseFloat(product.quantity);
     const minRequired = parseFloat(product.min_required);
-    if (quantity < minRequired) return "low-stock";
+    if (quantity < minRequired) return "bad";
     return "";
   };
 

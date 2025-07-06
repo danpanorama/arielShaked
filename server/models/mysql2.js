@@ -91,7 +91,6 @@ CREATE TABLE IF NOT EXISTS provider_products (
   provider_name VARCHAR(255),
   provider_id INT NOT NULL,
   price DECIMAL(10,2),
-
   min_order_quantity DECIMAL(10,2),
   is_active BOOLEAN DEFAULT TRUE
 );
@@ -110,7 +109,6 @@ CREATE TABLE IF NOT EXISTS provider_order_items (
   total_price DECIMAL(10,2) AS (quantity * unit_price) STORED,
   received_quantity DECIMAL(10,2) DEFAULT 0
 );
-
 `;
 await connection.query(createProviderOrderItemsTableQuery);
 
@@ -129,9 +127,6 @@ CREATE TABLE IF NOT EXISTS bakery_orders (
   order_date DATE,
   is_delivered TINYINT(1) DEFAULT 0 CHECK (is_delivered IN (0,1))
 );
-
-
-
 `;
 await connection.query(createBakeryOrdersTableQuery);
 
@@ -158,7 +153,7 @@ CREATE TABLE IF NOT EXISTS product_removal_history (
   product_id INT NOT NULL,
   product_name VARCHAR(255) NOT NULL,
   quantity_removed DECIMAL(10,2) NOT NULL,
-  removal_reason ENUM('מקולקל', 'שימוש בחנות', 'אחר') NOT NULL,
+  removal_reason VARCHAR(255) NOT NULL,
   removed_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 `;

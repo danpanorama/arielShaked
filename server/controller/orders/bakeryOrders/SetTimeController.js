@@ -98,14 +98,24 @@ const SetTimeController = async (req, res) => {
     await bakeryModel.updateEstimatedTime(order_id, estimated_ready_time);
     await bakeryModel.approveOrder(order_id); // עדכון is_approved ל-1
 
+    
+    
+
+
     // הורדת מלאי לכל פריט
     for (const item of items) {
       const productId = item.product_id || item.id;
+      const reason = 'הזמנה בחנות'
+      console.log(item,"::::::::::::::::::::::::::::")
+      await products.updateHistory(productId, item.product_name, item.quantity, reason);
       const quantity = parseFloat(item.quantity);
       if (!isNaN(quantity) && productId) {
         await products.decreaseProductStock(productId, quantity);
       }
     }
+
+
+
     orders[0].estimated_ready_time = estimated_ready_time
     orders[0].is_approved = 1
     const fullOrder = {

@@ -76,16 +76,19 @@ const sortedOrders = sortArray(normalizedOrders, sortField, sortOrder);
 
         <tbody>
           {sortedOrders.map((order) => (
+
             <tr
               key={order.id}
               className={
-                order.price <= order.amount_paid
-                  ? "paid"
+               Number(order.price)  <= Number(order.amount_paid) 
+                  ? "  paid"
                   : order.amount_paid > 0
                   ? "partially-paid"
                   : "unpaid"
               }
             >
+
+              {console.log( Number(order.price)  >= Number(order.amount_paid) ,"------", order.price,"----",order.amount_paid)}
               <td>
                 <Link to={`/order/${order.id}`}>{order.id}</Link>
               </td>
@@ -105,11 +108,11 @@ const sortedOrders = sortArray(normalizedOrders, sortField, sortOrder);
               </td>
               <td>{order.is_approved === 0 ? "נשלח לספק" : "נקלט במלאי"}</td>
               <td>
-                {order.price <= order.amount_paid
-                  ? "שולם"
+                {Number(order.price) <= Number(order.amount_paid)
+                  ? " שולם "
                   : order.amount_paid > 0
                   ? "שולם חלקית"
-                  : "לא שולם"}
+                  : " לא שולם"}
               </td>
               <td>
                 <input

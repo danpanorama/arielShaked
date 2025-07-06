@@ -17,7 +17,7 @@ const sideNavLinks = [
   { name: "מלאי", url: "/products", permissions: [3,4,2,1,0] },
   { name: "פריט-ספק", url: "/providersProducts", permissions: [3,4,2] },
   { name: "הזמנות ספקים", url: "/providersOrders", permissions: [3,4,2] },
-  { name: "הרשאות", url: "/users", permissions: [4] },
+  { name: "עובדים", url: "/users", permissions: [4] },
   { name: "דוחות", url: "/reports", permissions: [3,4] },
 ];
 

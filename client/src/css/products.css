@@ -80,3 +80,9 @@
   z-index: -1;
   position: absolute;
 }
+
+
+.bad{
+  background-color: #e74c3c;
+  color: white;
+}

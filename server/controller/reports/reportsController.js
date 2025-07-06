@@ -5,8 +5,14 @@ const {
   selectOpenOrdersSummary,
   selectAveragePreparationTime,
   selectBakerySummary,
-  selectUnapprovedOrdersSummary
+  selectUnapprovedOrdersSummary,
+  selectBakeryOrdersBetweenDates,
+  selectProductRemovalsBetweenDates
 } = require('../../models/reports');
+
+
+
+
 const {
 getAllProducts
 } = require('../../models/product');
@@ -55,7 +61,7 @@ const getBakerySummaryReport = async (req, res) => {
 
     // לא מוסיפים סינון לפי תאריכים => מחזיר הכל
 
-    const [summary] = await selectBakerySummary(where, params);
+    const [summary] = await selectBakerySummary(where, params);  
     const [avgTimeResult] = await selectAveragePreparationTime(where, params);
 
     const avgSeconds = avgTimeResult[0]?.avg_preparation_seconds || 0;
@@ -113,10 +119,52 @@ const getInventoryWithdrawHistory = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// דוח הזמנות אפייה לפי תאריכים
+const getBakeryOrdersByDateRange = async (req, res) => {
+  try {
+    const { from, to } = req.body;
+
+    if (!from || !to) {
+      return res.status(400).json({ error: 'Missing startDate or endDate' });
+    }
+
+    const [orders] = await selectBakeryOrdersBetweenDates(from, to);
+
+    console.log(orders)
+    
+    res.json({ orders });
+  } catch (err) {
+    console.error('Error in getBakeryOrdersByDateRange:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+const gethistoryByDateRange = async (req, res) => {
+  try {
+    const { from, to } = req.body;
+console.log(from,to)
+    if (!from || !to) {
+      return res.status(400).json({ error: 'Missing startDate or endDate' });
+    }
+
+    const [orders] = await selectProductRemovalsBetweenDates(from, to);
+
+    console.log(orders)
+    
+    res.json({ orders });
+  } catch (err) {
+    console.error('Error in getBakeryOrdersByDateRange:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
 module.exports = {
   getInventoryZeroReport,
+  gethistoryByDateRange,
+  getBakeryOrdersByDateRange,
   getOpenOrdersReport,
   getBakerySummaryReport,
   getInventoryWithdrawHistory

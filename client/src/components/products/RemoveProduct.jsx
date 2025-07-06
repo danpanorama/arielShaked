@@ -140,7 +140,7 @@ function RemoveProduct(props) {
           >
             <option value="">בחר סיבה</option>
             <option value="מקולקל">מקולקל</option>
-            <option value="אחר">שימוש בחנות</option>
+            <option value="שימוש בחנות">שימוש בחנות</option>
           </select>
         </div>
 
