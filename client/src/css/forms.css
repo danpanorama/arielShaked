@@ -6,6 +6,12 @@
   align-items: center;
   margin-bottom: 20px;
 }
+.uui{
+      padding: 0.4rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
 
 .signUp-Container {
   width: 400px;

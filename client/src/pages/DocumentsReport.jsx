@@ -138,6 +138,8 @@ function DocumentsReport() {
           console.log("📦 Orders data:", response.data.orders); // בדיקת הזמנות
           console.log("📊 Summary data:", response.data.summary); // בדיקת סיכום
           setReportTitle("דוח הזמנות פתוחות");
+        
+
           setOrders(response.data.orders || []);
           setunApproveOrder(response.data.unApproveOrder[0]);
           setSummary(response.data.summary || null);
@@ -244,6 +246,55 @@ function DocumentsReport() {
   );
 
   const renderOrdersTable = (orders) => {
+    console.log(orders,"fafafafafafafafaff")
+    const filteredOrders = orders.filter(
+      (order) => !order.is_paid && !order.is_received
+    );
+
+    if (filteredOrders.length === 0) return <p>אין הזמנות מתאימות להצגה</p>;
+
+    return (
+      <table className="report-table">
+        <thead>
+          <tr>
+            {Object.keys(filteredOrders[0]).map((key) => (
+              <th key={key}>{translateHeader(key)}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {filteredOrders.map((order, index) => (
+            <tr key={index}>
+              {Object.entries(order).map(([key, value], i) => (
+                <td key={i}>
+                  {key.toLowerCase().includes("date") || key === "created_at"
+                    ? formatDate(value)
+                    : typeof value === "boolean"
+                    ? value
+                      ? "✔️"
+                      : "❌"
+                    : (value === 1 || value === 0) &&
+                      key.toLowerCase() !== "orderid"
+                    ? value === 1
+                      ? "כן"
+                      : "לא"
+                    : String(value)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+
+
+
+
+
+  const renderOrdersTable2 = (orders) => {
+    console.log(orders,"fafafafafafafafaff")
     const filteredOrders = orders.filter(
       (order) => !order.is_paid && !order.is_received
     );
@@ -305,6 +356,8 @@ function DocumentsReport() {
 
         {reportTitle === "היסטוריית הוצאה מהמלאי" && reportData && (
           <>
+
+            {reportTitle && <h2 className="report-subtitle">{reportTitle}</h2>}
             <div className="flexRow">
               <label htmlFor="start-date">מתאריך</label>
               <input
@@ -325,7 +378,7 @@ function DocumentsReport() {
               <button onClick={handleDateSearch2}>חפש</button>
             </div>
 
-            {console.log(reportData)}
+       
 
             <RemovalPieChart data={reportData} />
 
@@ -335,6 +388,8 @@ function DocumentsReport() {
 
         {reportTitle === "דוח סיכום הזמנות אפייה" && reportData3 && (
           <>
+
+            {reportTitle && <h2 className="report-subtitle">{reportTitle}</h2>}
             <p className="text">⏱️ זמן ממוצע להזמנה: {avregeTime.time}</p>
 
             <div className="flexRow">
@@ -374,7 +429,7 @@ function DocumentsReport() {
           </>
         )}
 
-        {reportTitle && <h2 className="report-subtitle">{reportTitle}</h2>}
+      
         {reportTitle === "דוח חוסרים במלאי" && reportData && (
           <InventoryPieChart data={reportData} products={reportData2} />
         )}
@@ -459,7 +514,10 @@ function DocumentsReport() {
 
             <h3>פרטי כל ההזמנות שלא נסגרו:</h3>
 
-            {renderOrdersTable(orders)}
+{console.log(orders , '"::::::::::')}
+
+            {renderOrdersTable2(orders)}
+
             <button
               className="exelbtn"
               onClick={downloadExcel}
