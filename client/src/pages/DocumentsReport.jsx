@@ -137,9 +137,7 @@ function DocumentsReport() {
           console.log("📦 Orders data:::::::-----------------:", response.data);
           console.log("📦 Orders data:", response.data.orders); // בדיקת הזמנות
           console.log("📊 Summary data:", response.data.summary); // בדיקת סיכום
-          setReportTitle("דוח הזמנות פתוחות");
-        
-
+          setReportTitle("דוח הזמנות פתוחות");       
           setOrders(response.data.orders || []);
           setunApproveOrder(response.data.unApproveOrder[0]);
           setSummary(response.data.summary || null);
