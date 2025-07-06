@@ -124,7 +124,6 @@ function DocumentsReport() {
       switch (type) {
         case "inventory":
           response = await axiosInstance.get("/reports/inventory-zero");
-
           console.log("📦 Inventory report data:", response.data.data); // בדיקת נתוני מלאי
           setReportTitle("דוח חוסרים במלאי");
           setReportData(response.data.data);
@@ -137,8 +136,8 @@ function DocumentsReport() {
           console.log("📦 Orders data:::::::-----------------:", response.data);
           console.log("📦 Orders data:", response.data.orders); // בדיקת הזמנות
           console.log("📊 Summary data:", response.data.summary); // בדיקת סיכום
-          setReportTitle("דוח הזמנות פתוחות");       
-          setOrders(response.data.orders || []);
+          setReportTitle("דוח הזמנות פתוחות");         
+          setOrders(response.data.orders || []);    
           setunApproveOrder(response.data.unApproveOrder[0]);
           setSummary(response.data.summary || null);
           setReportData(null);
@@ -288,15 +287,13 @@ function DocumentsReport() {
 
 
 
-
-
-
   const renderOrdersTable2 = (orders) => {
-    console.log(orders,"fafafafafafafafaff")
-    const filteredOrders = orders.filter(
-      (order) => !order.is_paid && !order.is_received
-    );
+  
 
+    const filteredOrders = orders.filter(
+      (order) =>  Number(order.amount_paid) < Number(order.price) 
+    );
+  console.log(filteredOrders , "gdgfdgdgdgd")
     if (filteredOrders.length === 0) return <p>אין הזמנות מתאימות להצגה</p>;
 
     return (
@@ -512,7 +509,7 @@ function DocumentsReport() {
 
             <h3>פרטי כל ההזמנות שלא נסגרו:</h3>
 
-{console.log(orders , '"::::::::::')}
+  <h1> את צריכה לראות את השינוי הזה  </h1>
 
             {renderOrdersTable2(orders)}
 

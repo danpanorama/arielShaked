@@ -42,3 +42,11 @@
   background-color: #e0e0e0; /* צבע רקע כשנלחץ */
   transform: scale(0.98); /* אפקט הצמצום כשלוחצים על הכפתור */
 }
+.possr{
+  position: absolute;
+  top: 20px;
+  left: 10px;
+}
+.posreld{
+  position: relative;
+}

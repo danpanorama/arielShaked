@@ -93,6 +93,6 @@ width: 100vw;
 }
 
 .unpaid {
-  background-color: #f8d7da; /* אדום בהיר */
-  color: #721c24;
+  background-color: #e74c3c; /* אדום בהיר */
+  color: #fff;
 }

@@ -251,14 +251,14 @@ function OrderBakery() {
   };
 
   return (
-    <div className="providersContainer">
+    <div className="providersContainer posreld">
       <SideNavBar />
-    <br /><br />
+ 
       <div className="flex-row-bet">
         <div></div> 
 
 
-        <div className="flex-row-bet trss">
+        <div className="flex-row-bet possr">
           <PrimaryButton icon={PlusIcon} click={handleNewOrderClick} text="הזמנה חדשה" />
         </div>
       </div>
